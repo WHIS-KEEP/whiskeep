@@ -1,0 +1,79 @@
+# General
+.DS_Store
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.log
+*.stackdump
+
+# IDEs and Editors
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.vscode/
+!.vscode/extensions.json
+
+# Gradle
+.gradle
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+hs_err_pid*
+replay_pid*
+
+# STS (Spring Tool Suite)
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node.js
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# OS-specific
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+Icon
+*.icloud
+
+application-**.yaml
+application.yaml
