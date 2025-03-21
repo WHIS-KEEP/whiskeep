@@ -17,20 +17,22 @@
 
 ## 2. 설치된 것들
 
-0.  vite : 번들러
-1.  shadcn/ui : UI 컴포넌트 라이브러리(?)
-2.  tailwindcss : CSS 프레임워크
-3.  zustand : 상태관리
-4.  ky (ky-universal) : 통신
+0. vite : 번들러
+1. shadcn/ui : UI 컴포넌트 라이브러리(?)
+2. tailwindcss : CSS 프레임워크
+3. zustand : 상태관리
+4. axios : 통신 
+5. react-query : 훅
 
 <br>
 
 ## 3. (2) 관련 참고 문헌
 
-1.  https://ui.shadcn.com/docs/installation
-2.  https://tailwindcss.com/docs/installation/using-vite
-3.  https://zustand.docs.pmnd.rs/
-4.  https://github.com/sindresorhus/ky-universal#readme
+1. https://ui.shadcn.com/docs
+2. https://tailwindcss.com/docs/installation/using-vite
+3. https://zustand.docs.pmnd.rs
+4. https://github.com/sindresorhus/ky-universal#readme
+5. https://tanstack.com/query/latest/docs/framework/react/overview
 
 <br>
 
@@ -41,8 +43,3 @@
 2. border 값
    - 버튼 또는 유사한 역할을 담당하는 소형 컴포넌트의 경우 10
    - 프레임을 담당하는 컴포넌트(ex. 카드)는 20
-
-## 5. 유의사항
-
-1. 프로젝트의 구조가 디폴트가 아닌 FSD를 따르는 중
-   - https://velog.io/@kksltv123/React-프로젝트의-폴더-구조-FSD 참조

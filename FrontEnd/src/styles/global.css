@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 전역 스타일 변수 */
+:root {
+  /* 프라이머리 컬러 */
+  --primary-dark: #4f5039;
+  --primary: #727361;
+  --primary-50: #a6a79b;
+  --primary-30: #cbcbc4;
+
+  /* 포인트 컬러 (레드) */
+  --point-red-dark: #900000;
+  --point-red: #ae4d4d;
+  --point-red-40: #d19999;
+  --point-red-dark-20: #e8cccc;
+
+  /* 우드 컬러 */
+  --wood: #c4a380;
+  --wood-70: #d6bfa7;
+  --wood-30: #eee4d9;
+
+  /* 배경 컬러 */
+  --bg: #efebe0;
+  --bg-muted: #f6f4ef;
+
+  /* 텍스트 컬러 */
+  --text-main: #2f2f2f;
+  --text-muted: #585858;
+  --text-muted-40: #bcbcbc;
+  --text-muted-20: #dedede;
+
+  /* 기존 변수 */
+  --text-color: var(--text-main);
+  --background-color: var(--bg);
+  --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --app-background-color: var(--bg-muted);
+  --mobile-width: 412px;
+  --mobile-height: 915px;
+}
+
+/* 기본 스타일 */
+html,
+body {
+  font-family: var(--font-family);
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text-color);
+  background-color: var(--app-background-color);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* 모바일 컨테이너 */
+.mobile-container {
+  width: var(--mobile-width);
+  min-height: var(--mobile-height);
+  max-width: var(--mobile-width);
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  margin: 0 auto;
+}
+
+/* 링크 스타일 */
+a {
+  font-weight: 500;
+  color: var(--point-red);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--point-red-dark);
+}
+
+/* 반응형 기본 설정 */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* 기본 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
