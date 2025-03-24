@@ -1,0 +1,20 @@
+stages:
+  - checkstyle_backend
+
+checkstyle_backend:
+  stage: checkstyle_backend
+  image: gradle:8.5-jdk21
+  script:
+    - gradle checkstyleMain checkstyleTest --no-daemon
+  after_script:
+    - chmod +x scripts/ci/generate-codequality-report-from-checkstyle.sh
+    - scripts/ci/generate-codequality-report-from-checkstyle.sh build/reports/checkstyle/main.xml > checkstyle-report.json
+  artifacts:
+    when: always
+    paths:
+      - build/reports/checkstyle/
+    reports:
+      codequality:
+        - checkstyle-report.json
+  allow_failure: false
+
