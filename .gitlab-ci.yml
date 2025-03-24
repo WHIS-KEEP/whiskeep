@@ -6,6 +6,10 @@ checkstyle_backend:
   image: gradle:8.5-jdk21
   tags:
     - gitlab-runner
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - when: never 
   before_script:
     - cd BackEnd  
   script:
