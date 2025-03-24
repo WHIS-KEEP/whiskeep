@@ -4,6 +4,10 @@ stages:
 checkstyle_backend:
   stage: checkstyle_backend
   image: gradle:8.5-jdk21
+  tags:
+    - gitlab-runner
+  before_script:
+    - cd BackEnd  
   script:
     - gradle checkstyleMain checkstyleTest --no-daemon
   after_script:
@@ -12,9 +16,10 @@ checkstyle_backend:
   artifacts:
     when: always
     paths:
-      - build/reports/checkstyle/
+      - BackEnd/build/reports/checkstyle/
     reports:
       codequality:
-        - checkstyle-report.json
+        - BackEnd/checkstyle-report.json
   allow_failure: false
+
 
