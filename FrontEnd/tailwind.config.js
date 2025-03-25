@@ -30,6 +30,22 @@ export default {
         "text-muted": "#585858",
         "text-muted-40": "#BCBCBC",
         "text-muted-20": "#DEDEDE",
+
+        // shadcn/ui 기본 색상 맵핑
+        background: "#EFEBE0",
+        foreground: "#2F2F2F",
+        destructive: "#AE4D4D",
+        "destructive-foreground": "#FFFFFF",
+        accent: "#F6F4EF",
+        "accent-foreground": "#2F2F2F",
+        muted: "#585858",
+        "muted-foreground": "#BCBCBC",
+        border: "#DEDEDE",
+        input: "#CBCBC4",
+        ring: "#A6A79B",
+      },
+      borderRadius: {
+        DEFAULT: "0.5rem",
       },
     },
   },

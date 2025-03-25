@@ -1,18 +1,45 @@
 import { Routes, Route } from "react-router-dom"
-import MainLayout from "../components/layout/MainLayout"
 import Home from "../pages/Home"
-import About from "../pages/About"
 import NotFound from "../pages/NotFound"
-
+import Navbar from "../components/layout/Navbar"
+import Header from "@/components/layout/Header"
+import Main from "../pages/Main"
+import List from "@/pages/List"
+import Collection from "@/pages/Collection"
+import Mypage from "@/pages/Mypage"
+// import Login from "@/pages/Login"
 const Router = () => {
   return (
-    <Routes>
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+    <div className="mobile-container flex flex-col h-full">
+      {/* 상단 헤더 */}
+      <Header />
+
+      {/* 메인 콘텐츠 (스크롤 영역) */}
+      <div className="flex-grow overflow-auto" style={{ padding: "10px", paddingBottom: "150px" }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="main" element={<Main />} />
+          <Route path="list" element={<List />} />
+          <Route path="collection" element={<Collection />} />
+          <Route path="mypage" element={<Mypage />} />
+          {/* <Route path="login" element={<Login />} /> */}
+        </Routes>
+      </div>
+
+      {/* 하단 네비게이션 바 */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: 0,
+          width: "var(--mobile-width)",
+          maxWidth: "var(--mobile-width)",
+          zIndex: 50,
+        }}
+      >
+        <Navbar />
+      </div>
+    </div>
   )
 }
 
