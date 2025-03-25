@@ -26,9 +26,6 @@ public class Whisky {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long whiskyId;
 
-	@OneToOne(mappedBy = "whisky", cascade = CascadeType.ALL)
-	private WhiskyTasteInfo whiskyTasteInfo;
-
 	@Column(nullable = false, length = 200)
 	private String enName;
 
@@ -56,7 +53,7 @@ public class Whisky {
 
 	private Integer recordCnt;
 
-	private Boolean isTaste;
+	private Boolean hasTasteInfo;
 
 	@Column(length = 100)
 	private String caskType;

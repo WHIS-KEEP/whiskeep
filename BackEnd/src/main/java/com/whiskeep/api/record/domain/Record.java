@@ -1,7 +1,5 @@
 package com.whiskeep.api.record.domain;
 
-import java.time.LocalDateTime;
-
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.common.entity.BaseTimeEntity;
@@ -13,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +39,7 @@ public class Record extends BaseTimeEntity {
 	private Whisky whisky;
 
 	@Column(nullable = false)
+	@Min(1) @Max(5)
 	private Integer rating;
 
 	@Column(length = 1000)
