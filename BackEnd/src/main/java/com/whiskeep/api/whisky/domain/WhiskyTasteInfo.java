@@ -1,12 +1,14 @@
 package com.whiskeep.api.whisky.domain;
 
-import com.whiskeep.api.whisky.domain.Whisky;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,30 +16,32 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Table(name = "whisky_taste_info")
 public class WhiskyTasteInfo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long whiskyTasteId;
 
+	@OneToOne
 	@JoinColumn(name = "whisky_id", nullable = false)
-    private Whisky whisky;
+	private Whisky whisky;
 
-	private int smoky;
-	private int peaty;
-	private int spicy;
-	private int herbal;
-	private int fullBodied;
-	private int rich;
-	private int oily;
-	private int sweet;
-	private int vanilla;
-	private int fruity;
-	private int tart;
-	private int floral;
-	private int salty;
-	private int briny;
+	private Integer smoky;
+	private Integer peaty;
+	private Integer spicy;
+	private Integer herbal;
+	private Integer fullBodied;
+	private Integer rich;
+	private Integer oily;
+	private Integer sweet;
+	private Integer vanilla;
+	private Integer fruity;
+	private Integer tart;
+	private Integer floral;
+	private Integer salty;
+	private Integer briny;
+
+}
