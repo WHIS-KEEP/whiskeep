@@ -1,4 +1,3 @@
-import React from 'react';
 import logo from '../../assets/logo.svg';
 import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
