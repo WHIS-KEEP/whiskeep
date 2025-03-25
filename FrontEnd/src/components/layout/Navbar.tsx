@@ -11,7 +11,7 @@ function Navbar() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="w-full bg-white border-t border-primary-30 shadow-lg">
+    <div className="w-full bg-white border-primary-30 shadow-lg">
       <div
         className="flex items-center justify-between px-6"
         style={{ paddingTop: '0.6rem', paddingBottom: '0.6rem' }}
@@ -25,8 +25,8 @@ function Navbar() {
               <House
                 color={
                   isActive('/main')
-                    ? 'var(--primary-dark)'
-                    : 'var(--primary-50)'
+                    ? 'var(--color-primary-dark)'
+                    : 'var(--color-primary-50)'
                 }
                 size={30}
               />
@@ -43,8 +43,8 @@ function Navbar() {
               <List
                 color={
                   isActive('/list')
-                    ? 'var(--primary-dark)'
-                    : 'var(--primary-50)'
+                    ? 'var(--color-primary-dark)'
+                    : 'var(--color-primary-50)'
                 }
                 size={30}
               />
@@ -64,7 +64,7 @@ function Navbar() {
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div
                   className="w-[54px] h-[54px] rounded-full flex justify-center items-center shadow-lg"
-                  style={{ backgroundColor: 'var(--primary-dark)' }}
+                  style={{ backgroundColor: 'var(--color-primary-dark)' }}
                 >
                   <Camera color="white" size={36} />
                 </div>
@@ -87,8 +87,8 @@ function Navbar() {
               <Wine
                 color={
                   isActive('/collection')
-                    ? 'var(--primary-dark)'
-                    : 'var(--primary-50)'
+                    ? 'var(--color-primary-dark)'
+                    : 'var(--color-primary-50)'
                 }
                 size={30}
               />
@@ -105,8 +105,8 @@ function Navbar() {
               <UserRound
                 color={
                   isActive('/mypage')
-                    ? 'var(--primary-dark)'
-                    : 'var(--primary-50)'
+                    ? 'var(--color-primary-dark)'
+                    : 'var(--color-primary-50)'
                 }
                 size={30}
               />

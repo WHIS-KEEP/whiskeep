@@ -1,3 +1,4 @@
+import React from 'react';
 import logo from '../../assets/logo.svg';
 import { Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -5,12 +6,12 @@ import { Link } from 'react-router-dom';
 function Header() {
   return (
     <div
-      className="flex items-center justify-between"
+      className="flex items-center justify-between bg-bg-muted"
       style={{ padding: '1.25rem' }}
     >
       <Link to="/main">
         <div className="flex items-center ">
-          <img src={logo} alt="Wiskeep" className="h-10 w-auto" />
+          <img src={logo} alt="Wiskeep" className="h-7 w-auto" />
         </div>
       </Link>
 

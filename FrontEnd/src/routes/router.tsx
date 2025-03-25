@@ -7,7 +7,7 @@ import Main from '../pages/Main';
 import List from '@/pages/List';
 import Collection from '@/pages/Collection';
 import Mypage from '@/pages/Mypage';
-
+import Login from '@/pages/Login';
 const Router = () => {
   return (
     <div className="mobile-container flex flex-col h-full">
@@ -15,7 +15,7 @@ const Router = () => {
       <Header />
       {/* 메인 콘텐츠 (스크롤 영역) */}
       <div
-        className="flex-grow overflow-auto"
+        className="flex-grow overflow-auto bg-bg-muted"
         style={{ padding: '1.25rem', paddingBottom: '150px' }}
       >
         <Routes>
@@ -25,7 +25,7 @@ const Router = () => {
           <Route path="list" element={<List />} />
           <Route path="collection" element={<Collection />} />
           <Route path="mypage" element={<Mypage />} />
-          {/* <Route path="login" element={<Login />} /> */}
+          <Route path="login" element={<Login />} />
         </Routes>
       </div>
 
