@@ -18,7 +18,7 @@
 ## 2. 설치된 것들
 
 0. vite : 번들러
-1. shadcn/ui : UI 컴포넌트 라이브러리(?)
+1. shadcn/ui : UI 컴포넌트 라이브러리
 2. tailwindcss : CSS 프레임워크
 3. zustand : 상태관리
 4. axios : 통신 
@@ -39,7 +39,7 @@
 ## 4. 스타일 가이드
 
 1. 색상 코드
-   ![color code](./public/images/Color.png)
+   ![color code](./Color.png)
 2. border 값
    - 버튼 또는 유사한 역할을 담당하는 소형 컴포넌트의 경우 10
    - 프레임을 담당하는 컴포넌트(ex. 카드)는 20

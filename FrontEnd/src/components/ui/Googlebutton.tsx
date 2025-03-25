@@ -2,7 +2,7 @@
 // Google 로고가 늘어나지 않도록 종횡비는 유지
 // 버튼에는 항상 Google "G"의 표준 색상이 포함
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import React from "react"
 
 const GoogleButton = () => {

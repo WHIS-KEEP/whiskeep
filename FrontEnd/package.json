@@ -16,8 +16,6 @@
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "ky": "^1.7.5",
-    "ky-universal": "^0.12.0",
     "lucide-react": "^0.483.0",
     "my-ts-react": "file:",
     "react": "^19.0.0",

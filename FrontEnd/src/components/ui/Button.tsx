@@ -1,3 +1,5 @@
+// shadcn/ui의 Button 컴포넌트이므로 터치 X, 임포트 방식으로 구현
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 
 function Header() {
   return (
-    <div className="flex items-center justify-between p-4" style={{ padding: "1.25rem" }}>
+    <div className="flex items-center justify-between" style={{ padding: "1.25rem" }}>
       <Link to="/main">
         <div className="flex items-center ">
           <img src={logo} alt="Wiskeep" className="h-10 w-auto" />

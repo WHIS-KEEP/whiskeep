@@ -26,18 +26,12 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      ky:
-        specifier: ^1.7.5
-        version: 1.7.5
-      ky-universal:
-        specifier: ^0.12.0
-        version: 0.12.0(ky@1.7.5)(web-streams-polyfill@3.3.3)
       lucide-react:
         specifier: ^0.483.0
         version: 0.483.0(react@19.0.0)
       my-ts-react:
         specifier: 'file:'
-        version: file:(@types/react@19.0.12)(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(lightningcss@1.29.2))(web-streams-polyfill@3.3.3)
+        version: file:(@types/react@19.0.12)(ky@1.7.5)(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(lightningcss@1.29.2))(web-streams-polyfill@3.3.3)
       react:
         specifier: ^19.0.0
         version: 19.0.0
@@ -2568,7 +2562,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  my-ts-react@file:(@types/react@19.0.12)(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(lightningcss@1.29.2))(web-streams-polyfill@3.3.3):
+  my-ts-react@file:(@types/react@19.0.12)(ky@1.7.5)(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(lightningcss@1.29.2))(web-streams-polyfill@3.3.3):
     dependencies:
       '@radix-ui/react-slot': 1.1.2(@types/react@19.0.12)(react@19.0.0)
       '@tailwindcss/vite': 4.0.15(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(lightningcss@1.29.2))
@@ -2576,7 +2570,6 @@ snapshots:
       axios: 1.8.4
       class-variance-authority: 0.7.1
       clsx: 2.1.1
-      ky: 1.7.5
       ky-universal: 0.12.0(ky@1.7.5)(web-streams-polyfill@3.3.3)
       lucide-react: 0.483.0(react@19.0.0)
       react: 19.0.0
@@ -2590,6 +2583,7 @@ snapshots:
       - '@types/react'
       - debug
       - immer
+      - ky
       - use-sync-external-store
       - vite
       - web-streams-polyfill

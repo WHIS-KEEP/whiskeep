@@ -1,5 +1,6 @@
 import { BrowserRouter } from "react-router-dom"
 import Router from "./routes/router"
+import "./styles/global.css"
 
 const App = () => {
   return (

@@ -13,9 +13,8 @@ const Router = () => {
     <div className="mobile-container flex flex-col h-full">
       {/* 상단 헤더 */}
       <Header />
-
       {/* 메인 콘텐츠 (스크롤 영역) */}
-      <div className="flex-grow overflow-auto" style={{ padding: "10px", paddingBottom: "150px" }}>
+      <div className="flex-grow overflow-auto" style={{ padding: "1.25rem", paddingBottom: "150px" }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="*" element={<NotFound />} />
