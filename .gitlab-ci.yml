@@ -16,7 +16,7 @@ checkstyle_backend:
     - gradle checkstyleMain checkstyleTest --no-daemon
   after_script:
     - chmod +x scripts/ci/generate-codequality-report-from-checkstyle.sh
-    - scripts/ci/generate-codequality-report-from-checkstyle.sh build/reports/checkstyle/main.xml > BackEnd/checkstyle-report.json
+    - scripts/ci/generate-codequality-report-from-checkstyle.sh build/reports/checkstyle/main.xml > checkstyle-report.json
   artifacts:
     when: always
     paths:
@@ -25,5 +25,3 @@ checkstyle_backend:
       codequality:
         - BackEnd/checkstyle-report.json
   allow_failure: false
-
-
