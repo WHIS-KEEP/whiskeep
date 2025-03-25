@@ -2,6 +2,7 @@ package com.whiskeep.api.whiskylike.domain;
 
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.whisky.domain.Whisky;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

@@ -3,6 +3,7 @@ package com.whiskeep.api.record.domain;
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.common.entity.BaseTimeEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -42,5 +42,4 @@ public class WhiskyTasteInfo {
 	private Integer floral;
 	private Integer salty;
 	private Integer briny;
-
 }

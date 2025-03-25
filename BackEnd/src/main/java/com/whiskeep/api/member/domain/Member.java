@@ -1,9 +1,8 @@
 package com.whiskeep.api.member.domain;
 
-import java.time.LocalDateTime;
-
 import com.whiskeep.common.entity.BaseTimeEntity;
 import com.whiskeep.common.enumclass.Provider;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
