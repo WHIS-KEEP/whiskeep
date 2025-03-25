@@ -43,4 +43,7 @@ public class Member extends BaseTimeEntity {
 	@Column(nullable = false, length = 6)
 	private Provider provider;
 
+	@Column(nullable = false, unique = true)
+	private String providerId;
+
 }
