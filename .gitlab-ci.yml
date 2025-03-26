@@ -1,5 +1,6 @@
 stages:
   - checkstyle_backend
+  - checkstyle_frontend
 
 checkstyle_backend:
   stage: checkstyle_backend
@@ -24,4 +25,21 @@ checkstyle_backend:
     reports:
       codequality:
         - BackEnd/checkstyle-report.json
+  allow_failure: false
+
+  checkstyle_frontend:
+  stage: checkstyle_frontend
+  image: node:18
+  tags:
+    - gitlab-runner
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - when: never
+  before_script:
+    - cd FrontEnd
+    - npm ci
+  script:
+    - npx prettier --check "src/**/*.{js,ts,jsx,tsx,json,css,scss,md}"
+    - npx eslint "src/**/*.{js,ts,jsx,tsx}" --max-warnings=0
   allow_failure: false
