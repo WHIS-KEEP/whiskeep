@@ -1,6 +1,7 @@
 package com.whiskeep.api.member.auth;
 
 import java.util.Map;
+
 import com.whiskeep.common.enumclass.Provider;
 
 public class KakaoUserInfo implements OAuth2UserInfo {

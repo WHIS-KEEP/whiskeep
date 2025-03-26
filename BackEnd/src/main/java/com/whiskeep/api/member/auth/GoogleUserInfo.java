@@ -1,6 +1,7 @@
 package com.whiskeep.api.member.auth;
 
 import java.util.Map;
+
 import com.whiskeep.common.enumclass.Provider;
 
 public class GoogleUserInfo implements OAuth2UserInfo {
@@ -33,6 +34,6 @@ public class GoogleUserInfo implements OAuth2UserInfo {
 
 	@Override
 	public String getProviderId() {
-		return Provider.GOOGLE.name() + "_" + attributes.get("sub"); // "GOOGLE_" 접두사 제거
+		return Provider.GOOGLE.name() + "_" + attributes.get("sub");
 	}
 }
