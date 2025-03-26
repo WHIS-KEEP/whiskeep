@@ -10,9 +10,9 @@ checkstyle_backend:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: always
-    - when: never 
+    - when: never
   before_script:
-    - cd BackEnd  
+    - cd BackEnd
   script:
     - gradle checkstyleMain checkstyleTest --no-daemon
   after_script:
@@ -27,7 +27,7 @@ checkstyle_backend:
         - BackEnd/checkstyle-report.json
   allow_failure: false
 
-  checkstyle_frontend:
+checkstyle_frontend:
   stage: checkstyle_frontend
   image: node:18
   tags:
