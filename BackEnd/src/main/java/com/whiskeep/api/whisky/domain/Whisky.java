@@ -35,6 +35,9 @@ public class Whisky {
 	@Column(nullable = false, length = 200)
 	private String koName;
 
+	@Column(length = 1000)
+	private String description;
+
 	@Column(length = 500)
 	private String whiskyImg;
 
@@ -47,10 +50,9 @@ public class Whisky {
 	@Column(length = 50)
 	private String country;
 
-	private Integer abv;
+	private Double abv;
 
-	@Column(length = 1000)
-	private String description;
+	private Integer age;
 
 	@Type(JsonBinaryType.class)
 	@Column(columnDefinition = "jsonb")
