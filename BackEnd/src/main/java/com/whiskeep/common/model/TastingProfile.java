@@ -1,4 +1,4 @@
-package com.whiskeep.common.entity;
+package com.whiskeep.common.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

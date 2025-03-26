@@ -4,7 +4,7 @@ import java.util.Map;
 
 import org.hibernate.annotations.Type;
 
-import com.whiskeep.common.entity.TastingProfile;
+import com.whiskeep.common.model.TastingProfile;
 
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
@@ -65,7 +65,5 @@ public class Whisky {
 	@Type(JsonBinaryType.class)
 	@Column(columnDefinition = "jsonb")
 	private TastingProfile<Map<String, Double>> finish;
-
-
 
 }
