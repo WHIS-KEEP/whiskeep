@@ -1,6 +1,4 @@
-package com.whiskeep.api.whisky.domain;
-
-import java.util.Map;
+package com.whiskeep.api.member.domain;
 
 import org.hibernate.annotations.Type;
 
@@ -9,61 +7,40 @@ import com.whiskeep.common.entity.TastingProfile;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
-public class Whisky {
+public class MemberPreference {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long whiskyId;
+	private Long memberPreferenceId;
 
-	@Column(nullable = false, length = 200)
-	private String enName;
-
-	@Column(nullable = false, length = 200)
-	private String koName;
-
-	@Column(length = 500)
-	private String whiskyImg;
-
-	@Column(length = 50)
-	private String type;
-
-	@Column(length = 100)
-	private String distillery;
-
-	@Column(length = 50)
-	private String country;
-
-	private Integer abv;
-
-	@Column(length = 1000)
-	private String description;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_id", nullable = false, unique = true)
+	private Member member;
 
 	@Type(JsonBinaryType.class)
 	@Column(columnDefinition = "jsonb")
-	private TastingProfile<Map<String, Double>> nosing;
+	private TastingProfile<Void> nosing;
 
 	@Type(JsonBinaryType.class)
 	@Column(columnDefinition = "jsonb")
-	private TastingProfile<Map<String, Double>> tasting;
+	private TastingProfile<Void> tasting;
 
 	@Type(JsonBinaryType.class)
 	@Column(columnDefinition = "jsonb")
-	private TastingProfile<Map<String, Double>> finish;
-
-
-
+	private TastingProfile<Void> finish;
 }
