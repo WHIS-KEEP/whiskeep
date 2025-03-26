@@ -16,16 +16,30 @@ spring:
 #      ssl:
 #        enabled: ${SPRING_DATA_REDIS_SSL_ENABLED}
 #
+  # GOOGLE 소셜 로그인 환경변수
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: http://localhost:8080/api/member/login/success
+            scope:
+              - profile
+              - email
+
 decorator:
   datasource:
     p6spy:
       enable-logging: ${DECORATOR_DATASOURCE_P6SPY_ENABLE_LOGGING}
 
 ## JWT 비밀키, 유효기간 설정
-#jwt:
-#  secret: ${JWT_SECRET}
-#  expiration: ${JWT_EXPIRATION}
-#
+jwt:
+  header: Authorization
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
+
 ## KAKAO 소셜 로그인 환경변수
 #kakao:
 #  client:
@@ -37,18 +51,17 @@ decorator:
 #  redirect:
 #    uri: ${KAKAO_REDIRECT_URI}
 #
-## GOOGLE 소셜 로그인 환경변수
+# GOOGLE 소셜 로그인 환경변수
 #google:
-#  client:
-#    id: ${GOOGLE_CLIENT_ID}
-#    secret: ${GOOGLE_CLIENT_SECRET}
+#  client_id: ${GOOGLE_CLIENT_ID}
+#  client_secret: ${GOOGLE_CLIENT_SECRET}
 #  token:
 #    uri: ${GOOGLE_TOKEN_URI}
 #  user:
 #    uri: ${GOOGLE_USER_URI}
 #  redirect:
 #    uri: ${GOOGLE_REDIRECT_URI}
-#
+
 ##AWS
 #cloud:
 #  aws:

@@ -6,8 +6,12 @@ import com.whiskeep.common.enumclass.Provider;
 public interface OAuth2UserInfo {
 
 	String getEmail();
+
 	String getName();
+
 	String getProfileImg();
+
 	Provider getProvider();
+
 	String getProviderId();
 }
