@@ -5,10 +5,10 @@
 import { Button } from '@/components/ui/Button';
 import googleLogo from '../../assets/google.svg';
 
-interface GoogleButtonProps {
-  brand: string; // text prop의 타입
-  onClick?: () => void; // onClick prop
-}
+// interface GoogleButtonProps {
+//   brand: string; // text prop의 타입
+//   onClick?: () => void; // onClick prop
+// }
 
 const GoogleButton = () => {
   return (
