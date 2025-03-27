@@ -8,24 +8,34 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whiskeep.api.member.domain.Member;
+import com.whiskeep.api.member.dto.google.GoogleTokenDto;
+import com.whiskeep.api.member.dto.google.GoogleUserResponseDto;
+import com.whiskeep.api.member.dto.member.MemberResponseDto;
 import com.whiskeep.api.member.repository.MemberRepository;
+import com.whiskeep.common.enumclass.Provider;
 import com.whiskeep.common.util.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class CustomOAuth2UserService {
 
 	private final MemberRepository memberRepository;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final ObjectMapper objectMapper;
 
 	// GOOGLE 관련 변수
 	String googleLoginUrl = "https://accounts.google.com/o/oauth2/auth";
 	@Value("${spring.security.oauth2.client.registration.google.client-id}")
 	String googleClientId;
+	@Value("${spring.security.oauth2.client.registration.google.client-secret}")
+	private String googleClientSecret;
 	@Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
 	String googleRedirectUri;
 
@@ -43,45 +53,64 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		return loginUrl.toString();
 	}
 
-	@Override
-	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-		OAuth2User oAuth2User = super.loadUser(userRequest);
-		OAuth2UserInfo oAuth2UserInfo = null;
+	// ✅ 1️⃣ 인증 코드로 Access Token 요청
+	public GoogleTokenDto getAccessTokenFromCode(String code) {
+		String tokenRequestUrl = null;
 
-		String provider = userRequest.getClientRegistration().getRegistrationId();
-		String accessToken = userRequest.getAccessToken().getTokenValue();
+		// 구글 Access Token 요청
+		tokenRequestUrl = "https://oauth2.googleapis.com/token"
+			+ "?client_id=" + googleClientId
+			+ "&client_secret=" + googleClientSecret
+			+ "&code=" + code
+			+ "&grant_type=authorization_code"
+			+ "&redirect_uri=" + googleRedirectUri;
 
-		if ("google".equals(provider)) {
-			oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
-		} else {
-			oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
-		}
+		// RestTemplate: HTTP 요청 보내는 클라이언트
+		RestTemplate restTemplate = new RestTemplate();
+		return restTemplate.postForObject(tokenRequestUrl, null, GoogleTokenDto.class);
+	}
 
-		// 고유값인 providerId로 기존 회원 조회
-		Optional<Member> existingMember = memberRepository.findByProviderId(oAuth2UserInfo.getProviderId());
+	// ✅ 2️⃣ Access Token으로 사용자 정보 가져오기
+	public MemberResponseDto getUserInfoFromToken(GoogleTokenDto token) {
+		String userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
 
-		Member member;
+		RestTemplate restTemplate = new RestTemplate();
+		GoogleUserResponseDto googleUserInfo = restTemplate.getForObject(userInfoUrl + "?access_token=" + token.getAccessToken(), GoogleUserResponseDto.class);
+
+		// ✅ DB에서 사용자 확인 (없으면 새로 저장)
+		String providerId = Provider.GOOGLE.name() + "_" + googleUserInfo.getId();
+		Optional<Member> existingMember = memberRepository.findByProviderId(providerId);
 		if (existingMember.isPresent()) {
-			member = existingMember.get(); // 기존 회원이면 그대로 사용
+			return new MemberResponseDto(
+				existingMember.get().getEmail(),
+				existingMember.get().getName(),
+				existingMember.get().getNickname(),
+				existingMember.get().getProfileImg(),
+				existingMember.get().getProvider().name()
+			);
+
 		} else {
-			// 신규 회원이면 저장
-			member = Member.builder()
-				.email(oAuth2UserInfo.getEmail())
-				.name(oAuth2UserInfo.getName())
-				.nickname(generateUniqueNickname(oAuth2UserInfo.getName())) //닉네임 추가 로직 작성
-				.profileImg(oAuth2UserInfo.getProfileImg())
-				.provider(oAuth2UserInfo.getProvider())
-				.providerId(oAuth2UserInfo.getProviderId())
+			Member newMember = Member.builder()
+				.email(googleUserInfo.getEmail())
+				.name(googleUserInfo.getName())
+				.nickname(generateUniqueNickname(googleUserInfo.getName()))
+				.provider(Provider.GOOGLE)
+				.providerId(providerId)
 				.build();
-			memberRepository.save(member);
+			memberRepository.save(newMember);
+
+			return new MemberResponseDto(
+				newMember.getEmail(),
+				newMember.getName(),
+				newMember.getNickname(),
+				newMember.getProfileImg(),
+				newMember.getProvider().name()
+			);
 		}
+	}
 
-		// ✅ JWT 생성
-		String jwtToken = jwtTokenProvider.createToken(member.getEmail(), provider);
-
-		// ✅ 프론트엔드로 JWT 반환
-		// return new CustomOAuth2User(oAuth2User, jwtToken);
-		return oAuth2User;
+	public String createJwtToken(String nickName) {
+		return jwtTokenProvider.createToken(nickName);
 	}
 
 	private String generateUniqueNickname(String name) {

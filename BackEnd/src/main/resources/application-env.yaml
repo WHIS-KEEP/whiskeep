@@ -28,17 +28,16 @@ spring:
             scope:
               - profile
               - email
+    jwt:
+      secret-key: ${JWT_SECRET}
+      expiration-time: ${JWT_EXPIRATION}
+      issuer: whiskeep
 
 decorator:
   datasource:
     p6spy:
       enable-logging: ${DECORATOR_DATASOURCE_P6SPY_ENABLE_LOGGING}
 
-## JWT 비밀키, 유효기간 설정
-jwt:
-  header: Authorization
-  secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION}
 
 ## KAKAO 소셜 로그인 환경변수
 #kakao:
