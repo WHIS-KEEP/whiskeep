@@ -9,6 +9,5 @@ import com.whiskeep.api.whisky.domain.Whisky;
 
 public interface RecommendRepository extends JpaRepository<Whisky, Long> {
 
-
 	RecommendedListResponseDto recommend(double similarity);
 }
