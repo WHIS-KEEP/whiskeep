@@ -36,7 +36,7 @@ public class Member extends BaseTimeEntity {
 	@Column(length = 20, unique = true)
 	private String nickname;
 
-	@Column(length = 500)
+	@Column(nullable = false, length = 500)
 	private String profileImg;
 
 	@Enumerated(EnumType.STRING)
