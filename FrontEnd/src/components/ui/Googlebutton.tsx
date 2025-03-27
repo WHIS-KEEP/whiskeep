@@ -10,13 +10,14 @@ import googleLogo from '../../assets/google.svg';
 //   onClick?: () => void; // onClick prop
 // }
 
-const GoogleButton = () => {
+const GoogleButton = ({ onClick }: GoogleButtonProps) => {
   return (
     <Button
       type="button"
       variant="outline"
       size="m"
-      className="flex items-center rounded-xl bg-white justify-center gap-3 border border-gray-100 w-72 h-12 active:transform active:scale-85 active transition-all duration-150"
+      className=" cursor-pointer flex items-center rounded-[10px] bg-white hover:bg-white active:bg-white justify-center gap-1.75 border border-white  w-72 h-12 active:transform active:scale-85 active transition-all duration-150"
+      onClick={onClick}
     >
       <img src={googleLogo} alt="${brand} 로고" className="w-7 h-7" />
       <span className="text-align-center text-base font-semibold">
