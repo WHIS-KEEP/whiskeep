@@ -1,10 +1,11 @@
 stages:
-  - checkstyle_backend
-  - checkstyle_frontend
+  - checkstyle
+  - build
+  - test
 
 checkstyle_backend:
-  stage: checkstyle_backend
-  image: gradle:8.5-jdk21
+  stage: checkstyle
+  image: gradle:8.13-jdk21
   tags:
     - gitlab-runner
   rules:
@@ -28,8 +29,8 @@ checkstyle_backend:
   allow_failure: false
 
 checkstyle_frontend:
-  stage: checkstyle_frontend
-  image: node:18
+  stage: checkstyle
+  image: node:22
   tags:
     - gitlab-runner
   rules:
@@ -43,3 +44,54 @@ checkstyle_frontend:
     - npx prettier --check "src/**/*.{js,ts,jsx,tsx,json,css,scss,md}"
     - npx eslint "src/**/*.{js,ts,jsx,tsx}" --max-warnings=0
   allow_failure: false
+
+build_backend:
+  stage: build
+  image: gradle:8.13-jdk21
+  tags:
+    - gitlab-runner
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - when: never
+  script:
+    - cd BackEnd
+    - gradle build --no-daemon
+  artifacts:
+    paths:
+      - BackEnd/build/libs/
+
+build_frontend:
+  stage: build
+  image: node:22
+  tags:
+    - gitlab-runner
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - when: never
+  script:
+    - cd FrontEnd
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - FrontEnd/build/
+
+test_backend:
+  stage: test
+  image: gradle:8.13-jdk21
+  tags:
+    - gitlab-runner
+  needs:
+    - job: build_backend
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - when: never
+  script:
+    - cd BackEnd
+    - gradle test --no-daemon
+  artifacts:
+    paths:
+      - BackEnd/build/reports/tests/
