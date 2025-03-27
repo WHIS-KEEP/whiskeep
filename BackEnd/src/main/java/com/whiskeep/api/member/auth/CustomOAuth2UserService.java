@@ -39,10 +39,10 @@ public class CustomOAuth2UserService {
 	@Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
 	String googleRedirectUri;
 
-	public String getLoginUrl(String provider){
+	public String getLoginUrl(String provider) {
 		StringBuilder loginUrl = new StringBuilder();
 
-		if("google".equals(provider)){
+		if ("google".equals(provider)) {
 			loginUrl.append(googleLoginUrl)
 				.append("?client_id=").append(googleClientId)
 				.append("&redirect_uri=").append(googleRedirectUri)
