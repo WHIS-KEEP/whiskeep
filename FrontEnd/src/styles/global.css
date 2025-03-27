@@ -67,7 +67,9 @@
   /* 기존 변수 */
   --text-color: var(--text-main);
   --background-color: var(--bg);
-  --font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-family:
+    'Pretendard Variable', Inter, system-ui, Avenir, Helvetica, Arial,
+    sans-serif;
   --app-background-color: var(--bg-muted);
   --mobile-width: 412px;
   --mobile-height: 915px;
@@ -175,10 +177,50 @@
   --color-mobile-height: var(--mobile-height);
 }
 
+/* 프리텐다드 폰트 */
+@font-face {
+  font-family: 'Pretendard Variable';
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url('./woff2/PretendardVariable.woff2') format('woff2-variations');
+}
+
+/* 찜버튼 애니메이션 */
+@keyframes like-in {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+@keyframes like-out {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0.4;
+  }
+}
+
+.animate-like-in {
+  animation: like-in 0.15s ease-in-out forwards;
+}
+
+.animate-like-out {
+  animation: like-out 0.15s ease-in-out forwards;
+}
+
 /* 기본 스타일 */
 html,
 body {
-  font-family: var(--font-family);
+  font-family: 'Pretendard Variable', var(--font-family);
   line-height: 1.5;
   font-weight: 400;
   color: var(--text-color);

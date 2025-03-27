@@ -1,64 +1,116 @@
 import { cn } from '@/lib/util/utils';
-
 import { Heart } from 'lucide-react';
-import { Card, CardContent } from './card';
+import { Card, CardContent } from './Card';
+import defaultBgImg from '../../assets/issac.webp';
+import defaultWhiskyImg from '../../assets/sample.png';
+import { useState, useRef } from 'react'; // useRef 추가
 
-const Whisky = [
-  {
-    title: '맥캘란 12년산 쉐리 오크 40%',
-    description: 'Single Malt | 40%',
-  },
-];
+// Props 인터페이스 정의
+interface WhiskycardProps extends React.ComponentProps<typeof Card> {
+  title: string;
+  description: string;
+  bgImage?: string; // 배경 이미지 URL (선택적)
+  whiskyImage?: string; // 위스키 이미지 URL (선택적)
+}
 
-type CardProps = React.ComponentProps<typeof Card>;
+export function Whiskycard({
+  className,
+  title,
+  description,
+  bgImage = defaultBgImg, // 기본값으로 에셋 이미지 사용
+  whiskyImage = defaultWhiskyImg, // 기본값으로 에셋 이미지 사용
+  ...props
+}: WhiskycardProps) {
+  const [isLiked, setIsLiked] = useState(false); // 찜 상태를 관리하는 state
+  const heartRef = useRef<SVGSVGElement>(null); // Heart 컴포넌트에 대한 ref
 
-export function Whiskycard({ className, ...props }: CardProps) {
+  const handleLikeClick = () => {
+    if (heartRef.current) {
+      if (!isLiked) {
+        heartRef.current.classList.add('animate-like-in');
+        heartRef.current.classList.remove('animate-like-out');
+      } else {
+        heartRef.current.classList.add('animate-like-out');
+        heartRef.current.classList.remove('animate-like-in');
+      }
+      setTimeout(() => {
+        if (heartRef.current) {
+          heartRef.current.classList.remove('animate-like-in');
+          heartRef.current.classList.remove('animate-like-out');
+        }
+        setIsLiked(!isLiked); // 찜 상태를 토글 (애니메이션 후)
+      }, 150); // 애니메이션 지속 시간과 동일하게 설정
+    } else {
+      setIsLiked(!isLiked); // ref가 없을 경우 즉시 상태 토글
+    }
+  };
+
+  const heartClasses = cn(
+    'size-3 text-red-500 transition-all duration-150', // Transition for color change
+  );
+
+  const buttonClasses =
+    'absolute bottom-2 right-2 object-cover object-top w-[24px] h-[24px] rounded-full flex justify-center items-center bg-white shadow-lg border-none outline-none cursor-pointer';
+
   return (
     <div className="relative">
-      {' '}
-      {/* 부모 relative로 설정 */}
-      {/* 364px : 양쪽 패딩 17.5 일때 양 옆의 카드 가장자리의 외곽선이 안보이는 시점이라서 2장이 들어갈지 미지수 */}
+      {/* 카드 전체를 flex-col로 만들어 내부 요소들을 세로로 배치 */}
       <Card
-        className={cn('w-[170px] h-[250px] rounded-[18px]', className)}
+        className={cn(
+          'w-[170px] h-[260px] rounded-[18px] overflow-hidden relative p-0 py-0 gap-0 flex flex-col',
+          className,
+        )}
         {...props}
       >
-        <CardContent className="grid gap-4">{/* 명화 넣는 자리 */}</CardContent>
-      </Card>
-      <div className="absolute bottom-0 left-0 w-full h-[100px] bg-primary-dark rounded-b-[20px] flex items-end">
-        {' '}
-        {/* flex와 items-end 추가 */}
-        <div className="p-2 w-full">
-          {' '}
-          {/* 내부 div에 padding과 width 추가 */}
-          {Whisky.map((Whisky, index) => (
-            <div
-              key={index}
-              className="mb-4 grid grid-cols-[160px_1fr] pb-4 last:mb-0 last:pb-0"
-            >
-              <div className="space-y-4">
-                {' '}
-                {/* space-y 값을 줄여서 적절하게 */}
-                <p className="text-sm font-medium leading-none text-white overflow-hidden whitespace-nowrap text-ellipsis">
-                  {Whisky.title}
-                </p>
-                <div className="space-y-2 gridgrid-cols-[130px_1fr]">
-                  <p className="text-xs text-white overflow-hidden whitespace-nowrap text-ellipsis">
-                    {Whisky.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        {/* 하단배경 부분 */}
-        {/* 25.03.26. 여기까지 하다. 27은 여기부터 시작 */}
-        <div className="w-[4px] h-[54px] rounded-full flex justify-center items-center shadow-lg">
-          <Heart
-            className="size-5 absolute top-19 right-2 text-red-500"
-            fill="red"
+        {/* 카드 윗부분 */}
+        <CardContent className="p-0 m-0 h-[160px] relative overflow-hidden">
+          {/* 하얀색 배경 레이어 for 명화 레이어 깎기 */}
+          <div className="absolute top-0 left-0 w-full h-full rounded-br-[18px] bg-white"></div>
+          {/* 명화 레이어 깎기 (clip-path 적용 - 곡선) */}
+          <div
+            className="opacity-50 absolute top-0 left-0 w-full h-full overflow-hidden"
+            style={{ clipPath: 'inset(0 0 0 0 round 0 0 50px 0)' }}
+          >
+            <img
+              src={bgImage}
+              alt="bgimg"
+              className="absolute top-0 left-0 w-full h-full object-cover object-top"
+            />
+          </div>
+        </CardContent>
+
+        {/* 중앙에 배치할 이미지 */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+          <img
+            src={whiskyImage}
+            alt="whisky"
+            className="w-[150px] h-[150px] object-cover"
           />
         </div>
-      </div>
+
+        {/* 카드 아랫부분 */}
+        <div className="h-[100px] bg-primary-dark rounded-b-[18px] flex items-end justify-between p-2">
+          <div className="p-1.5 w-full">
+            <div className="space-y-2">
+              <p className="text-sm max-w-[150px] font-medium leading-none text-white overflow-hidden whitespace-nowrap text-ellipsis">
+                {title} {/* props로 받은 title 사용 */}
+              </p>
+              <p className="text-xs max-w-[123px] text-white overflow-hidden whitespace-nowrap text-ellipsis">
+                {description} {/* props로 받은 description 사용 */}
+              </p>
+            </div>
+          </div>
+          {/* 하얀 원과 하트를 묶어서 클릭 이벤트 처리 */}
+          <button onClick={handleLikeClick} className={buttonClasses}>
+            <Heart
+              ref={heartRef}
+              className={heartClasses}
+              fill={isLiked ? 'red' : 'white'}
+            />{' '}
+            {/* 찜 상태에 따라 fill 색상 변경 */}
+          </button>
+        </div>
+      </Card>
     </div>
   );
 }

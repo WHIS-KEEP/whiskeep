@@ -9,10 +9,9 @@ interface ButtonMProps {
   color?: 'default' | 'color-wood-70' | 'color-text-muted-40'; // 버튼의 색상
 }
 
-const ButtonM = ({ text, onClick, size, color }: ButtonMProps) => {
+const Btn = ({ text, onClick, size, color }: ButtonMProps) => {
   return (
     <Button
-      type="button"
       variant="outline"
       size={size} // 프로젝트 기획 상 사이즈는 s, m, l 세 가지 사이즈만 사용
       color={color} // Button 컴포넌트에 직접 color prop 전달
@@ -26,4 +25,4 @@ const ButtonM = ({ text, onClick, size, color }: ButtonMProps) => {
   );
 };
 
-export default ButtonM;
+export default Btn;
