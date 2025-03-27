@@ -1,5 +1,6 @@
 package com.whiskeep.api.record.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -21,4 +22,8 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 	@EntityGraph(attributePaths = {"member"})
 	Page<Record> findByWhiskyWhiskyIdAndIsPublicTrueOrderByCreatedAtDesc(Long whiskyId, Pageable pageable);
+
+	List<Record> findByMemberId(Long memberId);
+
+	List<Record> findAll(Long memberId);
 }
