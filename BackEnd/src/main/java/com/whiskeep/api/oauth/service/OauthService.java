@@ -68,8 +68,9 @@ public class OauthService {
 		String userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
 
 		RestTemplate restTemplate = new RestTemplate();
-		GoogleUserResponseDto googleUserInfo = restTemplate.getForObject(userInfoUrl + "?access_token="
-			+ token.getAccessToken(), GoogleUserResponseDto.class);
+		GoogleUserResponseDto googleUserInfo =
+			restTemplate.getForObject(userInfoUrl + "?access_token=" + token.getAccessToken(),
+				GoogleUserResponseDto.class);
 
 		// ✅ DB에서 사용자 확인 (없으면 새로 저장)
 		String providerId = Provider.GOOGLE.name() + "_" + googleUserInfo.getId();
