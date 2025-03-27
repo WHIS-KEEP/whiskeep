@@ -1,22 +1,16 @@
-package com.whiskeep.api.member.auth;
+package com.whiskeep.api.oauth.service;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whiskeep.api.member.domain.Member;
-import com.whiskeep.api.member.dto.google.GoogleTokenDto;
-import com.whiskeep.api.member.dto.google.GoogleUserResponseDto;
-import com.whiskeep.api.member.dto.member.MemberResponseDto;
+import com.whiskeep.api.member.dto.MemberResponseDto;
 import com.whiskeep.api.member.repository.MemberRepository;
+import com.whiskeep.api.oauth.dto.google.GoogleTokenDto;
+import com.whiskeep.api.oauth.dto.google.GoogleUserResponseDto;
 import com.whiskeep.common.enumclass.Provider;
 import com.whiskeep.common.util.JwtTokenProvider;
 
@@ -24,11 +18,10 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CustomOAuth2UserService {
+public class OauthService {
 
 	private final MemberRepository memberRepository;
 	private final JwtTokenProvider jwtTokenProvider;
-	private final ObjectMapper objectMapper;
 
 	// GOOGLE 관련 변수
 	String googleLoginUrl = "https://accounts.google.com/o/oauth2/auth";

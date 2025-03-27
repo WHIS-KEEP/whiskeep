@@ -1,4 +1,4 @@
-package com.whiskeep.api.member.dto.google;
+package com.whiskeep.api.oauth.dto.google;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
