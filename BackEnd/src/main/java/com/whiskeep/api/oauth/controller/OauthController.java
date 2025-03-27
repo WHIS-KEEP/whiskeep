@@ -16,7 +16,7 @@ import com.whiskeep.api.oauth.service.OauthService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/member/login")
+@RequestMapping("/api/members/login")
 @RequiredArgsConstructor
 public class OauthController {
 
@@ -39,7 +39,7 @@ public class OauthController {
 		MemberResponseDto memberResponseDto = oauthService.getUserInfoFromToken(googleTokenDto);
 
 		// 3️⃣ JWT 생성
-		String jwtToken = oauthService.createJwtToken(memberResponseDto.getNickname());
+		String jwtToken = oauthService.createJwtToken(memberResponseDto.nickname());
 
 		// 4️⃣ 프론트엔드로 JWT 응답
 		return ResponseEntity.ok(Map.of("access-token", jwtToken));

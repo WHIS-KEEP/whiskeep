@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.whiskeep.api.member.domain.Member;
@@ -64,6 +65,7 @@ public class OauthService {
 	}
 
 	// ✅ 2️⃣ Access Token으로 사용자 정보 가져오기
+	@Transactional
 	public MemberResponseDto getUserInfoFromToken(GoogleTokenDto token) {
 		String userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
 
