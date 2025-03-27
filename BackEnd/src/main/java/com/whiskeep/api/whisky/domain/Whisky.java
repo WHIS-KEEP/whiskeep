@@ -38,7 +38,7 @@ public class Whisky {
 	@Column(length = 1000)
 	private String description;
 
-	@Column(length = 500)
+	@Column(columnDefinition = "text")
 	private String whiskyImg;
 
 	@Column(length = 50)
