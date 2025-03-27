@@ -1,7 +1,3 @@
-// Google로 로그인
-// Google 로고가 늘어나지 않도록 종횡비는 유지
-// 버튼에는 항상 Google "G"의 표준 색상이 포함
-
 import { Button } from '@/components/ui/Button';
 import googleLogo from '../../assets/google.svg';
 
@@ -13,7 +9,6 @@ import googleLogo from '../../assets/google.svg';
 const GoogleButton = ({ onClick }: GoogleButtonProps) => {
   return (
     <Button
-      type="button"
       variant="outline"
       size="m"
       className=" cursor-pointer flex items-center rounded-[10px] bg-white hover:bg-white active:bg-white justify-center gap-1.75 border border-white  w-72 h-12 active:transform active:scale-85 active transition-all duration-150"

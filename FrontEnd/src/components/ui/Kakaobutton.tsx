@@ -10,7 +10,6 @@ import googleLogo from '../../assets/google.svg';
 const KakaoButton = ({ onClick }: KakaoButtonProps) => {
   return (
     <Button
-      type="button"
       variant="outline"
       className="cursor-pointer flex items-center rounded-[10px] bg-[#FEE500] hover:bg-[#FEE500] active:bg-[#FEE500] justify-center gap-3 border border-[#FEE500] w-72 h-12 active:transform active:scale-85 active transition-all duration-150"
       onClick={onClick}

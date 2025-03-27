@@ -6,7 +6,6 @@ const Login = () => {
   return (
     <div className="flex-1 p-4 overflow-auto">
       <div className="mt-4 flex flex-col py-50 items-center gap-5">
-        <Whiskycard />
         <GoogleButton />
         <KakaoButton />
       </div>

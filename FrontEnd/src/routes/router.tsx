@@ -8,6 +8,7 @@ import List from '@/pages/List';
 import Collection from '@/pages/Collection';
 import Mypage from '@/pages/Mypage';
 import Login from '@/pages/Login';
+import Test from '@/pages/Test';
 const Router = () => {
   return (
     <div className="mobile-container flex flex-col h-full">
@@ -26,6 +27,7 @@ const Router = () => {
           <Route path="collection" element={<Collection />} />
           <Route path="mypage" element={<Mypage />} />
           <Route path="login" element={<Login />} />
+          <Route path="test" element={<Test />} />
         </Routes>
       </div>
 

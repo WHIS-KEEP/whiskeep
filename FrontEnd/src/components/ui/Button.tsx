@@ -55,7 +55,7 @@ function Button({
   color,
   asChild = false,
   ...props
-}: React.ComponentProps<'button'> &
+}: React.HTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
   }) {
