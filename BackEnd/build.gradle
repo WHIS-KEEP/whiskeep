@@ -44,6 +44,9 @@ dependencies {
 		// === P6Spy ===
 		implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.2'
 
+		// === apache Math ===
+		implementation 'org.apache.commons:commons-math3:3.6.1'
+
 		// === Lombok ===
 		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'
