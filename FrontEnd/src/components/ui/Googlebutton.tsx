@@ -23,6 +23,10 @@ const GoogleButton = ({ onClick }: GoogleButtonProps) => {
       <span className="text-align-center text-base font-semibold">
         구글로 로그인
       </span>
+      <img src={googleLogo} alt="google logo" className="w-7 h-7" />
+      <span className="text-align-center text-base font-semibold">
+        구글 로그인
+      </span>
     </Button>
   );
 };
