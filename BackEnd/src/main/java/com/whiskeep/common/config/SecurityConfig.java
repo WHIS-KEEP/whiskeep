@@ -19,12 +19,12 @@ public class SecurityConfig {
 		http
 			.csrf(csrf -> csrf.disable()) // CSRF 보안 해제 (API 서버의 경우 비활성화 가능)
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/api/member/login/**").permitAll() // 누구나 접근 가능
+				.requestMatchers("/api/members/login/**").permitAll() // 누구나 접근 가능
 				.anyRequest().authenticated() // 그 외 요청은 인증 필요
 			)
 			.oauth2Login(oauth2 -> oauth2
-				.defaultSuccessUrl("/api/member/login/success", true) // 로그인 성공 시 리디렉션할
-				.failureUrl("/api/member/login?error=true") // 로그인 실패 시 리디렉션할 URL
+				.defaultSuccessUrl("/api/members/login/success", true) // 로그인 성공 시 리디렉션할
+				.failureUrl("/api/members/login?error=true") // 로그인 실패 시 리디렉션할 URL
 			)
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.formLogin(form -> form.disable()) // 기본 로그인 페이지 비활성화
