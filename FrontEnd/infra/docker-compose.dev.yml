@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  front-dev:
+    image: front-dev
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    container_name: front-dev
+    ports:
+      - "5173:80"
+    networks:
+      - whiskeep-net
+
+networks:
+  whiskeep-net:
+    external: true
