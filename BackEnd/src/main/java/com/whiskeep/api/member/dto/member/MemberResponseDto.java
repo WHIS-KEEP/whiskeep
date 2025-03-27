@@ -1,6 +1,7 @@
 package com.whiskeep.api.member.dto.member;
 
 import com.whiskeep.common.enumclass.Provider;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

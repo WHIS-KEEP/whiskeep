@@ -8,6 +8,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.whiskeep.api.member.auth.CustomOAuth2UserService;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -26,10 +27,10 @@ public class SecurityConfig {
 				.anyRequest().authenticated() // 그 외 요청은 인증 필요
 			)
 			.oauth2Login(oauth2 -> oauth2
-				.defaultSuccessUrl("/api/member/login/success", true) // 로그인 성공 시 리디렉션할 URL
+				.defaultSuccessUrl("/api/member/login/success", true) // 로그인 성공 시 리디렉션할
 				.failureUrl("/api/member/login?error=true") // 로그인 실패 시 리디렉션할 URL
 			)
-			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 세션을 사용하지 않음 (JWT 기반)
+			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.formLogin(form -> form.disable()) // 기본 로그인 페이지 비활성화
 			.httpBasic(httpBasic -> httpBasic.disable()); // HTTP 기본 인증 비활성화
 

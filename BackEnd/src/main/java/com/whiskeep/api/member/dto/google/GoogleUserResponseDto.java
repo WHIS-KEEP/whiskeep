@@ -1,6 +1,7 @@
 package com.whiskeep.api.member.dto.google;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
