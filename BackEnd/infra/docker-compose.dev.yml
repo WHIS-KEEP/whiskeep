@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  back-dev:
+    image: back-dev
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    container_name: back-dev
+    env_file:
+      - /var/jenkins_home/workspace/be/BackEnd/infra/.env
+    ports:
+      - "8081:8081"
+    volumes:
+      - /home/ubuntu/app/log:/log
+    networks:
+      - whiskeep-net
+    restart: unless-stopped
+
+networks:
+  whiskeep-net:
+    external: true
