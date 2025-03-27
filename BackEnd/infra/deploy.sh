@@ -1,26 +1,14 @@
-FROM openjdk:21-slim AS build
+#!/bin/bash
+# deploy.sh
 
-RUN apt-get update && apt-get install -y bash
+# 현재 스크립트가 있는 디렉토리(BackEnd/infra)로 이동
+cd "$(dirname "$0")" || exit
 
-WORKDIR /app
+# 기존 컨테이너와 orphan 컨테이너 정리
+docker compose -p backend -f docker-compose.dev.yml down --remove-orphans
 
-COPY ../build.gradle .
-COPY ../settings.gradle .
-COPY ../gradle gradle/
-COPY ../gradlew .
-RUN chmod +x gradlew
+# docker-compose.dev.yml 파일을 이용해 서비스 실행 (백그라운드 실행)
+docker compose -p backend -f docker-compose.dev.yml up -d --build
 
-RUN ./gradlew dependencies
-
-COPY ../src src
-
-RUN ./gradlew clean bootJar -x checkstyleMain -x checkstyleTest
-
-# 실행 환경
-FROM openjdk:21-slim
-
-WORKDIR /app
-
-COPY --from=build /app/build/libs/*.jar app.jar
-
-ENTRYPOINT ["java", "-Duser.timezone=Asia/Seoul", "-jar", "app.jar", "--server.port=8081"]
+# 실행 후 상태 확인 (옵션)
+docker compose -p backend -f docker-compose.dev.yml ps
