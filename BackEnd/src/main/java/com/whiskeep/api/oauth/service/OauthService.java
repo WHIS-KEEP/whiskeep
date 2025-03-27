@@ -25,7 +25,7 @@ public class OauthService {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	// GOOGLE 관련 변수
-	String googleLoginUrl = "https://accounts.google.com/o/oauth2/auth";
+	private static final String GOOGLE_LOGIN_URL = "https://accounts.google.com/o/oauth2/auth";
 	@Value("${spring.security.oauth2.client.registration.google.client-id}")
 	String googleClientId;
 	@Value("${spring.security.oauth2.client.registration.google.client-secret}")
@@ -37,7 +37,7 @@ public class OauthService {
 		StringBuilder loginUrl = new StringBuilder();
 
 		if ("google".equals(provider)) {
-			loginUrl.append(googleLoginUrl)
+			loginUrl.append(GOOGLE_LOGIN_URL)
 				.append("?client_id=").append(googleClientId)
 				.append("&redirect_uri=").append(googleRedirectUri)
 				.append("&response_type=code")
