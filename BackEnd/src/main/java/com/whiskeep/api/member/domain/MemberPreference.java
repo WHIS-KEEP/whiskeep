@@ -34,13 +34,14 @@ public class MemberPreference {
 
 	@Type(JsonBinaryType.class)
 	@Column(columnDefinition = "jsonb")
-	private TastingProfile<Void> nosing;
+	private TastingProfile<Double> nosing;
 
 	@Type(JsonBinaryType.class)
 	@Column(columnDefinition = "jsonb")
-	private TastingProfile<Void> tasting;
+	private TastingProfile<Double> tasting;
 
 	@Type(JsonBinaryType.class)
 	@Column(columnDefinition = "jsonb")
-	private TastingProfile<Void> finish;
+	private TastingProfile<Double> finish;
+
 }
