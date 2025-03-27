@@ -69,11 +69,11 @@ public class OauthService {
 
 		RestTemplate restTemplate = new RestTemplate();
 		GoogleUserResponseDto googleUserInfo =
-			restTemplate.getForObject(userInfoUrl + "?access_token=" + token.getAccessToken(),
+			restTemplate.getForObject(userInfoUrl + "?access_token=" + token.accessToken(),
 				GoogleUserResponseDto.class);
 
 		// ✅ DB에서 사용자 확인 (없으면 새로 저장)
-		String providerId = Provider.GOOGLE.name() + "_" + googleUserInfo.getId();
+		String providerId = Provider.GOOGLE.name() + "_" + googleUserInfo.id();
 		Optional<Member> existingMember = memberRepository.findByProviderId(providerId);
 		if (existingMember.isPresent()) {
 			return new MemberResponseDto(
@@ -86,9 +86,9 @@ public class OauthService {
 
 		} else {
 			Member newMember = Member.builder()
-				.email(googleUserInfo.getEmail())
-				.name(googleUserInfo.getName())
-				.nickname(generateUniqueNickname(googleUserInfo.getName()))
+				.email(googleUserInfo.email())
+				.name(googleUserInfo.name())
+				.nickname(generateUniqueNickname(googleUserInfo.name()))
 				.provider(Provider.GOOGLE)
 				.providerId(providerId)
 				.build();
