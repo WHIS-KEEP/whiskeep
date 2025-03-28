@@ -1,14 +1,18 @@
 import { Button } from '@/components/ui/Button';
 import googleLogo from '../../assets/google.svg';
 
-// interface GoogleButtonProps {
-//   brand: string; // text prop의 타입
-//   onClick?: () => void; // onClick prop
-// }
+interface GoogleButtonProps {
+  // brand: string; // text prop의 타입
+  onClick?: () => void; // onClick prop
+  disabled?: boolean; // disabled prop
+}
 
-const GoogleButton = () => {
+const GoogleButton = ({ onClick, disabled }: GoogleButtonProps) => {
   return (
     <Button
+      onClick={onClick}
+      disabled={disabled}
+      type="button"
       variant="outline"
       size="m"
       className=" cursor-pointer flex items-center rounded-[10px] bg-white hover:bg-white active:bg-white justify-center gap-1.75 border border-white  w-72 h-12 active:transform active:scale-85 active transition-all duration-150"
