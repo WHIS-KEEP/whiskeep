@@ -28,6 +28,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 	@EntityGraph(attributePaths = {"member"})
 	Page<Record> findByWhiskyWhiskyIdAndIsPublicTrueOrderByCreatedAtDesc(Long whiskyId, Pageable pageable);
 
-	List<Record> findByMemberId(Long memberId);
+	List<Record> findByMember_MemberId(Long memberId);
 
 }
