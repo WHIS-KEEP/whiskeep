@@ -33,7 +33,7 @@ public class RecommendService {
 
 	// 추천된 리스트들
 	public RecommendedListResponseDto recommendWhiskies(Long memberId) {
-		List<Record> records = recordRepository.findByMemberId(memberId);
+		List<Record> records = recordRepository.findByMember_MemberId(memberId);
 
 		List<Whisky> notRatedWhiskies = whiskyRepository.findWhiskiesNotRatedByMember(memberId);
 		List<RecommendResponseDto> recommendList = new ArrayList<>();
@@ -65,7 +65,6 @@ public class RecommendService {
 	}
 
 	//두 위스키 비교 - 두 위스키 간의 코사인 유사도 값 계산
-	@SuppressWarnings("checkstyle:LocalVariableName")
 	private double calculateSimilarity(TastingProfile<Map<String, Double>> profile1,
 		TastingProfile<Map<String, Double>> profile2) {
 
