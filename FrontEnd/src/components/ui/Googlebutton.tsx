@@ -7,12 +7,10 @@ interface GoogleButtonProps {
   disabled?: boolean; // disabled prop
 }
 
-const GoogleButton = ({ onClick, disabled }: GoogleButtonProps) => {
+const GoogleButton = ({ onClick }: GoogleButtonProps) => {
   return (
     <Button
       onClick={onClick}
-      disabled={disabled}
-      type="button"
       variant="outline"
       size="m"
       className=" cursor-pointer flex items-center rounded-[10px] bg-white hover:bg-white active:bg-white justify-center gap-1.75 border border-white  w-72 h-12 active:transform active:scale-85 active transition-all duration-150"
