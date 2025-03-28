@@ -13,9 +13,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.stream.Collectors;
 
-import com.whiskeep.common.enumclass.ErrorMessage;
+import com.whiskeep.common.exception.BaseException;
+import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.FailResponse;
-import com.whiskeep.common.exception.WhiskyNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -54,20 +54,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			status);
 	}
 
-	// 위스키 찾을 수 없음 예외 처리
-	@ExceptionHandler(WhiskyNotFoundException.class)
-	public ResponseEntity<FailResponse> handleWhiskyNotFoundException(WhiskyNotFoundException ex) {
+	//커스텀 예외 처리
+	@ExceptionHandler(BaseException.class)
+	public ResponseEntity<FailResponse> handleBaseException(BaseException ex) {
 		return ResponseEntity
-			.status(HttpStatus.NOT_FOUND)
-			.body(FailResponse.fail(HttpStatus.NOT_FOUND.value(), ex.getMessage()));
-	}
-
-	// 잘못된 인자 예외 처리
-	@ExceptionHandler(IllegalArgumentException.class)
-	public ResponseEntity<FailResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-		return ResponseEntity
-			.status(HttpStatus.BAD_REQUEST)
-			.body(FailResponse.fail(HttpStatus.BAD_REQUEST.value(), ex.getMessage()));
+			.status(ex.getStatus())
+			.body(FailResponse.fail(ex.getStatus().value(), ex.getMessage()));
 	}
 
 	// 기타 모든 예외 처리
