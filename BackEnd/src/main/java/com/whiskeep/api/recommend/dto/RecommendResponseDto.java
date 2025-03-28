@@ -10,5 +10,6 @@ public class RecommendResponseDto {
 	private Long whiskyId;
 	private String koName;
 	private String whiskyImg;
-	private Double avg;
+	private Double abv; //도수
+	private Double similarity;
 }
