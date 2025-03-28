@@ -9,6 +9,7 @@ import Collection from '@/pages/Collection';
 import Mypage from '@/pages/Mypage';
 import Login from '@/pages/Login';
 import Test from '@/pages/Test';
+import Like from '@/pages/Like';
 const Router = () => {
   return (
     <div className="mobile-container flex flex-col h-full">
@@ -28,6 +29,7 @@ const Router = () => {
           <Route path="mypage" element={<Mypage />} />
           <Route path="login" element={<Login />} />
           <Route path="test" element={<Test />} />
+          <Route path="like" element={<Like />} />
         </Routes>
       </div>
 
