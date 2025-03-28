@@ -4,6 +4,54 @@ import { Card, CardContent } from './Card';
 import defaultBgImg from '../../assets/issac.webp';
 import defaultWhiskyImg from '../../assets/sample.png';
 import { useState, useRef } from 'react'; // useRef 추가
+import React, { PureComponent } from 'react';
+import {
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+} from 'recharts';
+
+const data = [
+  {
+    subject: 'Sweet',
+    A: 120,
+    B: 110,
+    fullMark: 150,
+  },
+  {
+    subject: 'Smoky',
+    A: 98,
+    B: 130,
+    fullMark: 150,
+  },
+  {
+    subject: 'Fruity',
+    A: 86,
+    B: 130,
+    fullMark: 150,
+  },
+  {
+    subject: 'Body',
+    A: 99,
+    B: 100,
+    fullMark: 150,
+  },
+  {
+    subject: 'Spice',
+    A: 85,
+    B: 90,
+    fullMark: 150,
+  },
+  {
+    subject: 'Floral',
+    A: 65,
+    B: 85,
+    fullMark: 150,
+  },
+];
 
 // Props 인터페이스 정의
 interface WhiskycardProps extends React.ComponentProps<typeof Card> {
@@ -11,6 +59,34 @@ interface WhiskycardProps extends React.ComponentProps<typeof Card> {
   description: string;
   bgImage?: string; // 배경 이미지 URL (선택적)
   whiskyImage?: string; // 위스키 이미지 URL (선택적)
+}
+
+class Example extends PureComponent {
+  render() {
+    return (
+      <ResponsiveContainer width="100%" height="100%">
+        <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
+          <PolarGrid />
+          <PolarAngleAxis dataKey="subject" tick={false} />
+          <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} />
+          <Radar
+            name="A"
+            dataKey="A"
+            stroke="#F9B233"
+            fill="#F9B233"
+            fillOpacity={0.85}
+          />
+          <Radar
+            name="B"
+            dataKey="B"
+            stroke="9C723E"
+            fill="#9C723E"
+            fillOpacity={0.55}
+          />
+        </RadarChart>
+      </ResponsiveContainer>
+    );
+  }
 }
 
 export function Whiskycard({
@@ -76,6 +152,10 @@ export function Whiskycard({
               alt="bgimg"
               className="absolute top-0 left-0 w-full h-full object-cover object-top"
             />
+          </div>
+          {/* Radar Chart를 우측 상단에 배치 */}
+          <div className="absolute bottom-26 left-29 w-[60px] h-[60px]">
+            <Example />
           </div>
         </CardContent>
 

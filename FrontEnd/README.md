@@ -23,6 +23,7 @@
 3. zustand : 상태관리
 4. axios : 통신
 5. react-query : 훅
+6. Recharts : 차트 시각화
 
 <br>
 
@@ -33,6 +34,7 @@
 3. https://zustand.docs.pmnd.rs
 4. https://github.com/sindresorhus/ky-universal#readme
 5. https://tanstack.com/query/latest/docs/framework/react/overview
+6. https://recharts.org/en-US/
 
 <br>
 
