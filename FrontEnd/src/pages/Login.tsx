@@ -1,4 +1,3 @@
-import Button from '@/components/ui/Btn';
 import GoogleButton from '@/components/ui/Googlebutton';
 import KakaoButton from '@/components/ui/Kakaobutton';
 
