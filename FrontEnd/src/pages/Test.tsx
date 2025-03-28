@@ -6,7 +6,7 @@ import { useState } from 'react';
 // 테스트용 이미지 import
 import testBgImg from '../assets/issac.webp';
 import testWhiskyImg from '../assets/sample.png';
-
+import Modal from '@/components/ui/Modal';
 const Test = () => {
   // 상태 관리
   const [isLoading, setIsLoading] = useState(false);
@@ -41,7 +41,7 @@ const Test = () => {
       <div className="mt-4 flex flex-col py-50 items-center gap-5">
         {/* 테스트 페이지입니다. 컴포넌트를 불러와서 기능테스트까지 안전하게 할 수 있게 하기 위함입니다. */}
         {/* 테스트를 통해 기능 변동이나 코드 변동이 있을 시 반영이 쉽도록... */}
-
+        <Modal variant="wishlist" />
         {/* 위스키 카드 */}
         <Whiskycard
           title={testWhiskyData.title}

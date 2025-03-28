@@ -46,6 +46,7 @@ const Router = () => {
           <Route path="login" element={<Login />} />
           <Route path="login/success" element={<LoginSuccess />} />
           <Route path="test" element={<Test />} />
+          <Route path="like" element={<Like />} />
         </Routes>
       </div>
 

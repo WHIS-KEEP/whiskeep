@@ -7,9 +7,16 @@ interface ButtonMProps {
   onClick?: () => void; // 클릭 이벤트 핸들러
   size?: 's' | 'm' | 'l'; // 버튼의 사이즈
   color?: 'default' | 'color-wood-70' | 'color-text-muted-40'; // 버튼의 색상
+  textColor?: 'text-primary-dark' | 'text-white'; // 텍스트 색상 (두 가지 옵션만 허용)
 }
 
-const Btn = ({ text, onClick, size, color }: ButtonMProps) => {
+const Btn = ({
+  text,
+  onClick,
+  size,
+  color,
+  textColor = 'text-primary-dark',
+}: ButtonMProps) => {
   return (
     <Button
       variant="outline"
@@ -18,7 +25,9 @@ const Btn = ({ text, onClick, size, color }: ButtonMProps) => {
       className="cursor-pointer flex items-center rounded-[10px] justify-center border border-gray-100 active:transform active:scale-85 active transition-all duration-150"
       onClick={onClick}
     >
-      <span className="text-align-center text-base font-semibold text-primary-dark">
+      <span
+        className={`text-align-center text-base font-semibold ${textColor}`}
+      >
         {text}
       </span>
     </Button>
