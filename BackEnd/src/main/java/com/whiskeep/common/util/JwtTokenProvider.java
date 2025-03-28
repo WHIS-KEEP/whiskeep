@@ -28,10 +28,10 @@ public class JwtTokenProvider {
 		this.issuer = issuer;
 	}
 
-	public String createToken(String nickName) {
+	public String createToken(Long memberId) {
 		return Jwts.builder()
 			.setHeaderParam("typ", "JWT")
-			.setSubject(nickName)
+			.setSubject(memberId.toString())
 			.setIssuer(issuer)
 			.setIssuedAt(new Date())
 			.setExpiration(new Date(System.currentTimeMillis() + expiration))

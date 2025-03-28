@@ -79,6 +79,7 @@ public class OauthService {
 		Optional<Member> existingMember = memberRepository.findByProviderId(providerId);
 		if (existingMember.isPresent()) {
 			return new MemberResponseDto(
+				existingMember.get().getMemberId(),
 				existingMember.get().getEmail(),
 				existingMember.get().getName(),
 				existingMember.get().getNickname(),
@@ -97,6 +98,7 @@ public class OauthService {
 			memberRepository.save(newMember);
 
 			return new MemberResponseDto(
+				newMember.getMemberId(),
 				newMember.getEmail(),
 				newMember.getName(),
 				newMember.getNickname(),
@@ -106,8 +108,8 @@ public class OauthService {
 		}
 	}
 
-	public String createJwtToken(String nickName) {
-		return jwtTokenProvider.createToken(nickName);
+	public String createJwtToken(Long memberId) {
+		return jwtTokenProvider.createToken(memberId);
 	}
 
 	private String generateUniqueNickname(String name) {

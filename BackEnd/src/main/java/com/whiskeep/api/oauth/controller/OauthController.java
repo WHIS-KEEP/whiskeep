@@ -39,7 +39,7 @@ public class OauthController {
 		MemberResponseDto memberResponseDto = oauthService.getUserInfoFromToken(googleTokenDto);
 
 		// 3️⃣ JWT 생성
-		String jwtToken = oauthService.createJwtToken(memberResponseDto.nickname());
+		String jwtToken = oauthService.createJwtToken(memberResponseDto.memberId());
 
 		// 4️⃣ 프론트엔드로 JWT 응답
 		return ResponseEntity.ok(Map.of("access-token", jwtToken));
