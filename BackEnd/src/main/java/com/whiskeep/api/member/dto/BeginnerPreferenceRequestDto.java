@@ -1,9 +1,10 @@
 package com.whiskeep.api.member.dto;
 
 import java.util.List;
-import java.util.Map;
 
 import com.whiskeep.common.enumclass.Experience;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public record BeginnerPreferenceRequestDto (
@@ -11,6 +12,25 @@ public record BeginnerPreferenceRequestDto (
 	Long memberId,
 	Experience experience,
 	List<Double> preferenceOrder,
-	Map<String, Integer> tastingScore){
+	TastingScoreRequest tastingScore) {
 
+	public record TastingScoreRequest (
+		@NotNull @Min(1) @Max(5)
+		Integer fruity,
+
+		@NotNull @Min(1) @Max(5)
+		Integer sweet,
+
+		@NotNull @Min(1) @Max(5)
+		Integer spicy,
+
+		@NotNull @Min(1) @Max(5)
+		Integer oaky,
+
+		@NotNull @Min(1) @Max(5)
+		Integer herbal,
+
+		@NotNull @Min(1) @Max(5)
+		Integer briny
+	){}
 }
