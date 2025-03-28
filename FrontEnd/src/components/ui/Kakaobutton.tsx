@@ -4,8 +4,6 @@ import googleLogo from '../../assets/kakao.png';
 interface KakaoButtonProps {
   onClick?: () => void; // onClick prop
 }
-import { Button } from '@/components/ui/Button';
-import googleLogo from '../../assets/google.svg';
 
 const KakaoButton = ({ onClick }: KakaoButtonProps) => {
   return (
@@ -17,10 +15,6 @@ const KakaoButton = ({ onClick }: KakaoButtonProps) => {
       <img src={googleLogo} alt="kakao logo " className="w-5 h-5" />
       <span className="text-align-center text-base font-semibold">
         카카오 로그인
-      </span>
-      <img src={googleLogo} alt="Kakao 로고" className="w-7 h-7" />
-      <span className="text-align-center text-base font-semibold">
-        카카오로 로그인
       </span>
     </Button>
   );
