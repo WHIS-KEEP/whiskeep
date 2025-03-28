@@ -1,5 +1,7 @@
 package com.whiskeep.api.record.repository;
 
+
+
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +13,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.whiskeep.api.record.domain.Record;
+
+import com.whiskeep.api.record.domain.Record;
+
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
@@ -25,5 +30,4 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 	List<Record> findByMemberId(Long memberId);
 
-	List<Record> findAll(Long memberId);
 }
