@@ -1,5 +1,6 @@
 package com.whiskeep.api.member.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.common.enumclass.TastingCategory;
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,12 +28,12 @@ public class PreferenceService {
 	private final MemberRepository memberRepository;
 	private final MemberPreferenceRepository memberPreferenceRepository;
 
-
 	@Transactional
 	public void createBeginnerPreferenceScore(BeginnerPreferenceRequestDto preferenceRequestDto) {
 		// 사용자 검색
 		Member member =
-			memberRepository.findById(preferenceRequestDto.memberId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않은 사용자입니다."));
+			memberRepository.findById(preferenceRequestDto.memberId())
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않은 사용자입니다."));
 
 		// 사용자의 맛 별 score(1~5점)
 		BeginnerPreferenceRequestDto.TastingScoreRequest baseScore = preferenceRequestDto.tastingScore();
@@ -39,7 +41,6 @@ public class PreferenceService {
 		// [nosing, tasting, finish] 순으로 1~3순위
 		// 1순위 : 0.5, 2순위 : 0.3, 3순위 : 0.2
 		List<Double> weights = preferenceRequestDto.preferenceOrder();
-
 
 		// 1. 각 영역별 가중치 점수 구하기
 		TastingProfile<Double> nosing = calculateWeightedProfile(baseScore, weights.get(0));
@@ -73,7 +74,6 @@ public class PreferenceService {
 
 		// 4. scale factor 계산
 		double scaleFactor = 5.0 / maxScore;
-
 
 		// 5. 정규화 팩터 적용 (비율은 유지하면서 점수 자체를 키우기)
 		TastingProfile<Double> nomalizedNosing = scaleProfile(nosing, scaleFactor);
@@ -123,7 +123,7 @@ public class PreferenceService {
 	private Map<TastingCategory, Double> sumProfile(TastingProfile<Double>... profiles) {
 		Map<TastingCategory, Double> sum = new HashMap<>();
 
-		for(TastingProfile<Double> profile : profiles) {
+		for (TastingProfile<Double> profile : profiles) {
 			sum.merge(TastingCategory.FRUITY, profile.getFruity().getScore(), Double::sum);
 			sum.merge(TastingCategory.SWEET, profile.getSweet().getScore(), Double::sum);
 			sum.merge(TastingCategory.SPICY, profile.getSpicy().getScore(), Double::sum);
@@ -149,7 +149,7 @@ public class PreferenceService {
 	private TastingComponent<Double> makeComponent(TastingCategory category,
 		BeginnerPreferenceRequestDto.TastingScoreRequest baseScore,
 		Double weight) {
-		int rawScore = switch (category){
+		int rawScore = switch (category) {
 			case FRUITY -> baseScore.fruity();
 			case SWEET -> baseScore.sweet();
 			case SPICY -> baseScore.spicy();

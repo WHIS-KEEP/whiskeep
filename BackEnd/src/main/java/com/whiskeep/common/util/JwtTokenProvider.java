@@ -39,12 +39,22 @@ public class JwtTokenProvider {
 			.compact();
 	}
 
-	public String getUserFromToken(String token) {
+	public Long getMemberIdFromToken(String token) {
 		Claims claims = Jwts.parserBuilder()
 			.setSigningKey(key)
 			.build()
 			.parseClaimsJws(token)
 			.getBody();
-		return claims.getSubject();
+		return Long.parseLong(claims.getSubject());
+	}
+
+	// 토큰 유효성 검사
+	public boolean validateToken(String token) {
+		try {
+			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }

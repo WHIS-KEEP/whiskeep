@@ -7,7 +7,7 @@ public enum Experience {
 	FAMILIAR;
 
 	@JsonCreator
-	public static Experience from(String value){
+	public static Experience from(String value) {
 		return Experience.valueOf(value.toUpperCase());
 	}
 }
