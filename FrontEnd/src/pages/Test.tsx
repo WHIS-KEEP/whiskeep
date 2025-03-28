@@ -51,7 +51,7 @@ const Test = () => {
         />
 
         {/* 구글 소셜 로그인 */}
-        <GoogleButton onClick={() => console.log('구글 로그인 클릭')} />
+        <GoogleButton />
 
         {/* 카카오 소셜 로그인 */}
         <KakaoButton onClick={() => console.log('카카오 로그인 클릭')} />

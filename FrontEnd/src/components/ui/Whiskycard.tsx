@@ -1,6 +1,6 @@
 import { cn } from '@/lib/util/utils';
 import { Heart } from 'lucide-react';
-import { Card, CardContent } from './Card';
+import { Card, CardContent } from './card';
 import defaultBgImg from '../../assets/issac.webp';
 import defaultWhiskyImg from '../../assets/sample.png';
 import { useState, useRef } from 'react'; // useRef 추가
