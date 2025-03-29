@@ -1,5 +1,11 @@
 package com.whiskeep.api.record.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +18,7 @@ import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.NotFoundException;
+import com.whiskeep.api.whisky.dto.RecordListResponseDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,5 +47,46 @@ public class RecordService {
 			.build();
 
 		recordRepository.save(record);
+	}
+
+	public Integer countRecord(Long whiskyId) {
+
+		return recordRepository.countRecordsByWhisky_WhiskyId(whiskyId);
+	}
+
+	public Double getAverageRating(Long whiskyId) {
+
+		return recordRepository.findAverageRatingByWhiskyId(whiskyId).orElse(0.0);
+
+	}
+
+	public RecordListResponseDto getRecordByWhiskyId(Long whiskyId, int page, int size) {
+
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Record> recordPage = recordRepository.findByWhiskyWhiskyIdOrderByCreatedAtDesc(whiskyId, pageable);
+
+		List<RecordListResponseDto.RecordResponseDto> records = recordPage.getContent().stream()
+			.map(record -> RecordListResponseDto.RecordResponseDto.builder()
+				.recordId(record.getRecordId())
+				.nickname(record.getMember().getNickname())
+				.profileImage(record.getMember().getProfileImg())
+				.content(record.getContent())
+				.recordImg(record.getRecordImg())
+				.rating(record.getRating())
+				.createdAt(record.getCreatedAt())
+				.build())
+			.collect(Collectors.toList());
+
+		RecordListResponseDto.PageInfo pageInfo = RecordListResponseDto.PageInfo.builder()
+			.page(recordPage.getNumber())
+			.size(recordPage.getSize())
+			.totalPages(recordPage.getTotalPages())
+			.build();
+
+		return RecordListResponseDto.builder()
+			.records(records)
+			.pageInfo(pageInfo)
+			.build();
+
 	}
 }

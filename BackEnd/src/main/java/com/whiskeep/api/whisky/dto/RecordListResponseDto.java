@@ -1,0 +1,39 @@
+package com.whiskeep.api.whisky.dto;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@Builder
+public class RecordListResponseDto {
+	private List<RecordResponseDto> records;
+	private PageInfo pageInfo;
+
+
+	@Getter
+	@Builder
+	public static class RecordResponseDto {
+
+		private Long recordId;
+		private String nickname;
+		private String profileImage;
+		private String content;
+		private String recordImg;
+		private Integer rating;
+		private LocalDateTime createdAt;
+	}
+
+	@Getter
+	@Builder
+	public static class PageInfo {
+		private Integer page;
+		private Integer size;
+		private Integer totalPages;
+
+
+	}
+}
