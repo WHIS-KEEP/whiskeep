@@ -47,6 +47,8 @@ const Router = () => {
           <Route path="login/success" element={<LoginSuccess />} />
           <Route path="test" element={<Test />} />
           <Route path="like" element={<Like />} />
+          <Route path="record" element={<Record />} />
+          <Route path="record-detail" element={<RecordDetail />} />
         </Routes>
       </div>
 

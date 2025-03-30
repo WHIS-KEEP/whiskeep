@@ -87,7 +87,7 @@ export function SearchPage() {
       </div>
       {/* 4. 검색 결과 목록 (스크롤 영역) */}
       {/* flex-grow와 overflow-y-auto를 사용하여 남은 공간을 채우고 스크롤 가능하게 함 */}
-      <div className="w-full flex-grow overflow-y-auto rounded-md border p-2 scrollbar-thin scrollbar-thumb-gray-300">
+      <div className="w-full flex-grow overflow-y-auto rounded-md border p-2 scrollbar-thin scrollbar-thumb-red-dark">
         <div className="grid grid-cols-1 gap-2">
           {dummySearchResults.map((item) => (
             <Button // shadcn/ui Button 사용
