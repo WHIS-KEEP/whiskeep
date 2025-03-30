@@ -10,6 +10,8 @@ import Mypage from '@/pages/Mypage';
 import Login from '@/pages/Login';
 import Test from '@/pages/Test';
 import Like from '@/pages/Like';
+import Record from '@/pages/Record';
+import RecordDetail from '@/pages/Record-detail';
 const Router = () => {
   return (
     <div className="mobile-container flex flex-col h-full">
@@ -30,6 +32,8 @@ const Router = () => {
           <Route path="login" element={<Login />} />
           <Route path="test" element={<Test />} />
           <Route path="like" element={<Like />} />
+          <Route path="record" element={<Record />} />
+          <Route path="record-detail" element={<RecordDetail />} />
         </Routes>
       </div>
 
