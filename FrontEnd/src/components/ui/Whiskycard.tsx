@@ -59,6 +59,8 @@ interface WhiskycardProps extends React.ComponentProps<typeof Card> {
   description: string;
   bgImage?: string; // 배경 이미지 URL (선택적)
   whiskyImage?: string; // 위스키 이미지 URL (선택적)
+  showLikeButton?: boolean; // 하트 버튼 표시 여부 (선택적)
+  showChart?: boolean; // 차트 표시 여부 (선택적)
 }
 
 class Example extends PureComponent {
@@ -95,6 +97,8 @@ export function Whiskycard({
   description,
   bgImage = defaultBgImg, // 기본값으로 에셋 이미지 사용
   whiskyImage = defaultWhiskyImg, // 기본값으로 에셋 이미지 사용
+  showLikeButton = true, // 기본값은 하트 버튼 표시
+  showChart = true, // 기본값은 차트 표시
   ...props
 }: WhiskycardProps) {
   const [isLiked, setIsLiked] = useState(false); // 찜 상태를 관리하는 state
@@ -133,7 +137,7 @@ export function Whiskycard({
       {/* 카드 전체를 flex-col로 만들어 내부 요소들을 세로로 배치 */}
       <Card
         className={cn(
-          'w-[170px] h-[260px] rounded-[18px] overflow-hidden relative p-0 py-0 gap-0 flex flex-col',
+          'w-[180px] h-[260px] rounded-[18px] overflow-hidden relative p-0 py-0 gap-0 flex flex-col',
           className,
         )}
         {...props}
@@ -154,13 +158,15 @@ export function Whiskycard({
             />
           </div>
           {/* Radar Chart를 우측 상단에 배치 */}
-          <div className="absolute bottom-26 left-29 w-[60px] h-[60px]">
-            <Example />
-          </div>
+          {showChart && (
+            <div className="absolute bottom-26 left-29 w-[60px] h-[60px]">
+              <Example />
+            </div>
+          )}
         </CardContent>
 
         {/* 중앙에 배치할 이미지 */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+        <div className="absolute top-9/20 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
           <img
             src={whiskyImage}
             alt="whisky"
@@ -180,15 +186,17 @@ export function Whiskycard({
               </p>
             </div>
           </div>
-          {/* 하얀 원과 하트를 묶어서 클릭 이벤트 처리 */}
-          <button onClick={handleLikeClick} className={buttonClasses}>
-            <Heart
-              ref={heartRef}
-              className={heartClasses}
-              fill={isLiked ? 'red' : 'white'}
-            />{' '}
-            {/* 찜 상태에 따라 fill 색상 변경 */}
-          </button>
+          {/* 하트 버튼 (showLikeButton이 true일 때만 표시) */}
+          {showLikeButton && (
+            <button onClick={handleLikeClick} className={buttonClasses}>
+              <Heart
+                ref={heartRef}
+                className={heartClasses}
+                fill={isLiked ? 'red' : 'white'}
+              />{' '}
+              {/* 찜 상태에 따라 fill 색상 변경 */}
+            </button>
+          )}
         </div>
       </Card>
     </div>

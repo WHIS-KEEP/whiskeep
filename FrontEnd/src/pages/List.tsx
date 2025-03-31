@@ -7,6 +7,7 @@ import { cn } from '@/lib/util/utils';
 import Btn from '@/components/ui/Btn'; // 커스텀 버튼
 import { Button } from '@/components/ui/Button'; // shadcn/ui Button
 import { Input } from '@/components/ui/input';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 import {
   Select,
   SelectContent,
@@ -86,9 +87,9 @@ export function SearchPage() {
         정렬: 인기순 {/* TODO: 실제 정렬 기능 구현 */}
       </div>
       {/* 4. 검색 결과 목록 (스크롤 영역) */}
-      {/* flex-grow와 overflow-y-auto를 사용하여 남은 공간을 채우고 스크롤 가능하게 함 */}
-      <div className="w-full flex-grow overflow-y-auto rounded-md border p-2 scrollbar-thin scrollbar-thumb-red-dark">
-        <div className="grid grid-cols-1 gap-2">
+      {/* ScrollArea 컴포넌트로 교체 */}
+      <ScrollArea className="w-full flex-grow rounded-md border">
+        <div className="grid grid-cols-1 gap-2 p-2">
           {dummySearchResults.map((item) => (
             <Button // shadcn/ui Button 사용
               key={item.id}
@@ -112,10 +113,11 @@ export function SearchPage() {
           ))}
           {/* TODO: 무한 스크롤 로직 구현 */}
         </div>
-      </div>
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
       {/* 5. 하단 버튼 */}
       {/* sticky bottom-0 bg-background py-4 등으로 하단에 고정 가능 */}
-      <div className="mt-4 flex w-full shrink-0 justify-end gap-3 border-t pt-4">
+      <div className="mt-4 flex w-full shrink-0 justify-center gap-3 border-t pt-4">
         {' '}
         {/* 상단 테두리 및 패딩 추가 */}
         <Btn

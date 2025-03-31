@@ -7,6 +7,7 @@ import { cn } from '@/lib/util/utils';
 import Btn from '@/components/ui/Btn'; // 커스텀 버튼
 import { Button } from '@/components/ui/Button'; // shadcn/ui Button
 import Whiskycard from '@/components/ui/Whiskycard'; // Whiskycard 컴포넌트 경로 확인
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 
 // --- 더미 데이터 ---
 const dummyWishlistItems = Array.from({ length: 15 }, (_, i) => ({
@@ -43,9 +44,9 @@ export function WishlistPage() {
       {/* 1. 상단 텍스트 */}
       <h1 className="mb-4 text-xl font-semibold">나의 찜 리스트</h1>
       {/* 2. 찜 리스트 (스크롤 영역) */}
-      {/* flex-grow와 overflow-y-auto를 사용하여 남은 공간을 채우고 스크롤 가능하게 함 */}
-      <div className="w-full flex-grow overflow-y-auto rounded-md border p-2 scrollbar-thin scrollbar-thumb-gray-300">
-        <div className="grid grid-cols-2 gap-3">
+      {/* ScrollArea 컴포넌트로 교체 */}
+      <ScrollArea className="w-full flex-grow rounded-md border">
+        <div className="grid grid-cols-2 gap-3 p-2">
           {dummyWishlistItems.map((item) => (
             <Button // Button으로 감싸서 선택 기능 구현
               key={item.id}
@@ -69,9 +70,10 @@ export function WishlistPage() {
           ))}
           {/* TODO: 무한 스크롤 로직 구현 */}
         </div>
-      </div>
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
       {/* 3. 하단 버튼 */}
-      <div className="mt-4 flex w-full shrink-0 justify-end gap-3 border-t pt-4">
+      <div className="mt-4 flex w-full shrink-0 justify-center gap-3 border-t pt-4">
         {' '}
         {/* 상단 테두리 및 패딩 추가 */}
         <Btn

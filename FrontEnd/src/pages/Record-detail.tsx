@@ -1,6 +1,7 @@
 // src/components/pages/RecordDetailPage.jsx (예시 경로)
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card'; // shadcn/ui 카드 컴포넌트
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 
 // 이 컴포넌트는 사용자의 특정 기록(사진 + 텍스트)을 보여주는 페이지입니다.
 // 상위 레이아웃에 의해 하단 네비게이션 바 위의 공간을 채우도록 배치됩니다.
@@ -19,10 +20,8 @@ const RecordDetailPage = () => {
   // --- End Placeholder Data ---
 
   return (
-    // flex-1: 상위 flex 컨테이너에서 남은 공간을 모두 차지
-    // overflow-y-auto: 내용이 세로로 넘칠 경우 이 영역 내에서 스크롤
-    // bg-background: shadcn/ui 테마 배경색
-    <div className="flex-1 overflow-y-auto bg-background">
+    // ScrollArea 컴포넌트로 교체
+    <ScrollArea className="flex-1 bg-background">
       {/* 1. 기록 사진 */}
       {/* 이미지가 화면 너비에 맞게 표시되고 높이는 비율에 맞게 자동 조절 */}
       <div>
@@ -54,7 +53,8 @@ const RecordDetailPage = () => {
           </CardContent>
         </Card>
       </div>
-    </div> // End of main container
+      <ScrollBar orientation="vertical" />
+    </ScrollArea> // End of main container
   );
 };
 
@@ -76,7 +76,7 @@ function AppLayout() {
       // 메인 콘텐츠 영역: flex-1으로 남은 공간을 모두 차지하고,
       // 내부 콘텐츠가 넘칠 수 있으므로 overflow-y-hidden 또는 내용 컴포넌트에서 스크롤 처리
       <main className="flex-1 overflow-y-hidden">
-         // RecordDetailPage가 flex-1과 overflow-y-auto를 가지므로 여기서 스크롤 처리
+         // RecordDetailPage가 ScrollArea로 대체되었으므로 여기서 스크롤 처리
          <RecordDetailPage />
       </main>
 
