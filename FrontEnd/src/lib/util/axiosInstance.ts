@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useAuth } from '@/store/AuthContext';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api',
@@ -17,7 +16,6 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    s;
     if (error.response && error.response.status === 401) {
       console.warn('AccessToken이 만료됨. 자동 로그아웃 실행');
       localStorage.removeItem('accessToken');

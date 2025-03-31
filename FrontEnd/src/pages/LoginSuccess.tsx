@@ -46,7 +46,11 @@ const LoginSuccess = () => {
     }
   }, [login, navigate]); // 컴포넌트 마운트 시 실행
 
-  return <div>로그인 중...</div>; // 로그인 처리 중 표시
+  return (
+    <div className="flex-1 p-4 overflow-auto flex justify-center items-center">
+      <div className="w-10 h-10 border-4 border-gray-500 border-solid rounded-full border-t-transparent animate-spin"></div>
+    </div>
+  ); // 로그인 처리 중 표시
 };
 
 export default LoginSuccess;
