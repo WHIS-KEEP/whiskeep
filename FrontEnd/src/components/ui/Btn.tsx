@@ -36,7 +36,7 @@ const Btn = ({
         {text}
       </span>
     </Button>
-  );  
+  );
 };
 
 export default Btn;

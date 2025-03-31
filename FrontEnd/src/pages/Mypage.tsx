@@ -1,9 +1,9 @@
 // src/pages/Mypage.tsx (또는 적절한 경로)
 
-import React from 'react'; // React 19에서는 명시적 임포트 불필요할 수 있음
+// import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/Button';
-import { cn } from '@/lib/util/utils';
+// import { cn } from '@/lib/util/utils';
 import { Camera, Pencil, Image as ImageIcon, X } from 'lucide-react'; // Image, X 아이콘 추가
 // Drawer 컴포넌트 임포트
 import {
