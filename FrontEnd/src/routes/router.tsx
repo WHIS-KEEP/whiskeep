@@ -10,7 +10,7 @@ import Mypage from '@/pages/Mypage';
 import Login from '@/pages/Login';
 import Test from '@/pages/Test';
 import LoginSuccess from '@/pages/LoginSuccess';
-import { useAuth } from '@/store/AuthContext';
+import useAuth from '@/store/useContext';
 import { JSX } from 'react';
 
 // 보호된 페이지 (로그인한 사용자만 접근 가능)
