@@ -1,4 +1,4 @@
-package com.whiskeep.common.annotation;
+package com.whiskeep.common.auth.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

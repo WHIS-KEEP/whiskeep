@@ -1,4 +1,4 @@
-package com.whiskeep.common.config;
+package com.whiskeep.common.auth.resolver;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.repository.MemberRepository;
-import com.whiskeep.common.annotation.Auth;
+import com.whiskeep.common.auth.annotation.Auth;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.exception.UnauthorizedException;

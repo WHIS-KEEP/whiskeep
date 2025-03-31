@@ -1,4 +1,4 @@
-package com.whiskeep.common.config;
+package com.whiskeep.common.formatter;
 
 import java.util.Locale;
 

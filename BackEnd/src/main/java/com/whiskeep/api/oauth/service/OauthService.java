@@ -12,8 +12,8 @@ import com.whiskeep.api.member.dto.MemberResponseDto;
 import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.api.oauth.dto.google.GoogleTokenDto;
 import com.whiskeep.api.oauth.dto.google.GoogleUserResponseDto;
+import com.whiskeep.common.auth.jwt.JwtTokenProvider;
 import com.whiskeep.common.enumclass.Provider;
-import com.whiskeep.common.util.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 

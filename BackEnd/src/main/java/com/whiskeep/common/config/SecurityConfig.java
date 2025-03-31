@@ -8,7 +8,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.whiskeep.common.util.JwtTokenProvider;
+import com.whiskeep.common.auth.jwt.JwtAuthenticationFilter;
+import com.whiskeep.common.auth.jwt.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
 

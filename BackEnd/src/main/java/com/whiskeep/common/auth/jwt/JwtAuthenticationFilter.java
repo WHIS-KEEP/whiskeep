@@ -1,4 +1,4 @@
-package com.whiskeep.common.config;
+package com.whiskeep.common.auth.jwt;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,8 +7,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import com.whiskeep.common.util.JwtTokenProvider;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.whiskeep.common.util;
+package com.whiskeep.common.auth.jwt;
 
 import java.security.Key;
 import java.util.Date;
