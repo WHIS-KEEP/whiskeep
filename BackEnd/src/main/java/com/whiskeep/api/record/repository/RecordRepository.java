@@ -14,9 +14,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.whiskeep.api.record.domain.Record;
 
-import com.whiskeep.api.record.domain.Record;
-
-
 public interface RecordRepository extends JpaRepository<Record, Long> {
 
 
