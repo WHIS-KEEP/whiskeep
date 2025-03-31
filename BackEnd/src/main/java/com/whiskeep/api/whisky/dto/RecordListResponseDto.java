@@ -25,6 +25,7 @@ public class RecordListResponseDto {
 		private String recordImg;
 		private Integer rating;
 		private LocalDateTime createdAt;
+		private Boolean isPublic;
 	}
 
 	@Getter
