@@ -12,6 +12,7 @@ import com.whiskeep.api.member.dto.BeginnerPreferenceRequestDto;
 import com.whiskeep.api.member.dto.FamiliarPreferenceRequestDto;
 import com.whiskeep.api.member.service.PreferenceService;
 import com.whiskeep.common.annotation.Auth;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
