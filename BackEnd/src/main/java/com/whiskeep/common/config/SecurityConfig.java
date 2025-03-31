@@ -2,7 +2,6 @@ package com.whiskeep.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,7 +22,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider) throws
 		Exception {
 		http
-			.cors(Customizer.withDefaults()) // ✅ CORS 설정 추가
+			.cors(cors -> cors.disable()) // ✅ CORS 설정 추가
 			.csrf(csrf -> csrf.disable()) // CSRF 보안 해제 (API 서버의 경우 비활성화 가능)
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/api/members/login/**").permitAll() // 누구나 접근 가능

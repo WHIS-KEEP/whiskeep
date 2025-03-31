@@ -28,8 +28,8 @@ const LoginSuccess = () => {
 
         // 받은 access-token을 localStorage에 저장
         console.log(response.data);
-        const accessToken = response.data;
-        login(accessToken); // Context API를 사용하여 전역 상태 업데이트
+        const { accessToken, member } = response.data;
+        login(accessToken, member);
 
         // 메인 페이지로 이동
         navigate('/main');

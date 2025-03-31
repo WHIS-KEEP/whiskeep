@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whiskeep.api.member.dto.MemberResponseDto;
+import com.whiskeep.api.oauth.dto.LoginResponseDto;
 import com.whiskeep.api.oauth.dto.google.GoogleTokenDto;
 import com.whiskeep.api.oauth.service.OauthService;
 
@@ -32,19 +33,22 @@ public class OauthController {
 	}
 
 	@PostMapping("/success")
-	public ResponseEntity<String> socialLoginRedirect(@RequestParam String code) {
+	public ResponseEntity<LoginResponseDto> socialLoginRedirect(@RequestParam String code) {
 
-		// 1️⃣ 인증 코드로 Access Token 요청
+		// 인증 코드로 Access Token 요청
 		GoogleTokenDto googleTokenDto = oauthService.getAccessTokenFromCode(code);
 
-		// 2️⃣ Access Token으로 사용자 정보 가져오기
+		// Access Token으로 사용자 정보 가져오기
 		MemberResponseDto memberResponseDto = oauthService.getUserInfoFromToken(googleTokenDto);
 
-		// 3️⃣ JWT 생성
+		// JWT 생성
 		String jwtToken = oauthService.createJwtToken(memberResponseDto.memberId());
 
-		// 4️⃣ 프론트엔드로 JWT 응답
-		return ResponseEntity.ok(jwtToken);
+		// LoginResponseDto 저장
+		LoginResponseDto loginInfo = new LoginResponseDto(jwtToken, memberResponseDto);
+
+		// 프론트엔드로 JWT 응답
+		return ResponseEntity.ok(loginInfo);
 	}
 
 }
