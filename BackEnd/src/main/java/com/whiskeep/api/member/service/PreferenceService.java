@@ -33,12 +33,10 @@ public class PreferenceService {
 		// 사용자의 맛 별 score(1~5점)
 		BeginnerPreferenceRequestDto.TastingScoreRequest baseScore = preferenceRequestDto.tastingScore();
 
-
 		// 1. 각 영역별 가중치 점수 구하기
 		TastingProfile<Double> nosing = createSimpleProfile(baseScore);
 		TastingProfile<Double> tasting = createSimpleProfile(baseScore);
 		TastingProfile<Double> finish = createSimpleProfile(baseScore);
-
 
 		// 6. 보정된 score 값으로 DB에 저장
 		MemberPreference memberPreference = MemberPreference.builder()
@@ -112,8 +110,8 @@ public class PreferenceService {
 	// 	return sum;
 	// }
 	//
-	// private TastingProfile<Double> calculateWeightedProfile(BeginnerPreferenceRequestDto.TastingScoreRequest baseScore,
-	// 	Double weight) {
+	// private TastingProfile<Double> calculateWeightedProfile
+	// (BeginnerPreferenceRequestDto.TastingScoreRequest baseScore, Double weight) {
 	// 	return TastingProfile.<Double>builder()
 	// 		.fruity(makeComponent(TastingCategory.FRUITY, baseScore, weight))
 	// 		.sweet(makeComponent(TastingCategory.SWEET, baseScore, weight))
