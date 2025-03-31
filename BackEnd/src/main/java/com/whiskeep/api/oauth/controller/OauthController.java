@@ -3,8 +3,10 @@ package com.whiskeep.api.oauth.controller;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,8 +31,8 @@ public class OauthController {
 		return ResponseEntity.ok(loginUrl);
 	}
 
-	@GetMapping("/success")
-	public ResponseEntity<Map<String, String>> socialLoginRedirect(@RequestParam String code) {
+	@PostMapping("/success")
+	public ResponseEntity<String> socialLoginRedirect(@RequestParam String code) {
 
 		// 1️⃣ 인증 코드로 Access Token 요청
 		GoogleTokenDto googleTokenDto = oauthService.getAccessTokenFromCode(code);
@@ -42,7 +44,7 @@ public class OauthController {
 		String jwtToken = oauthService.createJwtToken(memberResponseDto.memberId());
 
 		// 4️⃣ 프론트엔드로 JWT 응답
-		return ResponseEntity.ok(Map.of("access-token", jwtToken));
+		return ResponseEntity.ok(jwtToken);
 	}
 
 }

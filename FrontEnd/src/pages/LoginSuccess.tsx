@@ -23,11 +23,10 @@ const LoginSuccess = () => {
 
       try {
         // 백엔드의 access-token 발급 API 호출
-        const response = await axios.post(`http://localhost:8080/api/members/login/success?code=${code}`,{
-            withCredentials: true, // 쿠키를 포함하여 요청
-        });
+        const response = await axios.post(`http://localhost:8080/api/members/login/success?code=${code}`);
 
         // 받은 access-token을 localStorage에 저장
+        console.log(response.data);
         const accessToken = response.data;
         login(accessToken); // Context API를 사용하여 전역 상태 업데이트
 
