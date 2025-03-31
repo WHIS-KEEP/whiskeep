@@ -33,5 +33,6 @@ public record BeginnerPreferenceRequestDto(
 
 		@NotNull @Min(1) @Max(5)
 		Integer briny
-	) { }
+	) {
+	}
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.whiskeep.api.record.dto.RecordCreateDto;
 import com.whiskeep.api.record.service.RecordService;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,7 +20,7 @@ public class RecordController {
 	private final RecordService recordService;
 
 	@PostMapping("/")
-	public ResponseEntity<?> createRecord(@RequestBody RecordCreateDto recordCreateDto ) {
+	public ResponseEntity<?> createRecord(@RequestBody RecordCreateDto recordCreateDto) {
 		System.out.println("test");
 
 		recordService.addRecord(recordCreateDto);

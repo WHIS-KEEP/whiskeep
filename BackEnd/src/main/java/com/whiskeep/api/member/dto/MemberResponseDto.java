@@ -7,5 +7,6 @@ public record MemberResponseDto(
 	String nickname,
 	String profileImg,
 	String provider
-) { }
+) {
+}
 

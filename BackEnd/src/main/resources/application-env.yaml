@@ -8,14 +8,14 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
 
-#  data:
-#    # Redis 설정
-#    redis:
-#      host: ${SPRING_DATA_REDIS_HOST}
-#      port: ${SPRING_DATA_REDIS_PORT}
-#      ssl:
-#        enabled: ${SPRING_DATA_REDIS_SSL_ENABLED}
-#
+  #  data:
+  #    # Redis 설정
+  #    redis:
+  #      host: ${SPRING_DATA_REDIS_HOST}
+  #      port: ${SPRING_DATA_REDIS_PORT}
+  #      ssl:
+  #        enabled: ${SPRING_DATA_REDIS_SSL_ENABLED}
+  #
   # GOOGLE 소셜 로그인 환경변수
   security:
     oauth2:
