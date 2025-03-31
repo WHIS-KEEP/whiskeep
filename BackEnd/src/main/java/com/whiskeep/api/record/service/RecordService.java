@@ -15,10 +15,11 @@ import com.whiskeep.api.record.domain.Record;
 import com.whiskeep.api.record.dto.RecordCreateRequestDto;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
+import com.whiskeep.api.whisky.dto.RecordListResponseDto;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.NotFoundException;
-import com.whiskeep.api.whisky.dto.RecordListResponseDto;
+
 
 import lombok.RequiredArgsConstructor;
 
