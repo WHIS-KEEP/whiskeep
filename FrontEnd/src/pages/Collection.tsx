@@ -1,4 +1,5 @@
 import React from 'react';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 // shadcn/ui를 사용하고 있으므로, 테마에 정의된 색상 (예: background, muted, border 등)과
 // Tailwind CSS 유틸리티 클래스를 활용하여 선반 디자인을 구현합니다.
@@ -15,52 +16,52 @@ const Collection = () => {
   `;
 
   return (
-    // flex-1: 남은 공간을 모두 차지
-    // p-4 md:p-8: 패딩 (중간 크기 화면 이상에서는 더 큰 패딩)
-    // overflow-auto: 내용이 넘칠 경우 스크롤 생성
-    // bg-background: shadcn/ui 테마의 기본 배경색 사용
-    <div className="flex-1 p-4 md:p-8 overflow-auto bg-background">
-      <h2 className="text-2xl font-semibold mb-8 text-foreground">
-        My Whisky Shelf
-      </h2>
+    // ScrollArea 컴포넌트로 교체
+    <ScrollArea className="flex-1 bg-background">
+      <div className="p-4 md:p-8">
+        <h2 className="text-2xl font-semibold mb-8 text-foreground">
+          My Whisky Shelf
+        </h2>
 
-      {/* 선반들을 감싸는 컨테이너 */}
-      {/* flex flex-col: 자식 요소들을 세로로 쌓음 */}
-      {/* space-y-24: 선반 사이의 수직 간격 (병 높이를 고려하여 충분히 설정) */}
-      <div className="flex flex-col space-y-24">
-        {/* 첫 번째 선반 */}
-        <div className={shelfStyle}>
-          {/* 나중에 이 안에 위스키 병 컴포넌트들을 배치합니다. */}
-          {/* 예시: <WhiskyBottle name="Glenfiddich 12" /> */}
-          <span className="text-xs text-muted-foreground italic">
-            Shelf 1 - Bottles will go here
-          </span>
-        </div>
+        {/* 선반들을 감싸는 컨테이너 */}
+        {/* flex flex-col: 자식 요소들을 세로로 쌓음 */}
+        {/* space-y-24: 선반 사이의 수직 간격 (병 높이를 고려하여 충분히 설정) */}
+        <div className="flex flex-col space-y-24">
+          {/* 첫 번째 선반 */}
+          <div className={shelfStyle}>
+            {/* 나중에 이 안에 위스키 병 컴포넌트들을 배치합니다. */}
+            {/* 예시: <WhiskyBottle name="Glenfiddich 12" /> */}
+            <span className="text-xs text-muted-foreground italic">
+              Shelf 1 - Bottles will go here
+            </span>
+          </div>
 
-        {/* 두 번째 선반 */}
-        <div className={shelfStyle}>
-          {/* 나중에 이 안에 위스키 병 컴포넌트들을 배치합니다. */}
-          <span className="text-xs text-muted-foreground italic">
-            Shelf 2 - Bottles will go here
-          </span>
-        </div>
+          {/* 두 번째 선반 */}
+          <div className={shelfStyle}>
+            {/* 나중에 이 안에 위스키 병 컴포넌트들을 배치합니다. */}
+            <span className="text-xs text-muted-foreground italic">
+              Shelf 2 - Bottles will go here
+            </span>
+          </div>
 
-        {/* 세 번째 선반 */}
-        <div className={shelfStyle}>
-          {/* 나중에 이 안에 위스키 병 컴포넌트들을 배치합니다. */}
-          <span className="text-xs text-muted-foreground italic">
-            Shelf 3 - Bottles will go here
-          </span>
-        </div>
+          {/* 세 번째 선반 */}
+          <div className={shelfStyle}>
+            {/* 나중에 이 안에 위스키 병 컴포넌트들을 배치합니다. */}
+            <span className="text-xs text-muted-foreground italic">
+              Shelf 3 - Bottles will go here
+            </span>
+          </div>
 
-        {/* 필요에 따라 더 많은 선반 추가 */}
-        {/*
-        <div className={shelfStyle}>
-          <span className="text-xs text-muted-foreground italic">Shelf 4 - Bottles will go here</span>
+          {/* 필요에 따라 더 많은 선반 추가 */}
+          {/*
+          <div className={shelfStyle}>
+            <span className="text-xs text-muted-foreground italic">Shelf 4 - Bottles will go here</span>
+          </div>
+          */}
         </div>
-        */}
       </div>
-    </div>
+      <ScrollBar orientation="vertical" />
+    </ScrollArea>
   );
 };
 

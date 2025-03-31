@@ -12,30 +12,32 @@ import Test from '@/pages/Test';
 import Like from '@/pages/Like';
 import Record from '@/pages/Record';
 import RecordDetail from '@/pages/Record-detail';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+
 const Router = () => {
   return (
     <div className="mobile-container flex flex-col h-full">
       {/* 상단 헤더 */}
       <Header />
       {/* 메인 콘텐츠 (스크롤 영역) */}
-      <div
-        className="flex-grow overflow-auto bg-bg-muted"
-        style={{ padding: '1.25rem', paddingBottom: '150px' }}
-      >
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="*" element={<NotFound />} />
-          <Route path="main" element={<Main />} />
-          <Route path="list" element={<List />} />
-          <Route path="collection" element={<Collection />} />
-          <Route path="mypage" element={<Mypage />} />
-          <Route path="login" element={<Login />} />
-          <Route path="test" element={<Test />} />
-          <Route path="like" element={<Like />} />
-          <Route path="record" element={<Record />} />
-          <Route path="record-detail" element={<RecordDetail />} />
-        </Routes>
-      </div>
+      <ScrollArea className="flex-grow bg-bg-muted">
+        <div style={{ paddingBottom: '150px' }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="main" element={<Main />} />
+            <Route path="list" element={<List />} />
+            <Route path="collection" element={<Collection />} />
+            <Route path="mypage" element={<Mypage />} />
+            <Route path="login" element={<Login />} />
+            <Route path="test" element={<Test />} />
+            <Route path="like" element={<Like />} />
+            <Route path="record" element={<Record />} />
+            <Route path="record-detail" element={<RecordDetail />} />
+          </Routes>
+        </div>
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
 
       {/* 하단 네비게이션 바 */}
       <div
