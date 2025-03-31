@@ -9,6 +9,7 @@ import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.dto.MemberResponseDto;
 import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.common.util.JwtTokenProvider;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
