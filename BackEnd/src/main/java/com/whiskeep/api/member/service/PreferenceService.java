@@ -1,9 +1,7 @@
 package com.whiskeep.api.member.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.domain.MemberPreference;
@@ -11,9 +9,10 @@ import com.whiskeep.api.member.dto.BeginnerPreferenceRequestDto;
 import com.whiskeep.api.member.dto.FamiliarPreferenceRequestDto;
 import com.whiskeep.api.member.repository.MemberPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberRepository;
+import com.whiskeep.common.exception.BadRequestException;
+import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -24,11 +23,11 @@ public class PreferenceService {
 	private final MemberPreferenceRepository memberPreferenceRepository;
 
 	@Transactional
-	public void createBeginnerPreferenceScore(BeginnerPreferenceRequestDto preferenceRequestDto) {
+	public void createBeginnerPreferenceScore(BeginnerPreferenceRequestDto preferenceRequestDto, Member member) {
 		// 사용자 검색
-		Member member =
-			memberRepository.findById(preferenceRequestDto.memberId())
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "존재하지 않은 사용자입니다."));
+		if (memberPreferenceRepository.existsByMember(member)) {
+			throw new BadRequestException(ErrorMessage.PREFERENCE_ALREADY_REGISTERED);
+		}
 
 		// 사용자의 맛 별 score(1~5점)
 		BeginnerPreferenceRequestDto.TastingScoreRequest baseScore = preferenceRequestDto.tastingScore();

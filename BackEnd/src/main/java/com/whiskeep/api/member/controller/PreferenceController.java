@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.dto.BeginnerPreferenceRequestDto;
 import com.whiskeep.api.member.dto.FamiliarPreferenceRequestDto;
 import com.whiskeep.api.member.service.PreferenceService;
-
+import com.whiskeep.common.annotation.Auth;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -22,8 +23,8 @@ public class PreferenceController {
 
 	@PostMapping("/preference/beginner")
 	public ResponseEntity<?> createPreferenceForBeginner(
-		@RequestBody BeginnerPreferenceRequestDto beginnerPreferenceRequestDto) {
-		preferenceService.createBeginnerPreferenceScore(beginnerPreferenceRequestDto);
+		@RequestBody BeginnerPreferenceRequestDto beginnerPreferenceRequestDto, @Auth Member member) {
+		preferenceService.createBeginnerPreferenceScore(beginnerPreferenceRequestDto, member);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
