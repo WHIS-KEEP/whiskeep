@@ -1,7 +1,7 @@
 // src/pages/SearchPage.tsx
 // Renders at /search (라우터 설정 필요)
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/util/utils';
 import Btn from '@/components/ui/Btn'; // 커스텀 버튼

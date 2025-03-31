@@ -1,5 +1,4 @@
 // src/components/pages/RecordDetailPage.jsx (예시 경로)
-import React from 'react';
 import { Card, CardContent } from '@/components/ui/card'; // shadcn/ui 카드 컴포넌트
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 

@@ -1,5 +1,3 @@
-// 각 술의 레코드
-import React from 'react';
 import { Separator } from '@/components/ui/separator'; // shadcn/ui의 Separator 컴포넌트
 import { AspectRatio } from '@/components/ui/aspect-ratio'; // shadcn/ui의 AspectRatio 컴포넌트 (없다면 `npx shadcn-ui@latest add aspect-ratio` 로 추가)
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
