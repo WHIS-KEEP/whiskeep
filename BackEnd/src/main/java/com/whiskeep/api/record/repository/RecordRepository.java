@@ -18,5 +18,5 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 	Integer countRecordsByWhisky_WhiskyId(Long whiskyId);
 
-	Page<Record> findByWhiskyWhiskyIdOrderByCreatedAtDesc(Long whiskyId, Pageable pageable);
+	Page<Record> findByWhiskyWhiskyIdAndIsPublicTrueOrderByCreatedAtDesc(Long whiskyId, Pageable pageable);
 }

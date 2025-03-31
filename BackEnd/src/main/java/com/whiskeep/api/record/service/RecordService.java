@@ -63,7 +63,8 @@ public class RecordService {
 	public RecordListResponseDto getRecordByWhiskyId(Long whiskyId, int page, int size) {
 
 		Pageable pageable = PageRequest.of(page, size);
-		Page<Record> recordPage = recordRepository.findByWhiskyWhiskyIdOrderByCreatedAtDesc(whiskyId, pageable);
+		Page<Record> recordPage = recordRepository.	findByWhiskyWhiskyIdAndIsPublicTrueOrderByCreatedAtDesc
+			(whiskyId, pageable);
 
 		List<RecordListResponseDto.RecordResponseDto> records = recordPage.getContent().stream()
 			.map(record -> RecordListResponseDto.RecordResponseDto.builder()
