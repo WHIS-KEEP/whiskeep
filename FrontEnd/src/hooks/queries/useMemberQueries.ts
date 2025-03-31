@@ -3,10 +3,10 @@ import axios from "axios";
 
 // 사용자 정보 API 요청
 const fetchUser = async () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("access-token");
   if (!token) throw new Error("No token found");
   
-  const response = await axios.get("https://your-backend.com/user", {
+  const response = await axios.get("http://localhost:8080/api/members", {
     headers: { Authorization: `Bearer ${token}` },
   });
   return response.data;

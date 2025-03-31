@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from '../pages/Home';
 import NotFound from '../pages/NotFound';
 import Navbar from '../components/layout/Navbar';
@@ -9,6 +9,16 @@ import Collection from '@/pages/Collection';
 import Mypage from '@/pages/Mypage';
 import Login from '@/pages/Login';
 import Test from '@/pages/Test';
+import LoginSuccess from '@/pages/LoginSuccess';
+import { useAuth } from '@/store/AuthContext';
+import { JSX } from 'react';
+
+// 보호된 페이지 (로그인한 사용자만 접근 가능)
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const { token } = useAuth();
+  return token ? children : <Navigate to="/login" replace />;
+};
+
 const Router = () => {
   return (
     <div className="mobile-container flex flex-col h-full">
@@ -22,11 +32,12 @@ const Router = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="main" element={<Main />} />
+          <Route path="main" element={<ProtectedRoute><Main /></ProtectedRoute>} />
           <Route path="list" element={<List />} />
           <Route path="collection" element={<Collection />} />
           <Route path="mypage" element={<Mypage />} />
           <Route path="login" element={<Login />} />
+          <Route path="login/success" element={<LoginSuccess />} />
           <Route path="test" element={<Test />} />
         </Routes>
       </div>
