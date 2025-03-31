@@ -32,7 +32,14 @@ const Router = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="main" element={<ProtectedRoute><Main /></ProtectedRoute>} />
+          <Route
+            path="main"
+            element={
+              <ProtectedRoute>
+                <Main />
+              </ProtectedRoute>
+            }
+          />
           <Route path="list" element={<List />} />
           <Route path="collection" element={<Collection />} />
           <Route path="mypage" element={<Mypage />} />
