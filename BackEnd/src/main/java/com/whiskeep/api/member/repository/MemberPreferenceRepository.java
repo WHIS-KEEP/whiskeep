@@ -6,5 +6,6 @@ import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.domain.MemberPreference;
 
 public interface MemberPreferenceRepository extends JpaRepository<MemberPreference, Long> {
-	boolean existsByMember(Member member);
+
+	Boolean existsByMember(Member member);
 }

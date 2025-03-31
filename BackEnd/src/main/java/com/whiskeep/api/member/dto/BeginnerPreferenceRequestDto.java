@@ -10,7 +10,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record BeginnerPreferenceRequestDto(
 	@NotNull(message = "초보자 초기 설문 정보가 들어오지 않았습니다.")
-	Long memberId,
 	Experience experience,
 	List<Double> preferenceOrder,
 	TastingScoreRequest tastingScore) {

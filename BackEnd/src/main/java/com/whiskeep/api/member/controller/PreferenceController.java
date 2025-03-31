@@ -31,8 +31,8 @@ public class PreferenceController {
 
 	@PostMapping("/preference/familiar")
 	public ResponseEntity<?> createPreferenceForFamiliar(
-		@RequestBody FamiliarPreferenceRequestDto familiarPreferenceRequestDto) {
-		preferenceService.createFamiliarPreferenceScore(familiarPreferenceRequestDto);
+		@RequestBody FamiliarPreferenceRequestDto familiarPreferenceRequestDto, @Auth Member member) {
+		preferenceService.createFamiliarPreferenceScore(familiarPreferenceRequestDto, member);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 }
