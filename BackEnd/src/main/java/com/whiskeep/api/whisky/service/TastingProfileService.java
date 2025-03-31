@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -18,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 public class TastingProfileService {
 
 	public List<String> extractTopFeatures(TastingProfile<Map<String, Double>> notes) {
-
 
 		Map<String, Double> allFeatures = new HashMap<>();
 		// 6가지 카테고리 별 데이터들을 하나의 맵에 다 추가하기
@@ -52,14 +52,14 @@ public class TastingProfileService {
 	private void addFeatures(Map<String, Double> allFeatures,
 		TastingComponent<Map<String, Double>> component) {
 
-		if(component == null) {
+		if (component == null) {
 			return;
 		}
 
 		Map<String, Double> features = component.getData();
-		if(features != null) {
+		if (features != null) {
 			features.forEach((feature, value) -> {
-				if(value != null && value > 0) {
+				if (value != null && value > 0) {
 					allFeatures.put(feature, value);
 				}
 			});
