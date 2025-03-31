@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useAuth } from '@/store/AuthContext';
+import useAuth from '@/store/useContext'; // 전역 로그인 상태 관리
 
 export const useLoginQueries = () => {
   const { token, logout } = useAuth();

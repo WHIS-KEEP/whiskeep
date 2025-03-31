@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth } from '@/store/AuthContext'; // 전역 로그인 상태 관리
+import useAuth from '@/store/useContext'; // 전역 로그인 상태 관리
 
 const LoginSuccess = () => {
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const LoginSuccess = () => {
       isFetched.current = true; // 한 번만 실행
       fetchAccessToken(); // access-token 발급 요청
     }
-  }, []); // 컴포넌트 마운트 시 실행
+  }, [login, navigate]); // 컴포넌트 마운트 시 실행
 
   return <div>로그인 중...</div>; // 로그인 처리 중 표시
 };
