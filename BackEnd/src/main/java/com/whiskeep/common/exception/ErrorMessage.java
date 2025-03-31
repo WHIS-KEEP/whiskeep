@@ -14,6 +14,7 @@ public enum ErrorMessage {
 	VALIDATION_FAILED("유효성 검증에 실패했습니다"),
 	INVALID_FILE_FORMAT("파일 형식이 올바르지 않습니다"),
 	DUPLICATE_ENTRY("이미 존재하는 데이터입니다"),
+	PREFERENCE_ALREADY_REGISTERED("이미 선호 정보가 등록되어 있습니다"),
 
 	// 401 Unauthorized 관련 오류 (UnauthorizedException)
 	UNAUTHORIZED("인증에 실패했습니다"),
