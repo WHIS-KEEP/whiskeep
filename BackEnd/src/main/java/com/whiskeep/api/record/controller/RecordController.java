@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.whiskeep.api.record.dto.RecordCreateDto;
+import com.whiskeep.api.member.domain.Member;
+import com.whiskeep.api.record.dto.RecordCreateRequestDto;
 import com.whiskeep.api.record.service.RecordService;
+import com.whiskeep.common.auth.annotation.Auth;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,10 +22,10 @@ public class RecordController {
 	private final RecordService recordService;
 
 	@PostMapping("/")
-	public ResponseEntity<?> createRecord(@RequestBody RecordCreateDto recordCreateDto) {
-		System.out.println("test");
+	public ResponseEntity<?> createRecord(@RequestBody RecordCreateRequestDto recordCreateRequestDto,
+		@Auth Member member) {
 
-		recordService.addRecord(recordCreateDto);
+		recordService.addRecord(member, recordCreateRequestDto);
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
 

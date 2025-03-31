@@ -1,6 +1,6 @@
 package com.whiskeep.api.record.dto;
 
-public record RecordCreateDto(
+public record RecordCreateRequestDto(
 	long memberId,
 	long whiskyId,
 	int rating,
