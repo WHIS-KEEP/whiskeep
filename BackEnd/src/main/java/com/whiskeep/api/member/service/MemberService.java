@@ -1,13 +1,14 @@
 package com.whiskeep.api.member.service;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.dto.MemberResponseDto;
 import com.whiskeep.api.member.repository.MemberRepository;
-import com.whiskeep.common.util.JwtTokenProvider;
+import com.whiskeep.common.auth.jwt.JwtTokenProvider;
+import com.whiskeep.common.exception.ErrorMessage;
+import com.whiskeep.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +28,7 @@ public class MemberService {
 		Long memberId = jwtTokenProvider.getMemberIdFromToken(accessToken);
 
 		Member member = memberRepository.findById(memberId)
-			.orElseThrow(() -> new UsernameNotFoundException("Member not found" + memberId));
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		return new MemberResponseDto(member.getMemberId(), member.getEmail(), member.getName(),
 			member.getNickname(), member.getProfileImg(), member.getProvider().name());
