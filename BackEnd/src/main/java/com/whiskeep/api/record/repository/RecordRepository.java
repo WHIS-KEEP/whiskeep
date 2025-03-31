@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,5 +19,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 	Integer countRecordsByWhisky_WhiskyId(Long whiskyId);
 
+	@EntityGraph(attributePaths = {"member"})
 	Page<Record> findByWhiskyWhiskyIdAndIsPublicTrueOrderByCreatedAtDesc(Long whiskyId, Pageable pageable);
 }
