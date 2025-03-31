@@ -9,9 +9,9 @@ import com.whiskeep.api.record.service.RecordService;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.dto.WhiskyDetailResponseDto;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
-
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.NotFoundException;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
