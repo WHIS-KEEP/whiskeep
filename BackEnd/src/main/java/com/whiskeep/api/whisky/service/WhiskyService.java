@@ -10,6 +10,8 @@ import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.dto.WhiskyDetailResponseDto;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
 
+import com.whiskeep.common.exception.ErrorMessage;
+import com.whiskeep.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,7 +27,7 @@ public class WhiskyService {
 	public WhiskyDetailResponseDto getWhiskyById(Long whiskyId) {
 
 		Whisky whisky = whiskyRepository.findById(whiskyId)
-			.orElseThrow(() -> new IllegalArgumentException("Whisky not found"));
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
 
 		// 위스키 엔티티의 테이스팅 프로파일 정보
 		System.out.println("Whisky ID: " + whiskyId);
