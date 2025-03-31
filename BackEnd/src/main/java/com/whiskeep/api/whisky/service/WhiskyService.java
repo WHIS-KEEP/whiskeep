@@ -29,20 +29,11 @@ public class WhiskyService {
 		Whisky whisky = whiskyRepository.findById(whiskyId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
 
-		// 위스키 엔티티의 테이스팅 프로파일 정보
-		System.out.println("Whisky ID: " + whiskyId);
-		System.out.println("Nosing profile: " + whisky.getNosing());
-		System.out.println("Tasting profile: " + whisky.getTasting());
-		System.out.println("Finish profile: " + whisky.getFinish());
 
 		List<String> nosingList = tastingProfileService.extractTopFeatures(whisky.getNosing());
 		List<String> tastingList = tastingProfileService.extractTopFeatures(whisky.getTasting());
 		List<String> finishList = tastingProfileService.extractTopFeatures(whisky.getFinish());
 
-		// 추출된 테이스팅 노트 목록
-		System.out.println("Extracted nosing list: " + nosingList);
-		System.out.println("Extracted tasting list: " + tastingList);
-		System.out.println("Extracted finish list: " + finishList);
 
 		Integer recordCnt = recordService.countRecord(whiskyId);
 		Double recordAvg = recordService.getAverageRating(whiskyId);
