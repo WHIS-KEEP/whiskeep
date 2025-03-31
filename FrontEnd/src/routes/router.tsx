@@ -8,7 +8,7 @@ import List from '@/pages/List';
 import Collection from '@/pages/Collection';
 import Mypage from '@/pages/Mypage';
 import Login from '@/pages/Login';
-import Test from '@/pages/Test';
+// import Test from '@/pages/Test';
 import Like from '@/pages/Like';
 import Record from '@/pages/Record';
 import RecordDetail from '@/pages/Record-detail';
@@ -30,7 +30,7 @@ const Router = () => {
             <Route path="collection" element={<Collection />} />
             <Route path="mypage" element={<Mypage />} />
             <Route path="login" element={<Login />} />
-            <Route path="test" element={<Test />} />
+            {/* <Route path="test" element={<Test />} /> */}
             <Route path="like" element={<Like />} />
             <Route path="record" element={<Record />} />
             <Route path="record-detail" element={<RecordDetail />} />

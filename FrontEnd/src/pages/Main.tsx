@@ -1,5 +1,5 @@
 // FILE: MainPageContent.tsx
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { cn } from '@/lib/util/utils';
 import {
   Dialog,
