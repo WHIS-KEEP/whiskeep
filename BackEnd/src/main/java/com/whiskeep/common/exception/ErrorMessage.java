@@ -29,8 +29,8 @@ public enum ErrorMessage {
 	// 404 Not Found 관련 오류 (NotFoundException)
 	RESOURCE_NOT_FOUND("요청한 리소스를 찾을 수 없습니다"),
 	WHISKY_NOT_FOUND("요청한 위스키를 찾을 수 없습니다"),
-	USER_NOT_FOUND("요청한 사용자를 찾을 수 없습니다"),
-	REVIEW_NOT_FOUND("요청한 리뷰를 찾을 수 없습니다"),
+	MEMBER_NOT_FOUND("요청한 사용자를 찾을 수 없습니다"),
+	RECORD_NOT_FOUND("요청한 기록을 찾을 수 없습니다"),
 
 	// 500 Internal Server Error 관련 오류
 	INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다"),
@@ -39,5 +39,3 @@ public enum ErrorMessage {
 
 	private final String message;
 }
-
-

@@ -1,5 +1,7 @@
 package com.whiskeep.common.handler;
 
+import java.util.List;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -11,16 +13,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.stream.Collectors;
-
 import com.whiskeep.common.exception.BaseException;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.FailResponse;
+import com.whiskeep.common.exception.FieldErrorDetail;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-	// Bean Validation 실패 처리
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(
 		MethodArgumentNotValidException ex,
@@ -28,17 +28,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		HttpStatusCode status,
 		WebRequest request) {
 
-		String errorMessage = ex.getBindingResult().getFieldErrors().stream()
-			.map(error -> error.getField() + ": " + error.getDefaultMessage())
-			.collect(Collectors.joining(", "));
+		List<FieldErrorDetail> errors = ex.getBindingResult()
+			.getFieldErrors()
+			.stream()
+			.map(FieldErrorDetail::of)
+			.toList();
 
-		return new ResponseEntity<>(
-			FailResponse.fail(status.value(), ErrorMessage.VALIDATION_FAILED.getMessage() + " - " + errorMessage),
-			headers,
-			status);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(FailResponse.failWithFieldErrors(
+				HttpStatus.BAD_REQUEST.value(),
+				ErrorMessage.VALIDATION_FAILED.getMessage(),
+				errors
+			));
 	}
 
-	// 필수 파라미터 누락 처리
 	@Override
 	protected ResponseEntity<Object> handleMissingServletRequestParameter(
 		MissingServletRequestParameterException ex,
@@ -46,15 +49,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		HttpStatusCode status,
 		WebRequest request) {
 
-		String errorMessage = "필수 파라미터 '" + ex.getParameterName() + "'이(가) 누락되었습니다";
+		String errorMessage = String.format(
+			"%s: '%s'",
+			ErrorMessage.MISSING_PARAMETER.getMessage(),
+			ex.getParameterName()
+		);
 
-		return new ResponseEntity<>(
-			FailResponse.fail(status.value(), errorMessage),
-			headers,
-			status);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(FailResponse.fail(
+				HttpStatus.BAD_REQUEST.value(),
+				errorMessage
+			));
 	}
 
-	//커스텀 예외 처리
 	@ExceptionHandler(BaseException.class)
 	public ResponseEntity<FailResponse> handleBaseException(BaseException ex) {
 		return ResponseEntity
@@ -62,13 +69,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			.body(FailResponse.fail(ex.getStatus().value(), ex.getMessage()));
 	}
 
-	// 기타 모든 예외 처리
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<FailResponse> handleAllUncaughtExceptions(Exception ex) {
+	public ResponseEntity<FailResponse> handleUnexpectedException(Exception ex) {
 		return ResponseEntity
 			.status(HttpStatus.INTERNAL_SERVER_ERROR)
 			.body(FailResponse.fail(
 				HttpStatus.INTERNAL_SERVER_ERROR.value(),
-				ErrorMessage.INTERNAL_SERVER_ERROR.getMessage()));
+				ErrorMessage.INTERNAL_SERVER_ERROR.getMessage()
+			));
 	}
 }

@@ -1,5 +1,9 @@
 package com.whiskeep.common.exception;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.Builder;
 import lombok.Value;
 
@@ -7,13 +11,24 @@ import lombok.Value;
 @Builder
 public class FailResponse {
 
-	private int status;
-	private String messege;
+	int status;
+	String message;
 
-	public static FailResponse fail(int status, String messege) {
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	List<FieldErrorDetail> errors;
+
+	public static FailResponse fail(int status, String message) {
 		return FailResponse.builder()
 			.status(status)
-			.messege(messege)
+			.message(message)
+			.build();
+	}
+
+	public static FailResponse failWithFieldErrors(int status, String message, List<FieldErrorDetail> errors) {
+		return FailResponse.builder()
+			.status(status)
+			.message(message)
+			.errors(errors)
 			.build();
 	}
 }
