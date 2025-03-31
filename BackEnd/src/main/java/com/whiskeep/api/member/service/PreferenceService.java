@@ -52,6 +52,7 @@ public class PreferenceService {
 			.nosing(nosing)
 			.tasting(tasting)
 			.finish(finish)
+			.preferenceOrder(preferenceRequestDto.preferenceOrder())
 			.build();
 
 		memberPreferenceRepository.save(memberPreference);

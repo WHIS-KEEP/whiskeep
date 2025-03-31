@@ -1,9 +1,10 @@
 package com.whiskeep.api.member.domain;
 
+import java.util.List;
+
 import org.hibernate.annotations.Type;
 
 import com.whiskeep.common.model.TastingProfile;
-
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,5 +44,9 @@ public class MemberPreference {
 	@Type(JsonBinaryType.class)
 	@Column(columnDefinition = "jsonb")
 	private TastingProfile<Double> finish;
+
+	@Type(JsonBinaryType.class)
+	@Column(columnDefinition = "jsonb")
+	List<Double> preferenceOrder;
 
 }
