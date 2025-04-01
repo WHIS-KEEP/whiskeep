@@ -70,7 +70,7 @@ public class RecordController {
 
 		recordService.updateRecord(member, recordId, recordUpdateRequestDto);
 
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{whiskyId}/{recordId}")
