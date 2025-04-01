@@ -6,10 +6,16 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.whiskeep.common.exception.ErrorMessage;
+import com.whiskeep.common.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 
 @Component
 public class JwtTokenProvider {
@@ -53,8 +59,12 @@ public class JwtTokenProvider {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
-		} catch (Exception e) {
-			return false;
+		} catch (ExpiredJwtException e) {
+			throw new UnauthorizedException(ErrorMessage.EXPIRED_TOKEN);
+		} catch (UnsupportedJwtException | MalformedJwtException | SecurityException | SignatureException e) {
+			throw new UnauthorizedException(ErrorMessage.INVALID_TOKEN);
+		} catch (IllegalArgumentException e) {
+			throw new UnauthorizedException(ErrorMessage.INVALID_PARAMETER);
 		}
 	}
 }
