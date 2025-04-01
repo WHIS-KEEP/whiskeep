@@ -1,4 +1,4 @@
-import { Button } from '@/components/shadcn/Button';
+import { Button } from '@/components/shadcn/button';
 import googleLogo from '../../assets/google.svg';
 
 // interface GoogleButtonProps {

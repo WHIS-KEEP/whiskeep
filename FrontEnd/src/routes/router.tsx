@@ -6,13 +6,13 @@ import Header from '@/components/layout/Header';
 import Main from '@/pages/MainPage';
 import List from '@/pages/ListPage';
 import Collection from '@/pages/CollectionPage';
-import Mypage from '@/pages/MyPage';
 import Login from '@/pages/LoginPage';
 // import Test from '@/pages/Test';
 import Like from '@/pages/LikePage';
 import Record from '@/pages/RecordPage';
 import RecordDetail from '@/pages/RecordDetailPage';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
+import MyPage from '@/pages/Mypage';
 
 const Router = () => {
   return (
@@ -28,12 +28,12 @@ const Router = () => {
             <Route path="main" element={<Main />} />
             <Route path="list" element={<List />} />
             <Route path="collection" element={<Collection />} />
-            <Route path="mypage" element={<Mypage />} />
             <Route path="login" element={<Login />} />
             {/* <Route path="test" element={<Test />} /> */}
             <Route path="like" element={<Like />} />
             <Route path="record" element={<Record />} />
             <Route path="record-detail" element={<RecordDetail />} />
+            <Route path="mypage" element={<MyPage />} />
           </Routes>
         </div>
         <ScrollBar orientation="vertical" />
