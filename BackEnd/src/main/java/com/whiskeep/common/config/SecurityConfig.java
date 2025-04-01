@@ -27,7 +27,8 @@ public class SecurityConfig {
 		CorsConfigurationSource corsConfigurationSource) throws
 		Exception {
 		http
-			.cors(c -> c.configurationSource(request -> new org.springframework.web.cors.CorsConfiguration().applyPermitDefaultValues())) // ✅ CORS 설정 추가
+			.cors(c -> c.configurationSource(request ->
+				new org.springframework.web.cors.CorsConfiguration().applyPermitDefaultValues())) // ✅ CORS 설정 추가
 			.csrf(csrf -> csrf.disable()) // CSRF 보안 해제 (API 서버의 경우 비활성화 가능)
 			// .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
 			.authorizeHttpRequests(auth -> auth

@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
   Avatar,
   AvatarFallback,
@@ -18,6 +20,22 @@ import Btn from '@/components/ui/Btn';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 
 const MyPage = () => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("accessToken");
+
+  if(!token) {
+    alert("로그인 후 이용해주세요.");
+    navigate('/login'); // 로그인 페이지로 리다이렉트
+  }
+
+  axios.get("http://localhost:8080/api/members", {
+    headers: {
+      "Authorization": `Bearer ${token}` // ✅ 반드시 포함해야 함
+    }
+  })
+  .then(response => console.log(response.data))
+  .catch(error => console.error("Error:", error));
+  
   const userData = {
     name: '김싸피',
     email: 'ssafy.K@ssafy.com',

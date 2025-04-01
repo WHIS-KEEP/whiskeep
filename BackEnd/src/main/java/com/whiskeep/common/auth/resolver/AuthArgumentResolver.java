@@ -9,11 +9,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
-import com.whiskeep.api.member.domain.Member;
-import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.common.auth.annotation.Auth;
 import com.whiskeep.common.exception.ErrorMessage;
-import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.exception.UnauthorizedException;
 
 import jakarta.servlet.http.HttpServletRequest;
