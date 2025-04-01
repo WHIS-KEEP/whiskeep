@@ -3,7 +3,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/components/shadcn/avatar';
-import { Button } from '@/components/shadcn/button';
+import { Button } from '@/components/shadcn/Button';
 import { Camera, Pencil, Image as ImageIcon, X } from 'lucide-react'; // Image, X 아이콘 추가
 // Drawer 컴포넌트 임포트
 import {

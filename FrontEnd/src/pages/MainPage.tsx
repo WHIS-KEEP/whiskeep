@@ -7,7 +7,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/shadcn/dialog';
-import { Button } from '@/components/shadcn/button';
+import { Button } from '@/components/shadcn/Button';
 import { Input } from '@/components/shadcn/input';
 import { Switch } from '@/components/shadcn/switch';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
