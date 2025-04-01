@@ -9,7 +9,9 @@ const App = () => {
     <QueryClientProvider client={new QueryClient()}>
       <AuthProvider>
         <BrowserRouter>
-          <Router />
+          <div className="mobile-container">
+            <Router />
+          </div>
         </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>
