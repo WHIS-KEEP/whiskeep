@@ -12,13 +12,17 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 import org.springframework.stereotype.Service;
 
+import com.whiskeep.api.member.domain.FamiliarWhiskyPreference;
 import com.whiskeep.api.member.domain.Member;
+import com.whiskeep.api.member.repository.FamiliarWhiskyPreferenceRepository;
 import com.whiskeep.api.recommend.dto.RecommendResponseDto;
 import com.whiskeep.api.recommend.dto.RecommendedListResponseDto;
 import com.whiskeep.api.record.domain.Record;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
+import com.whiskeep.common.exception.ErrorMessage;
+import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
 
@@ -31,26 +35,49 @@ public class RecommendService {
 	private final RecordRepository recordRepository;
 	private final WhiskyRepository whiskyRepository;
 	private final RecommendBeginnerService recommendBeginnerService;
+	private final FamiliarWhiskyPreferenceRepository familiarWhiskyPreferenceRepository;
 
 	public RecommendedListResponseDto recommend(Member member) {
 		int recordCnt = recordRepository.countByMember(member);
 
 		if (recordCnt >= 3) {
-			return recommendWhiskies(member);
-		} else {
-			return recommendBeginnerService.recommendForBeginnerService();
+			return recommendWhiskies(member, true);
 		}
+
+		boolean isFamiliar = familiarWhiskyPreferenceRepository.existsByMember(member);
+		if (isFamiliar) {
+			return recommendWhiskies(member, false);
+		}
+
+		// 초보자 로직 서비스
+		return recommendBeginnerService.recommendForBeginnerService();
 	}
 
 	// 추천된 리스트들
-	public RecommendedListResponseDto recommendWhiskies(Member member) {
-		Long memberId = member.getMemberId();
-		List<Record> records = recordRepository.findByMember_MemberId(memberId);
+	public RecommendedListResponseDto recommendWhiskies(Member member, boolean usedRecords) {
 
+		Long memberId = member.getMemberId();
+
+		List<?> baseList;
+		if (usedRecords) {
+			// 1. 기록이 3개 이상인 경우, 멤버가 작성한 기록 찾기
+			baseList = recordRepository.findByMember(member);
+
+		} else {
+			// 2. 기록이 3개 이하일 경우, 멤버가 초기 선택한 위스키 리스트 찾기
+			FamiliarWhiskyPreference pref =
+				familiarWhiskyPreferenceRepository.findByMember(member).orElseThrow(() -> new NotFoundException(
+					ErrorMessage.PREFERENCE_NOT_FOUND));
+			baseList = whiskyRepository.findAllById(pref.getLikedWhiskyIdList());
+		}
+
+		// 멤버가 평점을 남기지 않은 모든 위스키들 확인
 		List<Whisky> notRatedWhiskies = whiskyRepository.findWhiskiesNotRatedByMember(memberId);
+
 		List<RecommendResponseDto> recommendList = new ArrayList<>();
+
 		for (Whisky whisky : notRatedWhiskies) {
-			RecommendResponseDto whiskies = getRecommendedWhiskies(whisky, records);
+			RecommendResponseDto whiskies = getRecommendedWhiskies(whisky, baseList);
 			recommendList.add(whiskies);
 		}
 
@@ -63,7 +90,7 @@ public class RecommendService {
 			.recommendList(topRecommendations).build();
 	}
 
-	//2. 유사도 계산
+	// 유사도 계산
 	private double calculateWhiskySimilarity(Whisky myWhisky, Whisky newWhisky) {
 
 		double nosingSimilarity = calculateSimilarity(myWhisky.getNosing(), newWhisky.getNosing());
@@ -125,7 +152,7 @@ public class RecommendService {
 	//맵에 넣어주는 메서드
 	private void addComponentDetails(Map<String, Double> allDetails, String category,
 		TastingComponent<Map<String, Double>> component) {
-		if (component != null & component.getData() != null) {
+		if (component != null && component.getData() != null) {
 			component.getData().forEach((key, value) -> {
 				allDetails.put(key, value);
 			});
@@ -133,15 +160,26 @@ public class RecommendService {
 	}
 
 	//위스키 추천하기
-	private RecommendResponseDto getRecommendedWhiskies(Whisky newWhisky, List<Record> records) {
+	private RecommendResponseDto getRecommendedWhiskies(Whisky newWhisky, List<?> baseList) {
 		double totalSimilarity = 0.0;
 		double totalWeight = 0.0;
-		for (Record record : records) {
 
-			Whisky ratedWhisky = record.getWhisky();
+		for (Object obj : baseList) {
+			Whisky baseWhisky;
+			double weight;
+
+			if (obj instanceof Record record) {
+				baseWhisky = record.getWhisky();
+				weight = record.getRating().doubleValue() / 5.0;
+			} else if (obj instanceof Whisky whisky) {
+				baseWhisky = whisky;
+				weight = 5.0 / 5.0; // 초기 선택한 위스키의 경우, 평점 5점으로 간주하여 가중치 1.0
+			} else {
+				continue;
+			}
+
 			//가중치
-			double similarity = calculateWhiskySimilarity(ratedWhisky, newWhisky);
-			double weight = record.getRating().doubleValue() / 5;
+			double similarity = calculateWhiskySimilarity(baseWhisky, newWhisky);
 
 			totalSimilarity += similarity * weight;
 			totalWeight += weight;
@@ -160,3 +198,4 @@ public class RecommendService {
 	}
 
 }
+
