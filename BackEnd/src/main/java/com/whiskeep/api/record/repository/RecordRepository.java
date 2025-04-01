@@ -30,7 +30,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 	int countByMember(Member member);
 
-
 	List<Record> findAllByMember(Member member);
 
 	List<MyRecordResponseDto.RecordSummaryDto> findAllByMemberAndWhisky(Member member, Whisky whisky);

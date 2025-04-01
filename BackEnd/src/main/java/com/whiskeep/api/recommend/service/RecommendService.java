@@ -50,7 +50,7 @@ public class RecommendService {
 		}
 
 		// 초보자 로직 서비스
-		return recommendBeginnerService.recommendForBeginnerService();
+		return recommendBeginnerService.recommendForBeginnerService(member);
 	}
 
 	// 추천된 리스트들
