@@ -5,9 +5,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/util/utils';
 import Btn from '@/components/ui/Btn'; // 커스텀 버튼
-import { Button } from '@/components/ui/Button'; // shadcn/ui Button
+import { Button } from '@/components/shadcn/Button'; // shadcn/ui Button
 import Whiskycard from '@/components/ui/Whiskycard'; // Whiskycard 컴포넌트 경로 확인
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
+import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 
 // --- 더미 데이터 ---
 const dummyWishlistItems = Array.from({ length: 15 }, (_, i) => ({

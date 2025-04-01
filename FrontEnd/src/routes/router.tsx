@@ -6,13 +6,13 @@ import Header from '@/components/layout/Header';
 import Main from '../pages/MainPage';
 import List from '@/pages/ListPage';
 import Collection from '@/pages/CollectionPage';
-import MyPage from '@/pages/Mypage';
+import MyPage from '@/pages/MyPage';
 import Login from '@/pages/LoginPage';
 // import Test from '@/pages/Test';
 import Like from '@/pages/LikePage';
 import Record from '@/pages/RecordPage';
 import RecordDetail from '@/pages/RecordDetailPage';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 
 const Router = () => {
   return (

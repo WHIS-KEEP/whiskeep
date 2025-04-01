@@ -1,6 +1,6 @@
 // src/components/pages/RecordDetailPage.jsx (예시 경로)
-import { Card, CardContent } from '@/components/ui/card'; // shadcn/ui 카드 컴포넌트
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
+import { Card, CardContent } from '@/components/shadcn/card'; // shadcn/ui 카드 컴포넌트
+import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 
 // 이 컴포넌트는 사용자의 특정 기록(사진 + 텍스트)을 보여주는 페이지입니다.
 // 상위 레이아웃에 의해 하단 네비게이션 바 위의 공간을 채우도록 배치됩니다.

@@ -5,16 +5,16 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/util/utils';
 import Btn from '@/components/ui/Btn'; // 커스텀 버튼
-import { Button } from '@/components/ui/Button'; // shadcn/ui Button
-import { Input } from '@/components/ui/input';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
+import { Button } from '@/components/shadcn/Button'; // shadcn/ui Button
+import { Input } from '@/components/shadcn/input';
+import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/shadcn/select';
 
 // --- 더미 데이터 ---
 const dummySearchResults = Array.from({ length: 20 }, (_, i) => ({

@@ -1,6 +1,6 @@
 import GoogleButton from '@/components/ui/Googlebutton';
 import KakaoButton from '@/components/ui/Kakaobutton';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 
 const Login = () => {
   return (

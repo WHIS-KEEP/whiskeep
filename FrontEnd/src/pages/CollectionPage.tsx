@@ -1,4 +1,4 @@
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 
 // shadcn/ui를 사용하고 있으므로, 테마에 정의된 색상 (예: background, muted, border 등)과
 // Tailwind CSS 유틸리티 클래스를 활용하여 선반 디자인을 구현합니다.

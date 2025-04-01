@@ -6,11 +6,11 @@ import {
   DialogContent,
   DialogTrigger,
   DialogClose,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+} from '@/components/shadcn/dialog';
+import { Button } from '@/components/shadcn/Button';
+import { Input } from '@/components/shadcn/input';
+import { Switch } from '@/components/shadcn/switch';
+import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 import { Star, Send, Plus } from 'lucide-react'; // Using lucide-react for icons
 
 // Import the dialog content component
