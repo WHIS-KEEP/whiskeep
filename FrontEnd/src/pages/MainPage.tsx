@@ -112,7 +112,7 @@ export function MainPageContent() {
   );
 
   return (
-    <div className="flex flex-col gap-6 bg-gray-50 min-h-screen w-[412px] mx-auto rounded-[18px]">
+    <div className="flex flex-col gap-6 bg-gray-50 w-[412px] mx-auto rounded-[18px] p-4">
       {/* --- 오늘 한 잔 Section --- */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <div className="bg-white rounded-xl shadow p-4 flex flex-col gap-3">
