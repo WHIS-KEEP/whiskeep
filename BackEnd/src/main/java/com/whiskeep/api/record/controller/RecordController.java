@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.record.dto.request.RecordCreateRequestDto;
-import com.whiskeep.api.record.dto.response.RecordDetailResponseDto;
-import com.whiskeep.api.record.dto.response.MyRecordResponseDto;
 import com.whiskeep.api.record.dto.request.RecordUpdateRequestDto;
+import com.whiskeep.api.record.dto.response.MyRecordResponseDto;
+import com.whiskeep.api.record.dto.response.RecordDetailResponseDto;
 import com.whiskeep.api.record.service.RecordService;
 import com.whiskeep.api.whisky.dto.WhiskyRecordResponseDto;
 import com.whiskeep.common.auth.annotation.Auth;
