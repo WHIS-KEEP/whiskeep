@@ -53,4 +53,21 @@ public class Record extends BaseTimeEntity {
 	@Column(nullable = false)
 	private Boolean isPublic;
 
+	// 업데이트 메서드들
+	public void updateRating(Integer rating) {
+		this.rating = rating;
+	}
+
+	public void updateContent(String content) {
+		this.content = content;
+	}
+
+	public void updateIsPublic(Boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+
+	public void updateRecordImg(String recordImg) {
+		this.recordImg = recordImg;
+	}
+
 }

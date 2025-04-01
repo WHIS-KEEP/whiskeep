@@ -16,6 +16,7 @@ import com.whiskeep.api.record.domain.Record;
 import com.whiskeep.api.record.dto.RecordCreateRequestDto;
 import com.whiskeep.api.record.dto.RecordDetailResponseDto;
 import com.whiskeep.api.record.dto.RecordListWhiskyAndMemberResponseDto;
+import com.whiskeep.api.record.dto.RecordUpdateRequestDto;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.dto.RecordListResponseDto;
@@ -25,7 +26,6 @@ import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.ForbiddenException;
 import com.whiskeep.common.exception.NotFoundException;
 
-import com.whiskeep.common.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -126,8 +126,7 @@ public class RecordService {
 	public RecordListWhiskyAndMemberResponseDto getRecordByWhiskyIdAndMember(Long whiskyId, Member member) {
 
 		Whisky whisky = whiskyRepository.findById(whiskyId)
-			.orElseThrow(()-> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
-
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
 
 		List<RecordListWhiskyAndMemberResponseDto.RecordSummaryDto> recordDtos =
 			recordRepository.findAllByMemberAndWhisky(member, whisky)
@@ -151,7 +150,7 @@ public class RecordService {
 	public RecordDetailResponseDto getRecordDetail(Member member, Long recordId) {
 
 		Record record = recordRepository.findById(recordId)
-			.orElseThrow(()-> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
 
 		//기록을 쓴 유저인지 확인
 		if (!record.getMember().getMemberId().equals(member.getMemberId())) {
@@ -165,5 +164,24 @@ public class RecordService {
 			record.getCreatedAt()
 		);
 
+	}
+
+	@Transactional
+	public void updateRecord(Member member, Long recordId, RecordUpdateRequestDto recordUpdateRequestDto) {
+		// 기존 레코드 조회
+		Record record = recordRepository.findById(recordId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
+
+		// 권한 확인 (자신의 기록만 수정 가능)
+		if (!record.getMember().getMemberId().equals(member.getMemberId())) {
+			throw new ForbiddenException(ErrorMessage.FORBIDDEN);
+		}
+
+		record.updateRating(recordUpdateRequestDto.rating());
+		record.updateContent(recordUpdateRequestDto.content());
+		record.updateIsPublic(recordUpdateRequestDto.isPublic());
+		record.updateRecordImg(recordUpdateRequestDto.recordImg());
+
+		recordRepository.save(record);
 	}
 }
