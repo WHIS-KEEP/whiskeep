@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import Home from '@/pages/HomePage';
 import NotFound from '@/pages/NotFoundPage';
 import Main from '@/pages/MainPage';
@@ -8,15 +8,15 @@ import Mypage from '@/pages/Mypage';
 import Login from '@/pages/LoginPage';
 // import Test from '@/pages/TestPage';
 import LoginSuccess from '@/pages/LoginSuccess';
-import useAuth from '@/store/useContext';
-import { JSX } from 'react';
+// import useAuth from '@/store/useContext';
+// import { JSX } from 'react';
 import Layout from '@/components/layout/Layout';
 import DetailPage from '@/pages/DetailPage';
 // 보호된 페이지 (로그인한 사용자만 접근 가능)
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { token } = useAuth();
-  return token ? children : <Navigate to="/login" replace />;
-};
+// const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+//   const { token } = useAuth();
+//   return token ? children : <Navigate to="/login" replace />;
+// };
 
 const Router = () => {
   return (
