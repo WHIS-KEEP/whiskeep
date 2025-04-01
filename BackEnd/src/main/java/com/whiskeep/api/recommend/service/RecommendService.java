@@ -139,18 +139,18 @@ public class RecommendService {
 	private Map<String, Double> getWhiskyFlavorDetails(TastingProfile<Map<String, Double>> whiskyProfile) {
 		Map<String, Double> allDetails = new HashMap<>();
 		if (whiskyProfile != null) {
-			addComponentDetails(allDetails, "fruity", whiskyProfile.getFruity());
-			addComponentDetails(allDetails, "sweet", whiskyProfile.getSweet());
-			addComponentDetails(allDetails, "briny", whiskyProfile.getBriny());
-			addComponentDetails(allDetails, "spicy", whiskyProfile.getSpicy());
-			addComponentDetails(allDetails, "herbal", whiskyProfile.getHerbal());
-			addComponentDetails(allDetails, "oaky", whiskyProfile.getOaky());
+			addComponentDetails(allDetails, whiskyProfile.getFruity());
+			addComponentDetails(allDetails, whiskyProfile.getSweet());
+			addComponentDetails(allDetails, whiskyProfile.getBriny());
+			addComponentDetails(allDetails, whiskyProfile.getSpicy());
+			addComponentDetails(allDetails, whiskyProfile.getHerbal());
+			addComponentDetails(allDetails, whiskyProfile.getOaky());
 		}
 		return allDetails;
 	}
 
 	//맵에 넣어주는 메서드
-	private void addComponentDetails(Map<String, Double> allDetails, String category,
+	private void addComponentDetails(Map<String, Double> allDetails,
 		TastingComponent<Map<String, Double>> component) {
 		if (component != null && component.getData() != null) {
 			component.getData().forEach((key, value) -> {
