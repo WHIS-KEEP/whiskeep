@@ -8,4 +8,5 @@ public record GoogleTokenDto(
 	@JsonProperty("scope") String scope,
 	@JsonProperty("token_type") String tokenType,
 	@JsonProperty("id_token") String idToken
-) { }
+) {
+}

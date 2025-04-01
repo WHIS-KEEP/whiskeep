@@ -1,0 +1,11 @@
+package com.whiskeep.api.record.dto;
+
+public record RecordCreateRequestDto(
+	long memberId,
+	long whiskyId,
+	int rating,
+	String content,
+	String recordImg,
+	boolean isPublic
+) {
+}

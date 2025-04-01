@@ -40,7 +40,8 @@ public class Record extends BaseTimeEntity {
 	private Whisky whisky;
 
 	@Column(nullable = false)
-	@Min(1) @Max(5)
+	@Min(1)
+	@Max(5)
 	private Integer rating;
 
 	@Column(length = 1000)

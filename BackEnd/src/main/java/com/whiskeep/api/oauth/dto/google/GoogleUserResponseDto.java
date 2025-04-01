@@ -11,4 +11,5 @@ public record GoogleUserResponseDto(
 	@JsonProperty("family_name") String familyName, // 성
 	@JsonProperty("picture") String picture,
 	@JsonProperty("hd") String hd // 이메일에서 @ 뒷 부분
-) { }
+) {
+}

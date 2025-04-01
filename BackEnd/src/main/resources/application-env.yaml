@@ -8,14 +8,14 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
 
-#  data:
-#    # Redis 설정
-#    redis:
-#      host: ${SPRING_DATA_REDIS_HOST}
-#      port: ${SPRING_DATA_REDIS_PORT}
-#      ssl:
-#        enabled: ${SPRING_DATA_REDIS_SSL_ENABLED}
-#
+  #  data:
+  #    # Redis 설정
+  #    redis:
+  #      host: ${SPRING_DATA_REDIS_HOST}
+  #      port: ${SPRING_DATA_REDIS_PORT}
+  #      ssl:
+  #        enabled: ${SPRING_DATA_REDIS_SSL_ENABLED}
+  #
   # GOOGLE 소셜 로그인 환경변수
   security:
     oauth2:
@@ -50,16 +50,7 @@ decorator:
 #  redirect:
 #    uri: ${KAKAO_REDIRECT_URI}
 #
-# GOOGLE 소셜 로그인 환경변수
-#google:
-#  client_id: ${GOOGLE_CLIENT_ID}
-#  client_secret: ${GOOGLE_CLIENT_SECRET}
-#  token:
-#    uri: ${GOOGLE_TOKEN_URI}
-#  user:
-#    uri: ${GOOGLE_USER_URI}
-#  redirect:
-#    uri: ${GOOGLE_REDIRECT_URI}
+
 
 ##AWS
 #cloud:
