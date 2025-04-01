@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.recommend.dto.RecommendedListResponseDto;
 import com.whiskeep.api.recommend.service.RecommendService;
+import com.whiskeep.common.auth.annotation.Auth;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,12 +20,9 @@ public class RecommendController {
 	private final RecommendService recommendService;
 
 	@GetMapping //추천가져오기
-	public ResponseEntity<RecommendedListResponseDto> recommend(Long memberId) {
+	public ResponseEntity<RecommendedListResponseDto> recommend(@Auth Member member) {
 
-		//로그인 된 멤버 갖고오기
-
-		Long tempId = 1L;
-		RecommendedListResponseDto recommendations = recommendService.recommendWhiskies(tempId);
+		RecommendedListResponseDto recommendations = recommendService.recommend(member);
 		return ResponseEntity.ok(recommendations);
 	}
 }

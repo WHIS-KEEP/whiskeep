@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.record.domain.Record;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
@@ -27,4 +28,5 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 	List<Record> findByMember_MemberId(Long memberId);
 
+	int countByMember(Member member);
 }

@@ -12,9 +12,9 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 import org.springframework.stereotype.Service;
 
+import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.recommend.dto.RecommendResponseDto;
 import com.whiskeep.api.recommend.dto.RecommendedListResponseDto;
-import com.whiskeep.api.recommend.repository.RecommendRepository;
 import com.whiskeep.api.record.domain.Record;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
@@ -30,9 +30,21 @@ public class RecommendService {
 
 	private final RecordRepository recordRepository;
 	private final WhiskyRepository whiskyRepository;
+	private final RecommendBeginnerService recommendBeginnerService;
+
+	public RecommendedListResponseDto recommend(Member member) {
+		int recordCnt = recordRepository.countByMember(member);
+
+		if (recordCnt >= 3) {
+			return recommendWhiskies(member);
+		} else {
+			return recommendBeginnerService.recommendForBeginnerService();
+		}
+	}
 
 	// 추천된 리스트들
-	public RecommendedListResponseDto recommendWhiskies(Long memberId) {
+	public RecommendedListResponseDto recommendWhiskies(Member member) {
+		Long memberId = member.getMemberId();
 		List<Record> records = recordRepository.findByMember_MemberId(memberId);
 
 		List<Whisky> notRatedWhiskies = whiskyRepository.findWhiskiesNotRatedByMember(memberId);
@@ -120,8 +132,6 @@ public class RecommendService {
 		}
 	}
 
-
-
 	//위스키 추천하기
 	private RecommendResponseDto getRecommendedWhiskies(Whisky newWhisky, List<Record> records) {
 		double totalSimilarity = 0.0;
@@ -148,6 +158,5 @@ public class RecommendService {
 			.similarity(avgSimilarity)
 			.build();
 	}
-
 
 }
