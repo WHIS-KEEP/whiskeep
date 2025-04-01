@@ -1,17 +1,17 @@
 import { Routes, Route } from 'react-router-dom';
-import Home from '../pages/Home';
-import NotFound from '../pages/NotFound';
+import Home from '../pages/HomePage';
+import NotFound from '../pages/NotFoundPage';
 import Navbar from '../components/layout/Navbar';
 import Header from '@/components/layout/Header';
-import Main from '../pages/Main';
-import List from '@/pages/List';
-import Collection from '@/pages/Collection';
-import Mypage from '@/pages/Mypage';
-import Login from '@/pages/Login';
+import Main from '../pages/MainPage';
+import List from '@/pages/ListPage';
+import Collection from '@/pages/CollectionPage';
+import MyPage from '@/pages/Mypage';
+import Login from '@/pages/LoginPage';
 // import Test from '@/pages/Test';
-import Like from '@/pages/Like';
-import Record from '@/pages/Record';
-import RecordDetail from '@/pages/Record-detail';
+import Like from '@/pages/LikePage';
+import Record from '@/pages/RecordPage';
+import RecordDetail from '@/pages/RecordDetailPage';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 const Router = () => {
@@ -28,7 +28,7 @@ const Router = () => {
             <Route path="main" element={<Main />} />
             <Route path="list" element={<List />} />
             <Route path="collection" element={<Collection />} />
-            <Route path="mypage" element={<Mypage />} />
+            <Route path="mypage" element={<MyPage />} />
             <Route path="login" element={<Login />} />
             {/* <Route path="test" element={<Test />} /> */}
             <Route path="like" element={<Like />} />

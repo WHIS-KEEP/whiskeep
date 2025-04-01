@@ -17,7 +17,7 @@ import {
 import Btn from '@/components/ui/Btn';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 
-const Mypage = () => {
+const MyPage = () => {
   const userData = {
     name: '김싸피',
     email: 'ssafy.K@ssafy.com',
@@ -206,4 +206,4 @@ const Mypage = () => {
   );
 };
 
-export default Mypage;
+export default MyPage;
