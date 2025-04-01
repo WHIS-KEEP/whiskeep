@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.record.dto.RecordCreateRequestDto;
+import com.whiskeep.api.record.dto.RecordDetailResponseDto;
 import com.whiskeep.api.record.dto.RecordListWhiskyAndMemberResponseDto;
 import com.whiskeep.api.record.service.RecordService;
 import com.whiskeep.api.whisky.dto.WhiskyRecordResponseDto;
@@ -47,10 +48,19 @@ public class RecordController {
 	public ResponseEntity<?> getRecordsByWhiskyIdAndMember(
 		@Auth Member member, @PathVariable Long whiskyId) {
 
-		RecordListWhiskyAndMemberResponseDto recordListWhiskyAndMemberResponseDto = recordService.getRecordByWhiskyIdAndMember(whiskyId,
+		RecordListWhiskyAndMemberResponseDto recordListWhiskyAndMemberResponseDto = recordService.getRecordByWhiskyIdAndMember(
+			whiskyId,
 			member);
 
 		return ResponseEntity.ok(recordListWhiskyAndMemberResponseDto);
 	}
+
+	@GetMapping("/{whiskyId}/{recordId}")
+	public ResponseEntity<?> getRecordDetail(@Auth Member member, @PathVariable("recordId") Long recordId) {
+		RecordDetailResponseDto recordDetailResponseDto = recordService.getRecordDetail(member, recordId);
+
+		return ResponseEntity.ok(recordDetailResponseDto);
+	}
+
 
 }

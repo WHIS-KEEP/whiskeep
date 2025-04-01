@@ -14,6 +14,7 @@ import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.api.record.domain.Record;
 import com.whiskeep.api.record.dto.RecordCreateRequestDto;
+import com.whiskeep.api.record.dto.RecordDetailResponseDto;
 import com.whiskeep.api.record.dto.RecordListWhiskyAndMemberResponseDto;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
@@ -21,9 +22,10 @@ import com.whiskeep.api.whisky.dto.RecordListResponseDto;
 import com.whiskeep.api.whisky.dto.WhiskyRecordResponseDto;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
 import com.whiskeep.common.exception.ErrorMessage;
+import com.whiskeep.common.exception.ForbiddenException;
 import com.whiskeep.common.exception.NotFoundException;
 
-
+import com.whiskeep.common.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -142,6 +144,25 @@ public class RecordService {
 			whisky.getKoName(),
 			whisky.getEnName(),
 			recordDtos
+		);
+
+	}
+
+	public RecordDetailResponseDto getRecordDetail(Member member, Long recordId) {
+
+		Record record = recordRepository.findById(recordId)
+			.orElseThrow(()-> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
+
+		//기록을 쓴 유저인지 확인
+		if (!record.getMember().getMemberId().equals(member.getMemberId())) {
+			throw new ForbiddenException(ErrorMessage.FORBIDDEN);
+		}
+
+		return new RecordDetailResponseDto(
+			record.getRecordImg(),
+			record.getRating(),
+			record.getContent(),
+			record.getCreatedAt()
 		);
 
 	}
