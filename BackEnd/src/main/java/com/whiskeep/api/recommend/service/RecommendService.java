@@ -61,7 +61,7 @@ public class RecommendService {
 		List<?> baseList;
 		if (usedRecords) {
 			// 1. 기록이 3개 이상인 경우, 멤버가 작성한 기록 찾기
-			baseList = recordRepository.findByMember(member);
+			baseList = recordRepository.findAllByMember(member);
 
 		} else {
 			// 2. 기록이 3개 이하일 경우, 멤버가 초기 선택한 위스키 리스트 찾기
