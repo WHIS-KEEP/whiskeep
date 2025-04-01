@@ -1,6 +1,6 @@
 // 페이지 단에서 <Button text="선택" size="l" onClick={handleClick} /> 이렇게 사용
 // 클릭 이벤트 핸들러는 페이지 단에서 정의
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/shadcn/Button';
 
 interface ButtonMProps {
   text: string; // text prop의 타입

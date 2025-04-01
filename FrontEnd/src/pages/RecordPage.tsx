@@ -1,6 +1,6 @@
-import { Separator } from '@/components/ui/separator'; // shadcn/ui의 Separator 컴포넌트
-import { AspectRatio } from '@/components/ui/aspect-ratio'; // shadcn/ui의 AspectRatio 컴포넌트 (없다면 `npx shadcn-ui@latest add aspect-ratio` 로 추가)
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
+import { Separator } from '@/components/shadcn/separator'; // shadcn/ui의 Separator 컴포넌트
+import { AspectRatio } from '@/components/shadcn/aspect-ratio'; // shadcn/ui의 AspectRatio 컴포넌트 (없다면 `npx shadcn-ui@latest add aspect-ratio` 로 추가)
+import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 
 // 이 컴포넌트는 특정 술에 대한 상세 정보와 사용자가 기록한 사진들을 보여줍니다.
 // 하단 네비게이션 바는 포함하지 않습니다.

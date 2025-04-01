@@ -9,21 +9,21 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
-} from '@/components/ui/dialog';
+} from '@/components/shadcn/dialog';
 // --- Shadcn UI Components ---
 import Btn from '@/components/ui/Btn';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/shadcn/Button';
 import Whiskycard from '@/components/ui/Whiskycard';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/shadcn/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+} from '@/components/shadcn/select';
+import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
+import { ToggleGroup, ToggleGroupItem } from '@/components/shadcn/toggle-group';
 import { Star } from 'lucide-react';
 import { Search } from 'lucide-react';
 
