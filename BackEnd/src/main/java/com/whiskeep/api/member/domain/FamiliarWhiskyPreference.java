@@ -26,11 +26,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class InitialWhiskyPreference extends BaseTimeEntity {
+public class FamiliarWhiskyPreference extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long initialWhiskyPreferenceId;
+	private Long familiarWhiskyPreferenceId;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id", nullable = false, unique = true)

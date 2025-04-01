@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.whiskeep.api.member.domain.InitialWhiskyPreference;
+import com.whiskeep.api.member.domain.FamiliarWhiskyPreference;
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.domain.MemberPreference;
 import com.whiskeep.api.member.dto.BeginnerPreferenceRequestDto;
 import com.whiskeep.api.member.dto.FamiliarPreferenceRequestDto;
-import com.whiskeep.api.member.repository.InitialWhiskyPreferenceRepository;
+import com.whiskeep.api.member.repository.FamiliarWhiskyPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
@@ -28,7 +28,7 @@ public class PreferenceService {
 
 	private final MemberRepository memberRepository;
 	private final MemberPreferenceRepository memberPreferenceRepository;
-	private final InitialWhiskyPreferenceRepository initialWhiskyPreferenceRepository;
+	private final FamiliarWhiskyPreferenceRepository initialWhiskyPreferenceRepository;
 	private final WhiskyRepository whiskyRepository;
 
 	@Transactional
@@ -86,7 +86,7 @@ public class PreferenceService {
 		}
 
 		// 1. 숙련자(familiar)가 고른 초기 위스키 3병을 테이블에 저장
-		InitialWhiskyPreference familiarPreference = InitialWhiskyPreference.builder()
+		FamiliarWhiskyPreference familiarPreference = FamiliarWhiskyPreference.builder()
 			.member(member)
 			.likedWhiskyIdList(preferenceRequestDto.likedWhiskies())
 			.build();
