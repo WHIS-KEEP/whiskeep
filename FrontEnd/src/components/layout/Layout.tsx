@@ -9,7 +9,7 @@ const Layout = () => {
   return (
     <div className="flex flex-col h-full">
       {!hideLayout && <Header />}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto pb-16">
         <Outlet />
       </main>
       {!hideLayout && <Navbar />}
