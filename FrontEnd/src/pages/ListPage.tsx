@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/util/utils';
 import Btn from '@/components/ui/Btn'; // 커스텀 버튼
-import { Button } from '@/components/shadcn/button'; // shadcn/ui Button
+import { Button } from '@/components/shadcn/Button'; // shadcn/ui Button
 import { Input } from '@/components/shadcn/input';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
 import {

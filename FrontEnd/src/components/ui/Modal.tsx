@@ -12,7 +12,7 @@ import {
 } from '@/components/shadcn/dialog';
 // --- Shadcn UI Components ---
 import Btn from '@/components/ui/Btn';
-import { Button } from '@/components/shadcn/button';
+import { Button } from '@/components/shadcn/Button';
 import Whiskycard from '@/components/ui/Whiskycard';
 import { Input } from '@/components/shadcn/input';
 import {
