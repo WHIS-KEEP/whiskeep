@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.annotations.Type;
 
 import com.whiskeep.common.model.TastingProfile;
+
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

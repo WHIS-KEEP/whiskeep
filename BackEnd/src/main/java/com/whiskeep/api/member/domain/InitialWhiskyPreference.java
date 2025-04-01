@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.annotations.Type;
 
 import com.whiskeep.common.entity.BaseTimeEntity;
+
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
