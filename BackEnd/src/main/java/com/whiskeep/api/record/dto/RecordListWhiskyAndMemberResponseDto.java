@@ -12,5 +12,6 @@ public record RecordListWhiskyAndMemberResponseDto(
 	public record RecordSummaryDto(
 		Long recordId,
 		String recordImg
-	) {}
+	) {
+	}
 }

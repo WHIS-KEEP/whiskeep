@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,9 +51,8 @@ public class RecordController {
 	public ResponseEntity<?> getRecordsByWhiskyIdAndMember(
 		@Auth Member member, @PathVariable Long whiskyId) {
 
-		RecordListWhiskyAndMemberResponseDto recordListWhiskyAndMemberResponseDto = recordService.getRecordByWhiskyIdAndMember(
-			whiskyId,
-			member);
+		RecordListWhiskyAndMemberResponseDto recordListWhiskyAndMemberResponseDto
+			= recordService.getRecordByWhiskyIdAndMember(whiskyId, member);
 
 		return ResponseEntity.ok(recordListWhiskyAndMemberResponseDto);
 	}
@@ -68,9 +68,17 @@ public class RecordController {
 	public ResponseEntity<?> updateRecordDetail(@Auth Member member, @PathVariable("recordId") Long recordId,
 		@RequestBody RecordUpdateRequestDto recordUpdateRequestDto) {
 
-		recordService.updateRecord(member,recordId,recordUpdateRequestDto);
+		recordService.updateRecord(member, recordId, recordUpdateRequestDto);
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+
+	@DeleteMapping("/{whiskyId}/{recordId}")
+	public ResponseEntity<?> deleteRecord(@Auth Member member, @PathVariable("recordId") Long recordId) {
+
+		recordService.deleteRecord(member, recordId);
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }

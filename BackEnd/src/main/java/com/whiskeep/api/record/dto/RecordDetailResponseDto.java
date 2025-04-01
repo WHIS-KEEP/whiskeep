@@ -7,5 +7,5 @@ public record RecordDetailResponseDto(
 	Integer rating,
 	String content,
 	LocalDateTime createdAt
-	) {
+) {
 }

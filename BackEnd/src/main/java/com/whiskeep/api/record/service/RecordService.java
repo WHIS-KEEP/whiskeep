@@ -184,4 +184,18 @@ public class RecordService {
 
 		recordRepository.save(record);
 	}
+
+	@Transactional
+	public void deleteRecord(Member member, Long recordId) {
+
+		Record record = recordRepository.findById(recordId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
+
+		if (!record.getMember().getMemberId().equals(member.getMemberId())) {
+			throw new ForbiddenException(ErrorMessage.FORBIDDEN);
+		}
+
+		recordRepository.delete(record);
+
+	}
 }
