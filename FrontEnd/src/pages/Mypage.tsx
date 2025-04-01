@@ -1,5 +1,3 @@
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
   AvatarFallback,
@@ -18,31 +16,27 @@ import {
 } from '@/components/shadcn/drawer';
 import Btn from '@/components/ui/Btn';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
+import API from '@/lib/util/axiosInstance'; // axiosInstance 임포트
+import { useEffect, useState } from 'react';
 
 const MyPage = () => {
-  const navigate = useNavigate();
-  const token = localStorage.getItem('accessToken');
+  const [userData, setUserData] = useState({}); // 타입지정 물어보기 //////////////
 
-  if (!token) {
-    alert('로그인 후 이용해주세요.');
-    navigate('/login'); // 로그인 페이지로 리다이렉트
-  }
-
-  axios
-    .get('http://localhost:8080/api/members', {
-      headers: {
-        Authorization: `Bearer ${token}`, // ✅ 반드시 포함해야 함
-      },
+  useEffect(() => {
+    API.get('/members')
+      .then((response) => {
+        console.log(response.data)
+        setUserData({
+          name: response.data.name,
+          email: response.data.email,
+          nickname: response.data.nickname,
+          profileImageUrl: response.data.profileImg || 'https://github.com/shadcn.png',
+        });
     })
-    .then((response) => console.log(response.data))
-    .catch((error) => console.error('Error:', error));
+      .catch((error) => console.error('API 호출 오류:', error)); // 401은 인터셉터가 처리하므로 여기선 로그만 남김
+  }, []);
 
-  const userData = {
-    name: '김싸피',
-    email: 'ssafy.K@ssafy.com',
-    nickname: '발렌타인12409',
-    profileImageUrl: 'https://github.com/shadcn.png',
-  };
+  console.log(userData);
 
   // 이미지 변경 메뉴 관련 핸들러 (실제 구현 필요)
   const handleTakePhoto = () => {
@@ -73,7 +67,7 @@ const MyPage = () => {
           <div className="relative mb-2">
             <Avatar className="h-32 w-32 border">
               <AvatarImage
-                src={userData.profileImageUrl}
+                src={userData?.profileImageUrl}
                 alt="사용자 프로필 이미지"
               />
               <AvatarFallback>{userData.name?.charAt(0) || 'U'}</AvatarFallback>

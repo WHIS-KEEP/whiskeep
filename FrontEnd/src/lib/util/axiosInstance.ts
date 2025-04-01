@@ -1,23 +1,27 @@
 import axios from 'axios';
 
-const api = axios.create({
+const API = axios.create({
   baseURL: 'http://localhost:8080/api',
+  headers: { 'Content-Type': 'application/json' },
 });
 
-api.interceptors.request.use((config) => {
+// 요청 인터셉터 (Access Token을 자동으로 헤더에 추가)
+API.interceptors.request.use(
+  (config) => {
   const accessToken = localStorage.getItem('accessToken');
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
-});
+},
+(error) => Promise.reject(error));
 
 // 🔹 401 에러 발생 시 자동 로그아웃
-api.interceptors.response.use(
+API.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response && error.response.status === 401) {
-      console.warn('AccessToken이 만료됨. 자동 로그아웃 실행');
+      alert('다시 로그인해주세요.');
       localStorage.removeItem('accessToken');
       window.location.href = '/login';
     }
@@ -25,4 +29,4 @@ api.interceptors.response.use(
   },
 );
 
-export default api;
+export default API;
