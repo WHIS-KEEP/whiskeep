@@ -14,6 +14,7 @@ import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.api.record.domain.Record;
 import com.whiskeep.api.record.dto.RecordCreateRequestDto;
+import com.whiskeep.api.record.dto.RecordListWhiskyAndMemberResponseDto;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.dto.RecordListResponseDto;
@@ -120,4 +121,28 @@ public class RecordService {
 			.collect(Collectors.toList());
 	}
 
+	public RecordListWhiskyAndMemberResponseDto getRecordByWhiskyIdAndMember(Long whiskyId, Member member) {
+
+		Whisky whisky = whiskyRepository.findById(whiskyId)
+			.orElseThrow(()-> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
+
+
+		List<RecordListWhiskyAndMemberResponseDto.RecordSummaryDto> recordDtos =
+			recordRepository.findAllByMemberAndWhisky(member, whisky)
+				.stream()
+				.map(record -> new RecordListWhiskyAndMemberResponseDto.RecordSummaryDto(
+					record.recordId(),
+					record.recordImg()
+				))
+				.collect(Collectors.toList());
+
+		return new RecordListWhiskyAndMemberResponseDto(
+			whisky.getWhiskyId(),
+			whisky.getWhiskyImg(),
+			whisky.getKoName(),
+			whisky.getEnName(),
+			recordDtos
+		);
+
+	}
 }
