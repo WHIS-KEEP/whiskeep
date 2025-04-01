@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from '../pages/HomePage';
 import NotFound from '../pages/NotFoundPage';
-import Navbar from '../components/layout/Navbar';
+import Navbar from '@/components/layout/Navbar';
 import Header from '@/components/layout/Header';
-import Main from '../pages/MainPage';
+import Main from '@/pages/MainPage';
 import List from '@/pages/ListPage';
 import Collection from '@/pages/CollectionPage';
-import MyPage from '@/pages/MyPage';
+import Mypage from '@/pages/MyPage';
 import Login from '@/pages/LoginPage';
 // import Test from '@/pages/Test';
 import Like from '@/pages/LikePage';
@@ -28,7 +28,7 @@ const Router = () => {
             <Route path="main" element={<Main />} />
             <Route path="list" element={<List />} />
             <Route path="collection" element={<Collection />} />
-            <Route path="mypage" element={<MyPage />} />
+            <Route path="mypage" element={<Mypage />} />
             <Route path="login" element={<Login />} />
             {/* <Route path="test" element={<Test />} /> */}
             <Route path="like" element={<Like />} />
