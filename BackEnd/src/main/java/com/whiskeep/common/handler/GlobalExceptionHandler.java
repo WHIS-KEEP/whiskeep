@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +18,7 @@ import com.whiskeep.common.exception.BaseException;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.FailResponse;
 import com.whiskeep.common.exception.FieldErrorDetail;
+import com.whiskeep.common.exception.UnauthorizedException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -78,4 +80,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 				ErrorMessage.INTERNAL_SERVER_ERROR.getMessage()
 			));
 	}
+
+	@ExceptionHandler(UnauthorizedException.class)
+	public ResponseEntity<FailResponse> handleUnauthorizedException(AuthenticationException ex) {
+		return ResponseEntity
+			.status(HttpStatus.UNAUTHORIZED)
+			.body(FailResponse.fail(
+				HttpStatus.UNAUTHORIZED.value(),
+				ErrorMessage.UNAUTHORIZED.getMessage()
+			));
+	}
+
 }

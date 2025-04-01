@@ -8,6 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.whiskeep.common.exception.BadRequestException;
+import com.whiskeep.common.exception.ErrorMessage;
+import com.whiskeep.common.exception.UnauthorizedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,12 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			if (jwtTokenProvider.validateToken(token)) {
 				Long memberId = jwtTokenProvider.getMemberIdFromToken(token);
 
-				request.setAttribute("memberId", memberId);
-
 				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(memberId, null,
 					List.of(new SimpleGrantedAuthority("ROLE_USER")));
 
 				SecurityContextHolder.getContext().setAuthentication(auth);
+			} else {
+				// 토큰이 유효하지 않으면
+				throw new UnauthorizedException(ErrorMessage.INVALID_TOKEN);
 			}
 		}
 		filterChain.doFilter(request, response);

@@ -7,7 +7,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
+import com.whiskeep.common.auth.jwt.JwtAuthenticationEntryPoint;
 import com.whiskeep.common.auth.jwt.JwtAuthenticationFilter;
 import com.whiskeep.common.auth.jwt.JwtTokenProvider;
 
@@ -18,12 +20,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider) throws
+	public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider,
+		CorsConfigurationSource corsConfigurationSource) throws
 		Exception {
 		http
-			.cors(cors -> cors.disable()) // ✅ CORS 설정 추가
+			.cors(c -> c.configurationSource(request -> new org.springframework.web.cors.CorsConfiguration().applyPermitDefaultValues())) // ✅ CORS 설정 추가
 			.csrf(csrf -> csrf.disable()) // CSRF 보안 해제 (API 서버의 경우 비활성화 가능)
+			.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/api/members/login/**").permitAll() // 누구나 접근 가능
 				.anyRequest().authenticated() // 그 외 요청은 인증 필요
