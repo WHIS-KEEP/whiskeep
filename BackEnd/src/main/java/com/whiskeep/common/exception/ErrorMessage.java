@@ -32,6 +32,7 @@ public enum ErrorMessage {
 	WHISKY_NOT_FOUND("요청한 위스키를 찾을 수 없습니다"),
 	MEMBER_NOT_FOUND("요청한 사용자를 찾을 수 없습니다"),
 	RECORD_NOT_FOUND("요청한 기록을 찾을 수 없습니다"),
+	PREFERENCE_NOT_FOUND("요청한 설문조사 정보를 찾을 수 없습니다"),
 
 	// 500 Internal Server Error 관련 오류
 	INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다"),
