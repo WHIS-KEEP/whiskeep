@@ -23,7 +23,10 @@ import {
   SelectValue,
 } from '@/components/shadcn/select';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
-import { ToggleGroup, ToggleGroupItem } from '@/components/shadcn/toggle-group';
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from '@/components/shadcn/toggle/toggle-group';
 import { Star } from 'lucide-react';
 import { Search } from 'lucide-react';
 
