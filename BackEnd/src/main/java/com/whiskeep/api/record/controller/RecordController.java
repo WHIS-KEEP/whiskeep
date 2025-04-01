@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whiskeep.api.member.domain.Member;
-import com.whiskeep.api.record.dto.RecordCreateRequestDto;
-import com.whiskeep.api.record.dto.RecordDetailResponseDto;
-import com.whiskeep.api.record.dto.RecordListWhiskyAndMemberResponseDto;
-import com.whiskeep.api.record.dto.RecordUpdateRequestDto;
+import com.whiskeep.api.record.dto.request.RecordCreateRequestDto;
+import com.whiskeep.api.record.dto.response.RecordDetailResponseDto;
+import com.whiskeep.api.record.dto.response.MyRecordResponseDto;
+import com.whiskeep.api.record.dto.request.RecordUpdateRequestDto;
 import com.whiskeep.api.record.service.RecordService;
 import com.whiskeep.api.whisky.dto.WhiskyRecordResponseDto;
 import com.whiskeep.common.auth.annotation.Auth;
@@ -51,10 +51,10 @@ public class RecordController {
 	public ResponseEntity<?> getRecordsByWhiskyIdAndMember(
 		@Auth Member member, @PathVariable Long whiskyId) {
 
-		RecordListWhiskyAndMemberResponseDto recordListWhiskyAndMemberResponseDto
+		MyRecordResponseDto myRecordResponseDto
 			= recordService.getRecordByWhiskyIdAndMember(whiskyId, member);
 
-		return ResponseEntity.ok(recordListWhiskyAndMemberResponseDto);
+		return ResponseEntity.ok(myRecordResponseDto);
 	}
 
 	@GetMapping("/{whiskyId}/{recordId}")

@@ -1,4 +1,4 @@
-package com.whiskeep.api.record.dto;
+package com.whiskeep.api.record.dto.request;
 
 public record RecordCreateRequestDto(
 	long whiskyId,

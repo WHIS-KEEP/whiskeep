@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.api.record.domain.Record;
-import com.whiskeep.api.record.dto.RecordCreateRequestDto;
-import com.whiskeep.api.record.dto.RecordDetailResponseDto;
-import com.whiskeep.api.record.dto.RecordListWhiskyAndMemberResponseDto;
-import com.whiskeep.api.record.dto.RecordUpdateRequestDto;
+import com.whiskeep.api.record.dto.request.RecordCreateRequestDto;
+import com.whiskeep.api.record.dto.response.RecordDetailResponseDto;
+import com.whiskeep.api.record.dto.response.MyRecordResponseDto;
+import com.whiskeep.api.record.dto.request.RecordUpdateRequestDto;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.dto.RecordListResponseDto;
@@ -123,21 +123,21 @@ public class RecordService {
 			.collect(Collectors.toList());
 	}
 
-	public RecordListWhiskyAndMemberResponseDto getRecordByWhiskyIdAndMember(Long whiskyId, Member member) {
+	public MyRecordResponseDto getRecordByWhiskyIdAndMember(Long whiskyId, Member member) {
 
 		Whisky whisky = whiskyRepository.findById(whiskyId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
 
-		List<RecordListWhiskyAndMemberResponseDto.RecordSummaryDto> recordDtos =
+		List<MyRecordResponseDto.RecordSummaryDto> recordDtos =
 			recordRepository.findAllByMemberAndWhisky(member, whisky)
 				.stream()
-				.map(record -> new RecordListWhiskyAndMemberResponseDto.RecordSummaryDto(
+				.map(record -> new MyRecordResponseDto.RecordSummaryDto(
 					record.recordId(),
 					record.recordImg()
 				))
 				.collect(Collectors.toList());
 
-		return new RecordListWhiskyAndMemberResponseDto(
+		return new MyRecordResponseDto(
 			whisky.getWhiskyId(),
 			whisky.getWhiskyImg(),
 			whisky.getKoName(),

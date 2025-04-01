@@ -14,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.record.domain.Record;
-import com.whiskeep.api.record.dto.RecordListWhiskyAndMemberResponseDto;
+import com.whiskeep.api.record.dto.response.MyRecordResponseDto;
 import com.whiskeep.api.whisky.domain.Whisky;
 
 public interface RecordRepository extends JpaRepository<Record, Long> {
@@ -33,5 +33,5 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 	List<Record> findAllByMember(Member member);
 
-	List<RecordListWhiskyAndMemberResponseDto.RecordSummaryDto> findAllByMemberAndWhisky(Member member, Whisky whisky);
+	List<MyRecordResponseDto.RecordSummaryDto> findAllByMemberAndWhisky(Member member, Whisky whisky);
 }

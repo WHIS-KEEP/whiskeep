@@ -1,8 +1,8 @@
-package com.whiskeep.api.record.dto;
+package com.whiskeep.api.record.dto.response;
 
 import java.util.List;
 
-public record RecordListWhiskyAndMemberResponseDto(
+public record MyRecordResponseDto(
 	Long whiskyId,
 	String whiskyImg,
 	String whiskyKoName,
