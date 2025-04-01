@@ -1,6 +1,7 @@
 package com.whiskeep.api.record.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import com.whiskeep.api.record.dto.RecordCreateRequestDto;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.dto.RecordListResponseDto;
+import com.whiskeep.api.whisky.dto.WhiskyRecordResponseDto;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.NotFoundException;
@@ -91,4 +93,31 @@ public class RecordService {
 			.build();
 
 	}
+
+	public List<WhiskyRecordResponseDto> getWhiskyRecordsByMember(Member member) {
+
+		//login 한 유저의 모든 record 를 map 으로 수집 후, list 로 반환하여 중복 제거
+		return recordRepository.findAllByMember(member)
+			.stream()
+			.collect(Collectors.toMap(
+				record -> {
+					return Optional.ofNullable(record)
+						.map(r -> r.getWhisky())
+						.map(w -> w.getWhiskyId())
+						.orElseThrow(() -> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
+				},
+				record -> {
+					Whisky whisky = record.getWhisky();
+					return new WhiskyRecordResponseDto(
+						whisky.getWhiskyId(),
+						whisky.getWhiskyImg()
+					);
+				},
+				(existing, replacement) -> existing
+			))
+			.values()
+			.stream()
+			.collect(Collectors.toList());
+	}
+
 }
