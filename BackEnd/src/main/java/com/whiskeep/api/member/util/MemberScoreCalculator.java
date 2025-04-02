@@ -23,12 +23,17 @@ public class MemberScoreCalculator {
 
 	// 사용자가 선택한 위스키 맛 데이터 바탕으로 사용자 점수 계산
 	// Top-K 평균 -> 정규화 (Max 값 활용) -> 1~5점으로 스케일링
-	public Map<TastingCategory, Double> calculateProfileScore(List<Whisky> whiskies, String type) {
-		Map<TastingCategory, Double> total = new EnumMap<>(TastingCategory.class);
-		Map<TastingCategory, Integer> count = new EnumMap<>(TastingCategory.class);
+	public Map<TastingCategory, Double> calculateProfileScore(List<Whisky> whiskyList,
+		List<Double> ratingList, String type) {
+		Map<TastingCategory, Double> weightedTotal = new EnumMap<>(TastingCategory.class);
+		Map<TastingCategory, Double> totalWeight = new EnumMap<>(TastingCategory.class);
 
-		for (Whisky whisky : whiskies) {
+		for (int idx = 0; idx < whiskyList.size(); idx++) {
+			Whisky whisky = whiskyList.get(idx);
+			double weight = ratingList.get(idx) / 5.0; // 평점 1~5점 => 가중치 계산
+
 			TastingProfile<Map<String, Double>> profile = getProfileByType(type, whisky);
+
 			for (TastingCategory category : TastingCategory.values()) {
 				TastingComponent<Map<String, Double>> comp = profile.getComponent(category);
 				if (comp == null || comp.getData() == null) {
@@ -41,8 +46,9 @@ public class MemberScoreCalculator {
 					.toList();
 
 				double avgTopK = topK.stream().mapToDouble(d -> d).average().orElse(0.0);
-				total.merge(category, avgTopK, Double::sum);
-				count.merge(category, 1, Integer::sum);
+
+				weightedTotal.merge(category, avgTopK * weight, Double::sum);
+				totalWeight.merge(category, weight, Double::sum);
 			}
 		}
 
@@ -50,10 +56,10 @@ public class MemberScoreCalculator {
 		Map<TastingCategory, Double> scaledScores = new EnumMap<>(TastingCategory.class);
 
 		for (TastingCategory category : TastingCategory.values()) {
-			if (!total.containsKey(category)) {
+			if (!weightedTotal.containsKey(category)) {
 				continue;
 			}
-			double avg = total.get(category) / count.get(category);
+			double avg = weightedTotal.get(category) / totalWeight.get(category);
 			double max = maxMap.getOrDefault(category, 1.0);
 
 			double normalized = avg / max;

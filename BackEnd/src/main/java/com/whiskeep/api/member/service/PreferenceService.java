@@ -1,5 +1,6 @@
 package com.whiskeep.api.member.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import com.whiskeep.api.member.repository.FamiliarWhiskyPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.api.member.util.MemberScoreCalculator;
+import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
 import com.whiskeep.common.enumclass.TastingCategory;
@@ -36,6 +38,7 @@ public class PreferenceService {
 	private final FamiliarWhiskyPreferenceRepository familiarWhiskyPreferenceRepository;
 	private final WhiskyRepository whiskyRepository;
 	private final MemberScoreCalculator memberScoreCalculator;
+	private final RecordRepository recordRepository;
 
 	@Transactional
 	public void createBeginnerPreferenceScore(BeginnerPreferenceRequestDto preferenceRequestDto, Long memberId) {
@@ -108,12 +111,23 @@ public class PreferenceService {
 		// 초기 숙련자가 설문조사를 바탕으로 고른 위스키 Id 기반으로 위스키 리스트 반환
 		List<Whisky> whiskyList = whiskyRepository.findAllById(preferenceRequestDto.likedWhiskies());
 
-		// 3. 사용자 점수 계산
-		Map<TastingCategory, Double> nosingScores = memberScoreCalculator.calculateProfileScore(whiskyList, "nosing");
-		Map<TastingCategory, Double> tastingScores = memberScoreCalculator.calculateProfileScore(whiskyList, "tasting");
-		Map<TastingCategory, Double> finishScores = memberScoreCalculator.calculateProfileScore(whiskyList, "finish");
+		// 위스키 평점 리스트 조회하기
+		List<Double> ratingList = new ArrayList<>();
+		for (Whisky whisky : whiskyList) {
+			Double rating = recordRepository.findAverageRatingByWhiskyId(whisky.getWhiskyId()).orElse(5.0);
+			ratingList.add(rating);
+		}
 
-		// 4. 맛 프로필 별로 동일한 score 값 세팅
+		// 3. 사용자 점수 계산
+		Map<TastingCategory, Double> nosingScores = memberScoreCalculator.calculateProfileScore(whiskyList,
+			ratingList, "nosing");
+		Map<TastingCategory, Double> tastingScores = memberScoreCalculator.calculateProfileScore(whiskyList,
+			ratingList,
+			"tasting");
+		Map<TastingCategory, Double> finishScores = memberScoreCalculator.calculateProfileScore(whiskyList,
+			ratingList, "finish");
+
+		// 4. 맛 프로필 별로 score 값 세팅
 		TastingProfile<Double> nosing = createProfileFromMap(nosingScores);
 		TastingProfile<Double> tasting = createProfileFromMap(tastingScores);
 		TastingProfile<Double> finish = createProfileFromMap(finishScores);
