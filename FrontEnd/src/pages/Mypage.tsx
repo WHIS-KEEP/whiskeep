@@ -19,13 +19,25 @@ import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // Scro
 import API from '@/lib/util/axiosInstance'; // axiosInstance 임포트
 import { useEffect, useState } from 'react';
 
+// 🔹 UserData 타입 정의
+interface UserData {
+  name: string;
+  email: string;
+  nickname: string;
+  profileImageUrl?: string;
+}
+
 const MyPage = () => {
-  const [userData, setUserData] = useState({}); // 타입지정 물어보기 //////////////
+  const [userData, setUserData] = useState<UserData>({
+    name: '',
+    email: '',
+    nickname: '',
+    profileImageUrl: '',
+  });
 
   useEffect(() => {
     API.get('/members')
       .then((response) => {
-        console.log(response.data)
         setUserData({
           name: response.data.name,
           email: response.data.email,
@@ -36,7 +48,6 @@ const MyPage = () => {
       .catch((error) => console.error('API 호출 오류:', error)); // 401은 인터셉터가 처리하므로 여기선 로그만 남김
   }, []);
 
-  console.log(userData);
 
   // 이미지 변경 메뉴 관련 핸들러 (실제 구현 필요)
   const handleTakePhoto = () => {
