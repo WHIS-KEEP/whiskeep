@@ -81,13 +81,37 @@ public class RecommendService {
 			recommendList.add(whiskies);
 		}
 
-		List<RecommendResponseDto> topRecommendations = recommendList.stream()
+		List<RecommendResponseDto> sortedRecommendations = recommendList.stream()
 			.sorted((w1, w2) -> Double.compare(w2.getSimilarity(), w1.getSimilarity()))
-			.limit(5)
 			.collect(Collectors.toList());
 
+		return getNoDuplicatedRecommendations(sortedRecommendations, 5);
+	}
+
+	//중복 안된 추천 리스트 만들기
+	private RecommendedListResponseDto getNoDuplicatedRecommendations(List<RecommendResponseDto> sortedRecommendations,
+		int limit) {
+
+		List<RecommendResponseDto> noDuplicatedRecommendations = new ArrayList<>();
+
+		//중복검사용
+		Set<String> uniqueNames = new HashSet<>();
+
+		for (RecommendResponseDto recommendResponseDto : sortedRecommendations) {
+			if (!uniqueNames.contains(recommendResponseDto.getKoName())) {
+				noDuplicatedRecommendations.add(recommendResponseDto);
+				uniqueNames.add(recommendResponseDto.getKoName());
+
+				if (noDuplicatedRecommendations.size() >= limit) {
+					break;
+				}
+			}
+
+		}
+
 		return RecommendedListResponseDto.builder()
-			.recommendList(topRecommendations).build();
+			.recommendList(noDuplicatedRecommendations)
+			.build();
 	}
 
 	// 유사도 계산
