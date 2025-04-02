@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.recommend.dto.RecommendedListResponseDto;
 import com.whiskeep.api.recommend.service.RecommendService;
 import com.whiskeep.common.auth.annotation.Auth;
@@ -20,9 +19,9 @@ public class RecommendController {
 	private final RecommendService recommendService;
 
 	@GetMapping //추천가져오기
-	public ResponseEntity<RecommendedListResponseDto> recommend(@Auth Member member) {
+	public ResponseEntity<RecommendedListResponseDto> recommend(@Auth Long memberId) {
 
-		RecommendedListResponseDto recommendations = recommendService.recommend(member);
+		RecommendedListResponseDto recommendations = recommendService.recommend(memberId);
 		return ResponseEntity.ok(recommendations);
 	}
 }

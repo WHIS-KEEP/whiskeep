@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.whiskeep.api.member.domain.FamiliarWhiskyPreference;
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.repository.FamiliarWhiskyPreferenceRepository;
+import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.api.recommend.dto.RecommendResponseDto;
 import com.whiskeep.api.recommend.dto.RecommendedListResponseDto;
 import com.whiskeep.api.recommend.util.CosineSimilarityUtil;
@@ -35,8 +36,13 @@ public class RecommendService {
 	private final WhiskyRepository whiskyRepository;
 	private final RecommendBeginnerService recommendBeginnerService;
 	private final FamiliarWhiskyPreferenceRepository familiarWhiskyPreferenceRepository;
+	private final MemberRepository memberRepository;
 
-	public RecommendedListResponseDto recommend(Member member) {
+	public RecommendedListResponseDto recommend(Long memberId) {
+		Member member =
+			memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+
+
 		int recordCnt = recordRepository.countByMember(member);
 
 		if (recordCnt >= 3) {

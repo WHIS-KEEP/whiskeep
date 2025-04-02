@@ -20,6 +20,7 @@ import com.whiskeep.api.whisky.repository.WhiskyRepository;
 import com.whiskeep.common.enumclass.TastingCategory;
 import com.whiskeep.common.exception.BadRequestException;
 import com.whiskeep.common.exception.ErrorMessage;
+import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
 
@@ -36,7 +37,11 @@ public class PreferenceService {
 	private final MemberScoreCalculator memberScoreCalculator;
 
 	@Transactional
-	public void createBeginnerPreferenceScore(BeginnerPreferenceRequestDto preferenceRequestDto, Member member) {
+	public void createBeginnerPreferenceScore(BeginnerPreferenceRequestDto preferenceRequestDto, Long memberId) {
+		Member member =
+			memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+
+
 		// 이미 초기 설문조사를 완료한 경우
 		if (memberPreferenceRepository.existsByMember(member)) {
 			throw new BadRequestException(ErrorMessage.PREFERENCE_ALREADY_REGISTERED);
@@ -82,7 +87,9 @@ public class PreferenceService {
 
 	// 숙련자 선택한 위스키 기반 점수 계산
 	@Transactional
-	public void createFamiliarPreferenceScore(FamiliarPreferenceRequestDto preferenceRequestDto, Member member) {
+	public void createFamiliarPreferenceScore(FamiliarPreferenceRequestDto preferenceRequestDto, Long memberId) {
+		Member member =
+			memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		// 이미 초기 설문조사를 완료한 경우,
 		if (familiarWhiskyPreferenceRepository.existsByMember(member)) {
