@@ -31,4 +31,15 @@ public class TastingProfile<T> {
 			default -> null;
 		};
 	}
+
+	public void setComponent(TastingCategory category, TastingComponent<T> component) {
+		switch (category) {
+			case FRUITY -> this.fruity = component;
+			case SWEET -> this.sweet = component;
+			case SPICY -> this.spicy = component;
+			case OAKY -> this.oaky = component;
+			case HERBAL -> this.herbal = component;
+			case BRINY -> this.briny = component;
+		}
+	}
 }

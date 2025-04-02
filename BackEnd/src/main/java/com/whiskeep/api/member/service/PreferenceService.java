@@ -1,6 +1,7 @@
 package com.whiskeep.api.member.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,8 +14,10 @@ import com.whiskeep.api.member.dto.FamiliarPreferenceRequestDto;
 import com.whiskeep.api.member.repository.FamiliarWhiskyPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberRepository;
+import com.whiskeep.api.member.util.MemberScoreCalculator;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
+import com.whiskeep.common.enumclass.TastingCategory;
 import com.whiskeep.common.exception.BadRequestException;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.model.TastingComponent;
@@ -28,8 +31,9 @@ public class PreferenceService {
 
 	private final MemberRepository memberRepository;
 	private final MemberPreferenceRepository memberPreferenceRepository;
-	private final FamiliarWhiskyPreferenceRepository initialWhiskyPreferenceRepository;
+	private final FamiliarWhiskyPreferenceRepository familiarWhiskyPreferenceRepository;
 	private final WhiskyRepository whiskyRepository;
+	private final MemberScoreCalculator memberScoreCalculator;
 
 	@Transactional
 	public void createBeginnerPreferenceScore(BeginnerPreferenceRequestDto preferenceRequestDto, Member member) {
@@ -60,18 +64,18 @@ public class PreferenceService {
 
 	private TastingProfile<Double> createSimpleProfile(BeginnerPreferenceRequestDto.TastingScoreRequest baseScore) {
 		return TastingProfile.<Double>builder()
-			.fruity(toComponent(baseScore.fruity()))
-			.sweet(toComponent(baseScore.sweet()))
-			.spicy(toComponent(baseScore.spicy()))
-			.oaky(toComponent(baseScore.oaky()))
-			.herbal(toComponent(baseScore.herbal()))
-			.briny(toComponent(baseScore.briny()))
+			.fruity(toComponent(baseScore.fruity().doubleValue()))
+			.sweet(toComponent(baseScore.sweet().doubleValue()))
+			.spicy(toComponent(baseScore.spicy().doubleValue()))
+			.oaky(toComponent(baseScore.oaky().doubleValue()))
+			.herbal(toComponent(baseScore.herbal().doubleValue()))
+			.briny(toComponent(baseScore.briny().doubleValue()))
 			.build();
 	}
 
-	private TastingComponent<Double> toComponent(Integer score) {
+	private TastingComponent<Double> toComponent(Double score) {
 		return TastingComponent.<Double>builder()
-			.score(score.doubleValue()) // 그냥 Double로 변환
+			.score(score) // 그냥 Double로 변환
 			.data(null) // 추후 분석 데이터 필요 시 사용
 			.build();
 	}
@@ -81,7 +85,7 @@ public class PreferenceService {
 	public void createFamiliarPreferenceScore(FamiliarPreferenceRequestDto preferenceRequestDto, Member member) {
 
 		// 이미 초기 설문조사를 완료한 경우,
-		if (initialWhiskyPreferenceRepository.existsByMember(member)) {
+		if (familiarWhiskyPreferenceRepository.existsByMember(member)) {
 			throw new BadRequestException(ErrorMessage.PREFERENCE_ALREADY_REGISTERED);
 		}
 
@@ -91,28 +95,42 @@ public class PreferenceService {
 			.likedWhiskyIdList(preferenceRequestDto.likedWhiskies())
 			.build();
 
+		familiarWhiskyPreferenceRepository.save(familiarPreference);
 
-		initialWhiskyPreferenceRepository.save(familiarPreference);
-
-		// TODO 정확한 계산방법 적용하여 점수 생성하기
-		// 2. 초기에 고른 위스키 3병 기반으로 MemberPreference 점수 계산하여 생성하기
-
+		// 2. 위스키 정보 불러오기
+		// 초기 숙련자가 설문조사를 바탕으로 고른 위스키 Id 기반으로 위스키 리스트 반환
 		List<Whisky> whiskyList = whiskyRepository.findAllById(preferenceRequestDto.likedWhiskies());
 
-		// TastingProfile<Double> nosing = calculateAvgProfile(preferenceRequestDto.likedWhiskies(), "noising");
-		// TastingProfile<Double> tasting = calculateAvgProfile(preferenceRequestDto.likedWhiskies(), "tasting");
-		// TastingProfile<Double> finish = calculateAvgProfile(preferenceRequestDto.likedWhiskies(), "finish");
+		// 3. 사용자 점수 계산
+		Map<TastingCategory, Double> nosingScores = memberScoreCalculator.calculateProfileScore(whiskyList, "nosing");
+		Map<TastingCategory, Double> tastingScores = memberScoreCalculator.calculateProfileScore(whiskyList, "tasting");
+		Map<TastingCategory, Double> finishScores = memberScoreCalculator.calculateProfileScore(whiskyList, "finish");
 
+		// 4. 맛 프로필 별로 동일한 score 값 세팅
+		TastingProfile<Double> nosing = createProfileFromMap(nosingScores);
+		TastingProfile<Double> tasting = createProfileFromMap(tastingScores);
+		TastingProfile<Double> finish = createProfileFromMap(finishScores);
 
-		// 3. 계산된 score 값으로 Member Preference DB에 저장
-		// MemberPreference memberPreference = MemberPreference.builder()
-		// 	.member(member)
-		// 	.nosing(nosing)
-		// 	.tasting(tasting)
-		// 	.finish(finish)
-		// 	.build();
+		// 5. 계산된 score 값으로 Member Preference DB에 저장
+		MemberPreference memberPreference = MemberPreference.builder()
+			.member(member)
+			.nosing(nosing)
+			.tasting(tasting)
+			.finish(finish)
+			.build();
 
-		// memberPreferenceRepository.save(memberPreference);
+		memberPreferenceRepository.save(memberPreference);
+	}
+
+	private TastingProfile<Double> createProfileFromMap(Map<TastingCategory, Double> scores) {
+		return TastingProfile.<Double>builder()
+			.fruity(toComponent(scores.getOrDefault(TastingCategory.FRUITY, 0.0)))
+			.sweet(toComponent(scores.getOrDefault(TastingCategory.SWEET, 0.0)))
+			.spicy(toComponent(scores.getOrDefault(TastingCategory.SPICY, 0.0)))
+			.oaky(toComponent(scores.getOrDefault(TastingCategory.OAKY, 0.0)))
+			.herbal(toComponent(scores.getOrDefault(TastingCategory.HERBAL, 0.0)))
+			.briny(toComponent(scores.getOrDefault(TastingCategory.BRINY, 0.0)))
+			.build();
 	}
 
 }
