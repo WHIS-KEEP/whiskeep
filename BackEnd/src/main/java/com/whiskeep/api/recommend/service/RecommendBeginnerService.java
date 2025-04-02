@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
 import org.springframework.stereotype.Service;
 
 import com.whiskeep.api.member.domain.Member;
@@ -15,6 +13,7 @@ import com.whiskeep.api.member.domain.MemberPreference;
 import com.whiskeep.api.member.repository.MemberPreferenceRepository;
 import com.whiskeep.api.recommend.dto.RecommendResponseDto;
 import com.whiskeep.api.recommend.dto.RecommendedListResponseDto;
+import com.whiskeep.api.recommend.util.CosineSimilarityUtil;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
 import com.whiskeep.common.enumclass.TastingCategory;
@@ -46,17 +45,20 @@ public class RecommendBeginnerService {
 		// 3. 모든 위스키 리스트 돌면서 -> 코사인 유사도가 높은 위스키 반환하기
 		List<Whisky> allWhiskies = whiskyRepository.findAll();
 
+		// 중복된 한글이름(koName) 제거 위한 Set
 		Set<String> seenKoNames = new HashSet<>();
 
+		// 4. 모든 위스키에 대한 유사도 계산 후 sort 하여 추천 리스트 생성하기
 		List<RecommendResponseDto> recommendList = allWhiskies.stream()
 			.map(whisky -> RecommendResponseDto.builder()
 				.whiskyId(whisky.getWhiskyId())
 				.koName(whisky.getKoName())
 				.whiskyImg(whisky.getWhiskyImg())
 				.abv(whisky.getAbv())
-				.similarity(cosineSimilarity(userVector, extraWhiskyVector(whisky)))
+				.similarity(CosineSimilarityUtil.calculateCosineSimilarity(userVector, extraWhiskyVector(whisky))) //
+				// 사용자 벡터와 위스키 벡터 사이 코사인 유사도 검사
 				.build())
-			.filter(dto -> seenKoNames.add(dto.getKoName())) // Set으로 중복 제거 (같은 koName 일 경우, 중복 제거)
+			.filter(dto -> seenKoNames.add(dto.getKoName()))
 			.sorted((a, b) -> Double.compare(b.getSimilarity(), a.getSimilarity()))
 			.limit(5)
 			.toList();
@@ -69,27 +71,32 @@ public class RecommendBeginnerService {
 		Map<String, Double> userVector = new HashMap<>();
 		List<Double> weights = beginnerPref.getPreferenceOrder();
 
+		// 총합을 기준으로 정규화하여 가중치 계산
 		double totalWeight = weights.stream().mapToDouble(Double::doubleValue).sum();
 		double wNosing = weights.get(0) / totalWeight;
 		double wTasting = weights.get(1) / totalWeight;
 		double wFinish = weights.get(2) / totalWeight;
 
+		// TastingCategory에 대한 가중합 점수 계산
 		for (TastingCategory category : TastingCategory.values()) {
 			double score = getScore(beginnerPref.getNosing(), category) * wNosing
 				+ getScore(beginnerPref.getTasting(), category) * wTasting
 				+ getScore(beginnerPref.getFinish(), category) * wFinish;
 
+			// toLowerCase() : 키 이름 통일 및 일관성 유지를 위해
 			userVector.put(category.name().toLowerCase(), score);
 		}
 		return userVector;
 	}
 
+	// 각 TastingCategory 별로 score 가져오기
 	private double getScore(TastingProfile<Double> profile, TastingCategory category) {
 		TastingComponent<Double> tastingComponent = profile.getComponent(category);
 
 		return tastingComponent != null && tastingComponent.getScore() != null ? tastingComponent.getScore() : 0.0;
 	}
 
+	// 위스키 하나에 대한 카테고리별 평균 점수 기반으로 벡터 추출하는 메서드
 	private Map<String, Double> extraWhiskyVector(Whisky whisky) {
 		Map<String, Double> extraWhiskyVector = new HashMap<>();
 
@@ -117,26 +124,4 @@ public class RecommendBeginnerService {
 		return extraWhiskyVector;
 	}
 
-	// 사용자 벡터와 위스키 벡터 코사인 유사도 비교하기
-	private Double cosineSimilarity(Map<String, Double> userVector, Map<String, Double> stringDoubleMap) {
-		// 모든 키를 합치기
-		Set<String> keys = new HashSet<>();
-		keys.addAll(userVector.keySet());
-		keys.addAll(stringDoubleMap.keySet());
-
-		RealVector vec1 = new ArrayRealVector(keys.size());
-		RealVector vec2 = new ArrayRealVector(keys.size());
-
-		int idx = 0;
-		for (String key : keys) {
-			vec1.setEntry(idx, userVector.getOrDefault(key, 0.0));
-			vec2.setEntry(idx, stringDoubleMap.getOrDefault(key, 0.0));
-			idx++;
-		}
-
-		if (vec1.getNorm() == 0 || vec2.getNorm() == 0) {
-			return 0.0;
-		}
-		return vec1.cosine(vec2);
-	}
 }

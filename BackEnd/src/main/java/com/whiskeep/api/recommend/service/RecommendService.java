@@ -2,14 +2,10 @@ package com.whiskeep.api.recommend.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
 import org.springframework.stereotype.Service;
 
 import com.whiskeep.api.member.domain.FamiliarWhiskyPreference;
@@ -17,6 +13,7 @@ import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.repository.FamiliarWhiskyPreferenceRepository;
 import com.whiskeep.api.recommend.dto.RecommendResponseDto;
 import com.whiskeep.api.recommend.dto.RecommendedListResponseDto;
+import com.whiskeep.api.recommend.util.CosineSimilarityUtil;
 import com.whiskeep.api.record.domain.Record;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
@@ -25,7 +22,6 @@ import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -135,28 +131,8 @@ public class RecommendService {
 		Map<String, Double> whiskyFlavorDetails1 = getWhiskyFlavorDetails(profile1);
 		Map<String, Double> whiskyFlavorDetails2 = getWhiskyFlavorDetails(profile2);
 
-		//비교하고 있는 두개의 위스키가 가지고 있는 특성들 하나에 저장
-		Set<String> allFlavors = new HashSet<>();
-		allFlavors.addAll(whiskyFlavorDetails1.keySet());
-		allFlavors.addAll(whiskyFlavorDetails2.keySet());
-
-		RealVector whiskyV1 = new ArrayRealVector(allFlavors.size());
-		RealVector whiskyV2 = new ArrayRealVector(allFlavors.size());
-
-		// 없는 맛은 0으로 채우기
-		int cnt = 0;
-		for (String flavor : allFlavors) {
-			whiskyV1.setEntry(cnt, whiskyFlavorDetails1.getOrDefault(flavor, 0.0));
-			whiskyV2.setEntry(cnt, whiskyFlavorDetails2.getOrDefault(flavor, 0.0));
-			cnt++;
-		}
-
-		if (whiskyV1.getNorm() == 0.0 || whiskyV2.getNorm() == 0.0) {
-			return 0.0;
-		}
-
-		return whiskyV1.cosine(whiskyV2);
-
+		// 코사인 유사도 비교 util 계산하기
+		return CosineSimilarityUtil.calculateCosineSimilarity(whiskyFlavorDetails1, whiskyFlavorDetails2);
 	}
 
 	//위스키 속 세부항목 가져오기
