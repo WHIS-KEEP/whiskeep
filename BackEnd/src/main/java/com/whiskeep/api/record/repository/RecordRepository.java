@@ -4,6 +4,7 @@ package com.whiskeep.api.record.repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,4 +34,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 	List<Record> findAllByMember(Member member);
 
 	List<MyRecordResponseDto.RecordSummaryDto> findAllByMemberAndWhisky(Member member, Whisky whisky);
+
+	Set<Long> findDistinctWhiskyIdsByMember(Member member);
 }

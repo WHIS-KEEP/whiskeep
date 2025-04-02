@@ -154,7 +154,7 @@ public class PreferenceService {
 			.build();
 	}
 
-	// 사용자 선호 점수 조회하기
+	// 사용자 점수 조회하기
 	public MemberScoreResponseDto getMemberPreferenceScore(Long memberId) {
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
@@ -163,5 +163,31 @@ public class PreferenceService {
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.PREFERENCE_NOT_FOUND));
 
 		return MemberScoreResponseDto.from(memberPreference);
+	}
+
+	// 사용자 기록이 3병 이상일 경우 -> 점수 업데이트하기
+	public void updateMemberPreference(Member member, List<Whisky> whiskyList, List<Double> ratingList) {
+		// TODO 반복되는 코드 메서드로 분리하기
+		// 3. 사용자 점수 계산
+		Map<TastingCategory, Double> nosingScores = memberScoreCalculator.calculateProfileScore(whiskyList,
+			ratingList, "nosing");
+		Map<TastingCategory, Double> tastingScores = memberScoreCalculator.calculateProfileScore(whiskyList,
+			ratingList,
+			"tasting");
+		Map<TastingCategory, Double> finishScores = memberScoreCalculator.calculateProfileScore(whiskyList,
+			ratingList, "finish");
+
+		// 4. 맛 프로필 별로 score 값 세팅
+		TastingProfile<Double> nosing = createProfileFromMap(nosingScores);
+		TastingProfile<Double> tasting = createProfileFromMap(tastingScores);
+		TastingProfile<Double> finish = createProfileFromMap(finishScores);
+
+		// 5. 계산된 score 값으로 Member Preference DB에 저장
+		MemberPreference memberPreference = memberPreferenceRepository.findByMember(member)
+			.orElse(MemberPreference.builder()
+				.member(member).build());
+
+		memberPreference.update(nosing, tasting, finish);
+		memberPreferenceRepository.save(memberPreference);
 	}
 }

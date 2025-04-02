@@ -52,4 +52,9 @@ public class MemberPreference {
 	@Column(columnDefinition = "jsonb")
 	List<Double> preferenceOrder;
 
+	public void update(TastingProfile<Double> nosing, TastingProfile<Double> tasting, TastingProfile<Double> finish) {
+		this.nosing = nosing;
+		this.tasting = tasting;
+		this.finish = finish;
+	}
 }

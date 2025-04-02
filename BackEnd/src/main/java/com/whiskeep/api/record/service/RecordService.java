@@ -2,6 +2,7 @@ package com.whiskeep.api.record.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.repository.MemberRepository;
+import com.whiskeep.api.member.service.PreferenceService;
 import com.whiskeep.api.record.domain.Record;
 import com.whiskeep.api.record.dto.RecordImageResponseDto;
 import com.whiskeep.api.record.dto.request.RecordCreateRequestDto;
@@ -45,6 +47,7 @@ public class RecordService {
 	private final MemberRepository memberRepository;
 	private final WhiskyRepository whiskyRepository;
 	private final S3Client s3Client;
+	private final PreferenceService preferenceService;
 
 	@Value("${CLOUD_AWS_REGION_STATIC}")
 	private String region;
@@ -54,12 +57,14 @@ public class RecordService {
 	@Transactional
 	public void addRecord(Long memberId, RecordCreateRequestDto recordCreateRequestDto) {
 
+		// 1. 유효성 검사
 		Whisky whisky = whiskyRepository.findById(recordCreateRequestDto.whiskyId())
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
 
-
 		Member member = memberRepository.findById(memberId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+
+		// 2. 기록 저장
 		Record record = Record.builder()
 			.member(member)
 			.whisky(whisky)
@@ -70,6 +75,20 @@ public class RecordService {
 			.build();
 
 		recordRepository.save(record);
+
+		// 3. 기록한 위스키가 3병 이상일 경우, 사용자 점수 갱신
+		Set<Long> distinctWhiskyIds = recordRepository.findDistinctWhiskyIdsByMember(member);
+
+		if (distinctWhiskyIds.size() >= 3) {
+			List<Whisky> whiskyList = whiskyRepository.findAllById(distinctWhiskyIds);
+			List<Double> ratingList =
+				whiskyList.stream()
+					.map(w -> recordRepository.findAverageRatingByWhiskyId(w.getWhiskyId()).orElse(5.0))
+					.toList();
+
+			preferenceService.updateMemberPreference(member, whiskyList, ratingList);
+		}
+
 	}
 
 	public Integer countRecord(Long whiskyId) {

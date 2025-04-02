@@ -39,6 +39,7 @@ public class PreferenceController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
+	// 사용자 점수 조회하기
 	@GetMapping("/score")
 	public ResponseEntity<?> getPreferenceScore(@Auth Long memberId) {
 		MemberScoreResponseDto memberScore = preferenceService.getMemberPreferenceScore(memberId);
