@@ -11,6 +11,7 @@ import com.whiskeep.common.exception.UnauthorizedException;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -62,10 +63,8 @@ public class JwtTokenProvider {
 			return true;
 		} catch (ExpiredJwtException e) {
 			throw new UnauthorizedException(ErrorMessage.EXPIRED_TOKEN);
-		} catch (UnsupportedJwtException | MalformedJwtException | SecurityException | SignatureException e) {
+		} catch (JwtException e) {
 			throw new UnauthorizedException(ErrorMessage.INVALID_TOKEN);
-		} catch (IllegalArgumentException e) {
-			throw new UnauthorizedException(ErrorMessage.INVALID_PARAMETER);
 		}
 	}
 }

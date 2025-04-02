@@ -82,12 +82,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 	@ExceptionHandler(UnauthorizedException.class)
-	public ResponseEntity<FailResponse> handleUnauthorizedException(AuthenticationException ex) {
+	public ResponseEntity<FailResponse> handleUnauthorizedException(UnauthorizedException ex) {
 		return ResponseEntity
 			.status(HttpStatus.UNAUTHORIZED)
 			.body(FailResponse.fail(
 				HttpStatus.UNAUTHORIZED.value(),
-				ErrorMessage.UNAUTHORIZED.getMessage()
+				ex.getMessage()
 			));
 	}
 
