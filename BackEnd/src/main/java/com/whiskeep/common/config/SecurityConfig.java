@@ -36,6 +36,7 @@ public class SecurityConfig {
 			.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/api/members/login/**").permitAll() // 누구나 접근 가능
+				.requestMatchers(("/api/ocr/**")).permitAll()
 				.anyRequest().authenticated() // 그 외 요청은 인증 필요
 			)
 			.oauth2Login(oauth2 -> oauth2.disable()
