@@ -40,8 +40,7 @@ public class PreferenceService {
 	@Transactional
 	public void createBeginnerPreferenceScore(BeginnerPreferenceRequestDto preferenceRequestDto, Long memberId) {
 		Member member =
-			memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
-
+			memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		// 이미 초기 설문조사를 완료한 경우
 		if (memberPreferenceRepository.existsByMember(member)) {
@@ -90,7 +89,7 @@ public class PreferenceService {
 	@Transactional
 	public void createFamiliarPreferenceScore(FamiliarPreferenceRequestDto preferenceRequestDto, Long memberId) {
 		Member member =
-			memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+			memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		// 이미 초기 설문조사를 완료한 경우,
 		if (familiarWhiskyPreferenceRepository.existsByMember(member)) {
@@ -143,9 +142,11 @@ public class PreferenceService {
 
 	// 사용자 선호 점수 조회하기
 	public MemberScoreResponseDto getMemberPreferenceScore(Long memberId) {
-		Member member = memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
-		MemberPreference memberPreference = memberPreferenceRepository.findByMember(member).orElseThrow(()-> new NotFoundException(ErrorMessage.PREFERENCE_NOT_FOUND));
+		MemberPreference memberPreference = memberPreferenceRepository.findByMember(member)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.PREFERENCE_NOT_FOUND));
 
 		return MemberScoreResponseDto.from(memberPreference);
 	}
