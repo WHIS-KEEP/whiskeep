@@ -42,12 +42,12 @@ const MyPage = () => {
           name: response.data.name,
           email: response.data.email,
           nickname: response.data.nickname,
-          profileImageUrl: response.data.profileImg || 'https://github.com/shadcn.png',
+          profileImageUrl:
+            response.data.profileImg || 'https://github.com/shadcn.png',
         });
-    })
+      })
       .catch((error) => console.error('API 호출 오류:', error)); // 401은 인터셉터가 처리하므로 여기선 로그만 남김
   }, []);
-
 
   // 이미지 변경 메뉴 관련 핸들러 (실제 구현 필요)
   const handleTakePhoto = () => {

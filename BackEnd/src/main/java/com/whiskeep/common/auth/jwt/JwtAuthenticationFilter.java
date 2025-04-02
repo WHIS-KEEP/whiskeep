@@ -8,7 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.whiskeep.common.exception.BadRequestException;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.UnauthorizedException;
 

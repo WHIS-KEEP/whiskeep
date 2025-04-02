@@ -8,13 +8,14 @@ const API = axios.create({
 // 요청 인터셉터 (Access Token을 자동으로 헤더에 추가)
 API.interceptors.request.use(
   (config) => {
-  const accessToken = localStorage.getItem('accessToken');
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
-  }
-  return config;
-},
-(error) => Promise.reject(error));
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
 
 // 🔹 401 에러 발생 시 자동 로그아웃
 API.interceptors.response.use(
