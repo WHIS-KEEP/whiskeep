@@ -45,8 +45,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
 		// 인증된 사용자가 없으면 예외 처리
 		if (authentication == null || authentication.getPrincipal() == null) {
-			System.out.println(authentication);
-			System.out.println(authentication.getPrincipal());
 			// @Auth(required = false) 인 경우
 			if (authAnnotation != null && !authAnnotation.required()) {
 				return null; // 인증 없이 처리 가능

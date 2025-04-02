@@ -27,7 +27,6 @@ const LoginSuccess = () => {
         );
 
         // 받은 access-token을 localStorage에 저장
-        console.log(response.data);
         const { accessToken, member } = response.data;
         login(accessToken, member);
 
