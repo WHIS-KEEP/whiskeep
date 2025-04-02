@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.whiskeep.api.member.domain.Member;
+import com.whiskeep.api.record.dto.RecordImageResponseDto;
 import com.whiskeep.api.record.dto.request.RecordCreateRequestDto;
 import com.whiskeep.api.record.dto.request.RecordUpdateRequestDto;
 import com.whiskeep.api.record.dto.response.MyRecordResponseDto;
@@ -79,6 +82,14 @@ public class RecordController {
 		recordService.deleteRecord(member, recordId);
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping("/image")
+	public ResponseEntity<?> uploadImage(@Auth Member member,
+		@RequestParam("file") MultipartFile file) {
+		RecordImageResponseDto recordImageResponseDto = recordService.uploadImage(file, member);
+		return new ResponseEntity<>(recordImageResponseDto, HttpStatus.OK);
+
 	}
 
 }

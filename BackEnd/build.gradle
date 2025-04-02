@@ -47,6 +47,9 @@ dependencies {
 		// === apache Math ===
 		implementation 'org.apache.commons:commons-math3:3.6.1'
 
+		// === S3 Client ===
+		implementation 'software.amazon.awssdk:s3:2.29.52'
+
 		// === Lombok ===
 		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'
@@ -63,6 +66,8 @@ dependencies {
 		testImplementation 'io.projectreactor:reactor-test'
 		testImplementation 'org.springframework.security:spring-security-test'
 		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
 	}
 
 }

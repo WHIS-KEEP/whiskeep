@@ -2,17 +2,21 @@ package com.whiskeep.api.record.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.api.record.domain.Record;
+import com.whiskeep.api.record.dto.RecordImageResponseDto;
 import com.whiskeep.api.record.dto.request.RecordCreateRequestDto;
 import com.whiskeep.api.record.dto.request.RecordUpdateRequestDto;
 import com.whiskeep.api.record.dto.response.MyRecordResponseDto;
@@ -22,11 +26,15 @@ import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.dto.RecordListResponseDto;
 import com.whiskeep.api.whisky.dto.WhiskyRecordResponseDto;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
+import com.whiskeep.common.exception.BadRequestException;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.ForbiddenException;
 import com.whiskeep.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +44,12 @@ public class RecordService {
 	private final RecordRepository recordRepository;
 	private final MemberRepository memberRepository;
 	private final WhiskyRepository whiskyRepository;
+	private final S3Client s3Client;
+
+	@Value("${CLOUD_AWS_REGION_STATIC}")
+	private String region;
+	@Value("${CLOUD_AWS_S3_BUCKET}")
+	private String bucket;
 
 	@Transactional
 	public void addRecord(Member member, RecordCreateRequestDto recordCreateRequestDto) {
@@ -198,4 +212,47 @@ public class RecordService {
 		recordRepository.delete(record);
 
 	}
+
+	@Transactional
+	public RecordImageResponseDto uploadImage(MultipartFile multipartFile, Member member) {
+		String dirName = "record/images/";
+
+		if (multipartFile == null || multipartFile.isEmpty()) {
+			throw new BadRequestException(ErrorMessage.FILE_NOT_INCLUDED);
+		}
+
+		String fileName = createFileName(multipartFile.getOriginalFilename(), dirName);
+
+		try {
+
+			PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+				.bucket(bucket)
+				.key(fileName)
+				.contentType(multipartFile.getContentType())
+				.build();
+
+			s3Client.putObject(putObjectRequest,
+				RequestBody.fromInputStream(multipartFile.getInputStream(), multipartFile.getSize()));
+
+			String fileUrl = "https://" + bucket + ".s3." + region + ".amazonaws.com/" + fileName;
+
+			return new RecordImageResponseDto(fileUrl);
+		} catch (Exception e) {
+			throw new BadRequestException(ErrorMessage.FILE_UPLOAD_FAIL);
+		}
+	}
+
+	private String createFileName(String fileName, String dirName) {
+		String uuid = UUID.randomUUID().toString().replace("-", "");
+		String extension = getFileExtension(fileName);
+		return dirName + uuid + extension;
+	}
+
+	private String getFileExtension(String fileName) {
+		if (fileName == null || !fileName.contains(".")) {
+			throw new BadRequestException(ErrorMessage.INVALID_FILE_FORMAT);
+		}
+		return fileName.substring(fileName.lastIndexOf("."));
+	}
+
 }

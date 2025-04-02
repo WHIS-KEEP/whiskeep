@@ -15,6 +15,8 @@ public enum ErrorMessage {
 	INVALID_FILE_FORMAT("파일 형식이 올바르지 않습니다"),
 	DUPLICATE_ENTRY("이미 존재하는 데이터입니다"),
 	PREFERENCE_ALREADY_REGISTERED("이미 선호 정보가 등록되어 있습니다"),
+	FILE_NOT_INCLUDED("파일이 포함되지 않았습니다"),
+	FILE_UPLOAD_FAIL("파일 업로드 중 오류가 발생했습니다"),
 
 	// 401 Unauthorized 관련 오류 (UnauthorizedException)
 	UNAUTHORIZED("인증에 실패했습니다"),
