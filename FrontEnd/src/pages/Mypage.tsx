@@ -36,16 +36,15 @@ const MyPage = () => {
   });
 
   useEffect(() => {
-    API.get('/members')
-      .then((response) => {
-        setUserData({
-          name: response.data.name,
-          email: response.data.email,
-          nickname: response.data.nickname,
-          profileImageUrl:
-            response.data.profileImg || 'https://github.com/shadcn.png',
-        });
-      })
+    API.get('/members').then((response) => {
+      setUserData({
+        name: response.data.name,
+        email: response.data.email,
+        nickname: response.data.nickname,
+        profileImageUrl:
+          response.data.profileImg || 'https://github.com/shadcn.png',
+      });
+    });
   }, []);
 
   // 이미지 변경 메뉴 관련 핸들러 (실제 구현 필요)
