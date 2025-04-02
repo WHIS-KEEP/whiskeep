@@ -5,12 +5,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
+import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,36 +30,89 @@ public class WhiskyScoreCalculatorService {
 	private static final double PERCENTILE = 0.95;
 
 	/*애플리케이션 시작 시 위스키 점수 계산 실행*/
+	public CommandLineRunner runCalculator() {
+		return args -> {
+
+			// if(true) return;
+			log.info("Running whisky calculator...");
+			saveAllWhiskyScores();
+			log.info("Finished running whisky calculator...");
+		};
+	}
 
 	//모든 위스키 점수를 계산
 	public void saveAllWhiskyScores() {
 		List<Whisky> allWhiskies = whiskyRepository.findAll();
 
+		//계수 계산
 		Map<String, Double> coefficients = calculateCoefficients(allWhiskies);
 
 		coefficients.forEach((k, v) -> log.info(" {} = {}", k, v));
 
-		for (Whisky w : allWhiskies) {
-			updateWhiskyScore(w, coefficients);
-			whiskyRepository.save(w);
+
+		int errorCnt=0;
+
+		try {
+			//각 위스키 계산
+			for (Whisky whisky : allWhiskies) {
+				//고정계수로 점수 계산
+				updateWhiskyScore(whisky, coefficients);
+				whiskyRepository.save(whisky);
+			}
+		}catch (Exception e) {
 		}
 
 	}
 
-	//위스키 업데이트
+	//위스키 업데이트하기
 	private void updateWhiskyScore(Whisky whisky, Map<String, Double> coefficients) {
-		//Nosing
+		//Nosing 업데이트
 		if (whisky.getNosing() != null) {
-			update
+			updateCategoryScore("fruity_nosing", whisky.getNosing().getFruity(), coefficients);
+			updateCategoryScore("sweet_nosing", whisky.getNosing().getSweet(), coefficients);
+			updateCategoryScore("oaky_nosing", whisky.getNosing().getOaky(), coefficients);
+			updateCategoryScore("spicy_nosing", whisky.getNosing().getSpicy(), coefficients);
+			updateCategoryScore("briny_nosing", whisky.getNosing().getBriny(), coefficients);
+			updateCategoryScore("herbal_nosing", whisky.getNosing().getHerbal(), coefficients);
 		}
 		//Tasting
-		if (whisky.getNosing() != null) {
-			update
+		if (whisky.getTasting() != null) {
+			updateCategoryScore("fruity_tasting", whisky.getTasting().getFruity(), coefficients);
+			updateCategoryScore("sweet_tasting", whisky.getTasting().getSweet(), coefficients);
+			updateCategoryScore("oaky_tasting", whisky.getTasting().getOaky(), coefficients);
+			updateCategoryScore("spicy_tasting", whisky.getTasting().getSpicy(), coefficients);
+			updateCategoryScore("briny_tasting", whisky.getTasting().getBriny(), coefficients);
+			updateCategoryScore("herbal_tasting", whisky.getTasting().getHerbal(), coefficients);
 		}
 		//Finish
-		if (whisky.getNosing() != null) {
-			update
+		if (whisky.getFinish() != null) {
+			updateCategoryScore("fruity_finish", whisky.getFinish().getFruity(), coefficients);
+			updateCategoryScore("sweet_finish", whisky.getFinish().getSweet(), coefficients);
+			updateCategoryScore("oaky_finish", whisky.getFinish().getOaky(), coefficients);
+			updateCategoryScore("spicy_finish", whisky.getFinish().getSpicy(), coefficients);
+			updateCategoryScore("briny_finish", whisky.getFinish().getBriny(), coefficients);
+			updateCategoryScore("herbal_finish", whisky.getFinish().getHerbal(), coefficients);
+
 		}
+	}
+
+	private void updateCategoryScore(String categoryKey, TastingComponent<Map<String, Double>> category, Map<String,
+		Double> coefficients) {
+		if(category == null || category.getData() == null) {
+			return;
+		}
+
+		//카테고리 별 세부데이터들 합산
+		double sum = category.getData().values().stream()
+			.filter(Objects::nonNull)
+			.mapToDouble(Double::doubleValue)
+			.sum();
+
+		double coefficient = coefficients.getOrDefault(categoryKey, 1.0);
+		//안전장치 - 나머지 높은 5% 구간의 점수가 넘으면 안되니까
+		double score = Math.min(MAX_SCORE, sum / coefficient);
+
+		category.setScore(score);
 	}
 
 	//계수 계산하기
