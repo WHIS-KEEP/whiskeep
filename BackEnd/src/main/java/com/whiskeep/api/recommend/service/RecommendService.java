@@ -2,8 +2,10 @@ package com.whiskeep.api.recommend.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -23,8 +25,8 @@ import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
-
 import lombok.RequiredArgsConstructor;
+
 
 @Service
 @RequiredArgsConstructor

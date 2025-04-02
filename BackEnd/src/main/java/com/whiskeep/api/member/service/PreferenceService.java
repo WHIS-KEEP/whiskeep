@@ -11,6 +11,7 @@ import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.domain.MemberPreference;
 import com.whiskeep.api.member.dto.BeginnerPreferenceRequestDto;
 import com.whiskeep.api.member.dto.FamiliarPreferenceRequestDto;
+import com.whiskeep.api.member.dto.MemberScoreResponseDto;
 import com.whiskeep.api.member.repository.FamiliarWhiskyPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberRepository;
@@ -140,4 +141,12 @@ public class PreferenceService {
 			.build();
 	}
 
+	// 사용자 선호 점수 조회하기
+	public MemberScoreResponseDto getMemberPreferenceScore(Long memberId) {
+		Member member = memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+
+		MemberPreference memberPreference = memberPreferenceRepository.findByMember(member).orElseThrow(()-> new NotFoundException(ErrorMessage.PREFERENCE_NOT_FOUND));
+
+		return MemberScoreResponseDto.from(memberPreference);
+	}
 }

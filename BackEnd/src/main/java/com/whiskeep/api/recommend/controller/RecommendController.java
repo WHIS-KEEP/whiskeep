@@ -18,7 +18,7 @@ public class RecommendController {
 
 	private final RecommendService recommendService;
 
-	@GetMapping //추천가져오기
+	@GetMapping //추천 가져오기
 	public ResponseEntity<RecommendedListResponseDto> recommend(@Auth Long memberId) {
 
 		RecommendedListResponseDto recommendations = recommendService.recommend(memberId);
