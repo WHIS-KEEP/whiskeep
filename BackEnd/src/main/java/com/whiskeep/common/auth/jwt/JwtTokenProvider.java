@@ -62,9 +62,9 @@ public class JwtTokenProvider {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
 		} catch (ExpiredJwtException e) {
-			throw new UnauthorizedException(ErrorMessage.EXPIRED_TOKEN);
-		} catch (JwtException e) {
-			throw new UnauthorizedException(ErrorMessage.INVALID_TOKEN);
+			throw new UnauthorizedException(ErrorMessage.EXPIRED_TOKEN); // 🔹 만료된 토큰 예외
+		} catch (UnsupportedJwtException | MalformedJwtException | SecurityException | SignatureException e) {
+			throw new UnauthorizedException(ErrorMessage.INVALID_TOKEN); // 🔹 잘못된 토큰 예외
 		}
 	}
 }

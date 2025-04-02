@@ -40,7 +40,7 @@ public class SecurityConfig {
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.formLogin(form -> form.disable()) // 기본 로그인 페이지 비활성화
 			.httpBasic(httpBasic -> httpBasic.disable()) // HTTP 기본 인증 비활성화
-			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, jwtAuthenticationEntryPoint),
 				UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
