@@ -52,11 +52,14 @@ public class RecordService {
 	private String bucket;
 
 	@Transactional
-	public void addRecord(Member member, RecordCreateRequestDto recordCreateRequestDto) {
+	public void addRecord(Long memberId, RecordCreateRequestDto recordCreateRequestDto) {
 
 		Whisky whisky = whiskyRepository.findById(recordCreateRequestDto.whiskyId())
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
 
+
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 		Record record = Record.builder()
 			.member(member)
 			.whisky(whisky)
@@ -111,7 +114,10 @@ public class RecordService {
 
 	}
 
-	public List<WhiskyRecordResponseDto> getWhiskyRecordsByMember(Member member) {
+	public List<WhiskyRecordResponseDto> getWhiskyRecordsByMember(Long memberId) {
+
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		//login 한 유저의 모든 record 를 map 으로 수집 후, list 로 반환하여 중복 제거
 		return recordRepository.findAllByMember(member)
@@ -137,7 +143,10 @@ public class RecordService {
 			.collect(Collectors.toList());
 	}
 
-	public MyRecordResponseDto getRecordByWhiskyIdAndMember(Long whiskyId, Member member) {
+	public MyRecordResponseDto getRecordByWhiskyIdAndMember(Long whiskyId, Long memberId) {
+
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		Whisky whisky = whiskyRepository.findById(whiskyId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
@@ -161,7 +170,10 @@ public class RecordService {
 
 	}
 
-	public RecordDetailResponseDto getRecordDetail(Member member, Long recordId) {
+	public RecordDetailResponseDto getRecordDetail(Long memberId, Long recordId) {
+
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		Record record = recordRepository.findById(recordId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
@@ -181,7 +193,10 @@ public class RecordService {
 	}
 
 	@Transactional
-	public void updateRecord(Member member, Long recordId, RecordUpdateRequestDto recordUpdateRequestDto) {
+	public void updateRecord(Long memberId, Long recordId, RecordUpdateRequestDto recordUpdateRequestDto) {
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+
 		// 기존 레코드 조회
 		Record record = recordRepository.findById(recordId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
@@ -200,7 +215,10 @@ public class RecordService {
 	}
 
 	@Transactional
-	public void deleteRecord(Member member, Long recordId) {
+	public void deleteRecord(Long memberId, Long recordId) {
+
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		Record record = recordRepository.findById(recordId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
@@ -214,7 +232,7 @@ public class RecordService {
 	}
 
 	@Transactional
-	public RecordImageResponseDto uploadImage(MultipartFile multipartFile, Member member) {
+	public RecordImageResponseDto uploadImage(MultipartFile multipartFile) {
 		String dirName = "record/images/";
 
 		if (multipartFile == null || multipartFile.isEmpty()) {

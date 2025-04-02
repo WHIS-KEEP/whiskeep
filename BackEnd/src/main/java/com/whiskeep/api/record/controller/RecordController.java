@@ -36,58 +36,58 @@ public class RecordController {
 
 	@PostMapping
 	public ResponseEntity<?> createRecord(@RequestBody RecordCreateRequestDto recordCreateRequestDto,
-		@Auth Member member) {
+		@Auth Long memberId) {
 
-		recordService.addRecord(member, recordCreateRequestDto);
+		recordService.addRecord(memberId, recordCreateRequestDto);
 
 		return new ResponseEntity<>(HttpStatus.CREATED);
 
 	}
 
 	@GetMapping
-	public ResponseEntity<?> getWhiskyRecords(@Auth Member member) {
-		List<WhiskyRecordResponseDto> records = recordService.getWhiskyRecordsByMember(member);
+	public ResponseEntity<?> getWhiskyRecords(@Auth Long memberId) {
+		List<WhiskyRecordResponseDto> records = recordService.getWhiskyRecordsByMember(memberId);
 		return ResponseEntity.ok(records);
 	}
 
 	@GetMapping("/{whiskyId}")
 	public ResponseEntity<?> getRecordsByWhiskyIdAndMember(
-		@Auth Member member, @PathVariable Long whiskyId) {
+		@Auth Long memberId, @PathVariable Long whiskyId) {
 
 		MyRecordResponseDto myRecordResponseDto
-			= recordService.getRecordByWhiskyIdAndMember(whiskyId, member);
+			= recordService.getRecordByWhiskyIdAndMember(whiskyId, memberId);
 
 		return ResponseEntity.ok(myRecordResponseDto);
 	}
 
 	@GetMapping("/{whiskyId}/{recordId}")
-	public ResponseEntity<?> getRecordDetail(@Auth Member member, @PathVariable("recordId") Long recordId) {
-		RecordDetailResponseDto recordDetailResponseDto = recordService.getRecordDetail(member, recordId);
+	public ResponseEntity<?> getRecordDetail(@Auth Long memberId, @PathVariable("recordId") Long recordId) {
+		RecordDetailResponseDto recordDetailResponseDto = recordService.getRecordDetail(memberId, recordId);
 
 		return ResponseEntity.ok(recordDetailResponseDto);
 	}
 
 	@PutMapping("/{whiskyId}/{recordId}")
-	public ResponseEntity<?> updateRecordDetail(@Auth Member member, @PathVariable("recordId") Long recordId,
+	public ResponseEntity<?> updateRecordDetail(@Auth Long memberId, @PathVariable("recordId") Long recordId,
 		@RequestBody RecordUpdateRequestDto recordUpdateRequestDto) {
 
-		recordService.updateRecord(member, recordId, recordUpdateRequestDto);
+		recordService.updateRecord(memberId, recordId, recordUpdateRequestDto);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{whiskyId}/{recordId}")
-	public ResponseEntity<?> deleteRecord(@Auth Member member, @PathVariable("recordId") Long recordId) {
+	public ResponseEntity<?> deleteRecord(@Auth Long memberId, @PathVariable("recordId") Long recordId) {
 
-		recordService.deleteRecord(member, recordId);
+		recordService.deleteRecord(memberId, recordId);
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@PostMapping("/image")
-	public ResponseEntity<?> uploadImage(@Auth Member member,
+	public ResponseEntity<?> uploadImage(@Auth Long memberId,
 		@RequestParam("file") MultipartFile file) {
-		RecordImageResponseDto recordImageResponseDto = recordService.uploadImage(file, member);
+		RecordImageResponseDto recordImageResponseDto = recordService.uploadImage(file);
 		return new ResponseEntity<>(recordImageResponseDto, HttpStatus.OK);
 
 	}
