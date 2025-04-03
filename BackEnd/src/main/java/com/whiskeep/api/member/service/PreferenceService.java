@@ -188,6 +188,7 @@ public class PreferenceService {
 	}
 
 	// 숙련자 설문조사 시, 선택할 위스키 9개 정보 조회하기
+	@Transactional(readOnly = true)
 	public List<PopularWhiskyResponseDto> getPopularWhiskyList() {
 
 		// 인기 있는 위스키 TOP 9
