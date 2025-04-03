@@ -20,12 +20,43 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   return token ? children : <Navigate to="/login" replace />;
 };
 
+// 로그인한 사용자는 접근 불가
+const PublicRoute = ({ children }: { children: JSX.Element }) => {
+  const { token } = useAuth();
+  return token ? <Navigate to="/main" replace /> : children;
+};
+
 const Router = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="login" element={<Login />} />
-      <Route path="login/success" element={<LoginSuccess />} />
+      {/* 로그인한 사용자는 접근 불가 */}
+
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <Home />
+          </PublicRoute>
+        }
+      />
+
+      <Route
+        path="login"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="login/success"
+        element={
+          <PublicRoute>
+            <LoginSuccess />
+          </PublicRoute>
+        }
+      />
+
       <Route element={<Layout />}>
         <Route
           element={
