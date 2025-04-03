@@ -6,7 +6,7 @@ import List from '@/pages/ListPage';
 import Collection from '@/pages/CollectionPage';
 import Mypage from '@/pages/Mypage';
 import Login from '@/pages/LoginPage';
-// import Test from '@/pages/TestPage';
+import Test from '@/pages/TestPage';
 import LoginSuccess from '@/pages/LoginSuccess';
 import useAuth from '@/store/useContext';
 import { JSX } from 'react';
@@ -37,6 +37,7 @@ const Router = () => {
           <Route path="collection" element={<Collection />} />
           <Route path="mypage" element={<Mypage />} />
           <Route path="detail/:whiskyId" element={<DetailPage />} />
+          <Route path="test" element={<Test />} />
         </Route>
       </Route>
 
