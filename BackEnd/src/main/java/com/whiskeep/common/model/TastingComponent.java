@@ -13,4 +13,8 @@ public class TastingComponent<T> {
 
 	private Double score;
 	private T data;
+
+	public void setScore(double score) {
+		this.score = score;
+	}
 }
