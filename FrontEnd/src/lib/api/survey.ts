@@ -1,7 +1,13 @@
 import API from '@/lib/util/axiosInstance';
 
+export interface SurveyWhisky {
+  whiskyId: number;
+  koName: string;
+  whiskyImg: string;
+}
+
 // TOP 9 위스키 조회하기
-export const getPopularWhiskies = () => {
+export const getPopularWhiskies = (): Promise<SurveyWhisky[]> => {
   return API.get('/members/popular-whiskies').then((res) => res.data);
 };
 
