@@ -387,4 +387,4 @@ const DetailPage = () => {
   );
 };
 
-export default DetailPage;
+export default WhiskyDetailPage; // 메인 컴포넌트 내보내기
