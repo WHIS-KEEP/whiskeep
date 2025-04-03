@@ -23,7 +23,7 @@ const LoginSuccess = () => {
       try {
         // 백엔드의 access-token 발급 API 호출
         const response = await axios.post(
-          `http://localhost:8080/api/members/login/success?code=${code}`,
+          `${import.meta.env.VITE_API_URL}/members/login/success?code=${code}`,
         );
 
         // 받은 access-token을 localStorage에 저장

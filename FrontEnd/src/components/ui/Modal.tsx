@@ -35,7 +35,7 @@ import exampleImage from '../../assets/example.png';
 
 // --- TypeScript Interface ---
 interface WhiskySearchResult {
-  id: string;
+  id: number;
   name: string;
   enName?: string;
   type: string;
@@ -63,7 +63,7 @@ const variantTitles: Record<PromptVariant, string> = {
 const dummySearchResults: WhiskySearchResult[] = [
   // ... (Keep dummy data as is) ...
   {
-    id: '1257',
+    id: 1257,
     name: '아드베그 5년산',
     enName: 'Ardbeg 5 Years',
     type: 'Single Malt Whisky',
@@ -76,7 +76,7 @@ const dummySearchResults: WhiskySearchResult[] = [
     abv: 47,
   },
   {
-    id: 'whisky_2',
+    id: 2,
     name: '발렌타인 40년산',
     enName: "Ballantine's 40 Years Old",
     type: '블렌디드',
@@ -88,7 +88,7 @@ const dummySearchResults: WhiskySearchResult[] = [
     abv: 70,
   },
   {
-    id: 'whisky_3',
+    id: 3,
     name: '버팔로 트레이스',
     enName: 'Buffalo Trace',
     type: '버번',
@@ -100,7 +100,7 @@ const dummySearchResults: WhiskySearchResult[] = [
     abv: 45,
   },
   {
-    id: 'whisky_4',
+    id: 4,
     name: '글렌피딕 15년',
     enName: 'Glenfiddich 15 Year Old',
     type: '싱글 몰트',
@@ -112,7 +112,7 @@ const dummySearchResults: WhiskySearchResult[] = [
     abv: 40,
   },
   {
-    id: 'whisky_5',
+    id: 5,
     name: '레드브레스트 12년 CS',
     enName: 'Redbreast 12 Year Old Cask Strength',
     type: '싱글 팟 스틸',
@@ -124,7 +124,7 @@ const dummySearchResults: WhiskySearchResult[] = [
     abv: 58.6,
   },
   ...Array.from({ length: 15 }, (_, i) => ({
-    id: `whisky_${i + 6}`,
+    id: i + 6,
     name: `더미 위스키 ${i + 6}`,
     enName: `Dummy Whisky ${i + 6}`,
     type: i % 3 === 0 ? '싱글 몰트' : i % 3 === 1 ? '버번' : '블렌디드',
@@ -145,7 +145,7 @@ const dummySearchResults: WhiskySearchResult[] = [
 ];
 
 interface WishlistItem {
-  id: string;
+  id: number;
   name: string;
   rating: number;
   imageUrl: string;
@@ -153,7 +153,7 @@ interface WishlistItem {
 const dummyWishlistItems: WishlistItem[] = Array.from(
   { length: 15 },
   (_, i) => ({
-    id: `wish_${i + 1}`,
+    id: i + 1,
     name: `Wishlist Item ${i + 1}`,
     rating: Math.round((4 + Math.random()) * 10) / 10,
     imageUrl: exampleImage,
@@ -180,10 +180,10 @@ function SearchWhiskyDialogContent({
   onSelect,
   closeParentDialog,
 }: {
-  onSelect: (id: string) => void;
+  onSelect: (id: number) => void;
   closeParentDialog?: () => void;
 }) {
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -193,7 +193,7 @@ function SearchWhiskyDialogContent({
   const countries = ['미국', '아일랜드', '캐나다', '스코틀랜드'];
   const types = ['버번', '싱글 몰트', '그레인', '블랜디드 몰트'];
 
-  const handleSelectItem = (id: string) =>
+  const handleSelectItem = (id: number) =>
     setSelectedItemId((prev) => (prev === id ? null : id));
 
   const handleConfirm = () => {
@@ -430,11 +430,11 @@ function WishlistDialogContent({
   onSelect,
   closeParentDialog,
 }: {
-  onSelect: (id: string) => void;
+  onSelect: (id: number) => void;
   closeParentDialog?: () => void;
 }) {
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-  const handleSelectItem = (id: string) =>
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const handleSelectItem = (id: number) =>
     setSelectedItemId((prev) => (prev === id ? null : id));
   const handleConfirm = () => {
     if (selectedItemId) {
@@ -558,7 +558,7 @@ export function WhiskySelectionDialog({
   };
 
   // 위스키 검색 결과에서 ID로 위스키 찾기 함수
-  const findWhiskyById = (id: string) => {
+  const findWhiskyById = (id: number) => {
     // 위스키 검색 결과에서 찾기
     const fromSearch = dummySearchResults.find((item) => item.id === id);
     if (fromSearch) return fromSearch;
@@ -571,7 +571,7 @@ export function WhiskySelectionDialog({
   };
 
   // 위스키 선택 핸들러 수정
-  const handleWhiskySelected = (id: string) => {
+  const handleWhiskySelected = (id: number) => {
     const whisky = findWhiskyById(id);
     if (whisky) {
       console.log(`Whisky ${id} selected:`, whisky);

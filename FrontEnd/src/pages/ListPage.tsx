@@ -18,7 +18,7 @@ import {
 
 // --- 더미 데이터 ---
 const dummySearchResults = Array.from({ length: 20 }, (_, i) => ({
-  id: `whisky_${i + 1}`,
+  id: i + 1,
   name: `더미 위스키 ${i + 1}`,
   type: i % 2 === 0 ? '싱글 몰트' : '버번',
   country: i % 3 === 0 ? '스코틀랜드' : '미국',
@@ -27,7 +27,7 @@ const dummySearchResults = Array.from({ length: 20 }, (_, i) => ({
 
 export function SearchPage() {
   const navigate = useNavigate();
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
   const handleConfirm = () => {
     console.log('선택된 아이템 ID:', selectedItemId);
@@ -39,7 +39,7 @@ export function SearchPage() {
     navigate('/Main'); // 메인 페이지로 이동
   };
 
-  const handleSelectItem = (id: string) => {
+  const handleSelectItem = (id: number) => {
     setSelectedItemId((prevId) => (prevId === id ? null : id));
   };
 

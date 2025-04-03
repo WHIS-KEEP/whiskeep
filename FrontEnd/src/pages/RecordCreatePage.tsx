@@ -5,7 +5,9 @@ import whiskyPlaceholder from '../assets/bottle.png';
 
 // 커스텀 훅 가져오기
 import useImageUpload from '../hooks/mutations/useImageUpload';
-import useRecordSubmit, { WhiskyInfo } from '../hooks/mutations/useRecordSubmit';
+import useRecordSubmit, {
+  WhiskyInfo,
+} from '../hooks/mutations/useRecordSubmit';
 
 // Dialog 컴포넌트 가져오기
 import WhiskySelectionDialog from '@/components/ui/Modal';

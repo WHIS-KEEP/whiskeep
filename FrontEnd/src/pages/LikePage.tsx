@@ -11,7 +11,7 @@ import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // Scro
 
 // --- 더미 데이터 ---
 const dummyWishlistItems = Array.from({ length: 15 }, (_, i) => ({
-  id: `wish_${i + 1}`,
+  id: i + 1,
   imageUrl: `/images/whisky-placeholder.png`,
   name: `찜한 위스키 ${i + 1}`,
   rating: Math.round((4 + Math.random()) * 10) / 10,
@@ -21,7 +21,7 @@ const dummyWishlistItems = Array.from({ length: 15 }, (_, i) => ({
 export function WishlistPage() {
   // 컴포넌트 이름 변경 (e.g., LikePage) 가능
   const navigate = useNavigate();
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
   const handleConfirm = () => {
     console.log('선택된 아이템 ID:', selectedItemId);
@@ -33,7 +33,7 @@ export function WishlistPage() {
     navigate('/Main'); // 메인 페이지로 이동
   };
 
-  const handleSelectItem = (id: string) => {
+  const handleSelectItem = (id: number) => {
     setSelectedItemId((prevId) => (prevId === id ? null : id));
   };
 

@@ -24,7 +24,7 @@ import exampleImage from '../assets/example.png';
 
 // 위스키 데이터 인터페이스 추가
 interface WhiskyData {
-  id: string;
+  id: number;
   name: string;
   enName?: string;
   type?: string;
@@ -38,7 +38,7 @@ interface WhiskyData {
 
 // Dummy data for recommendations
 const dummyRecommendations = Array.from({ length: 8 }, (_, i) => ({
-  id: `rec_${i + 1}`,
+  id: i + 1,
   imageUrl: i % 2 === 0 ? sampleImage : exampleImage, // 임포트한 이미지 사용
   name: `추천 위스키 ${i + 1}`,
   description: `싱글 몰트 | 4${i % 6}%`,
@@ -87,7 +87,7 @@ export function MainPageContent() {
 
   // 위스키 선택 핸들러
   const handleWhiskySelect = (whisky: WhiskyData) => {
-    console.log('Selected whisky in MainPage:', whisky);
+    // console.log('Selected whisky in MainPage:', whisky);
     setSelectedWhisky(whisky);
 
     // 프로그래매틱하게 다이얼로그 닫기
