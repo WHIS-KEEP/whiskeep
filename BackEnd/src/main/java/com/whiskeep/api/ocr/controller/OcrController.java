@@ -23,14 +23,8 @@ public class OcrController {
 
 	@PostMapping
 	public ResponseEntity<?> doOcr(@RequestPart("image") MultipartFile image) {
-		System.out.println("🔥 OCR 요청 받음! 파일명: " + image.getOriginalFilename());
 		Map<String, Object> response = ocrService.performOcr(image);
 
 		return ResponseEntity.ok(response);
-	}
-
-	@PostMapping("/string")
-	public ResponseEntity<String> testOcr() {
-		return ResponseEntity.ok("파일을 잘 받았습니다!");
 	}
 }
