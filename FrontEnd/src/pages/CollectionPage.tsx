@@ -15,8 +15,8 @@ const BOTTLES_PER_PAGE = BOTTLES_PER_SHELF * SHELVES_PER_PAGE; // 페이지당 �
 
 // 위스키 타입 정의
 interface Whisky {
-  whiskyID: number;
-  whkiskyImg: string;
+  whiskyId: number;
+  whiskyImg: string;
 }
 
 // --- 컴포넌트 ---
@@ -55,8 +55,8 @@ const Collection = () => {
 
         // API 응답 데이터를 기존 형식에 맞게 변환
         const formattedData = response.data.map((whisky) => ({
-          id: whisky.whiskyID,
-          image: whisky.whkiskyImg,
+          id: whisky.whiskyId,
+          image: whisky.whiskyImg,
         }));
 
         console.log('🔄 변환된 데이터:', formattedData);
@@ -271,7 +271,7 @@ const Collection = () => {
                         role="tabpanel"
                         // hidden 속성 제거: translateX로 시각적 제어
                       >
-                        <div className="flex flex-col items-center gap-y-15 px-2 ">
+                        <div className="flex flex-col items-center gap-y-15 px-2  ">
                           {/* === 선반 렌더링 === */}
                           {Array.from({ length: SHELVES_PER_PAGE }).map(
                             (_, shelfIndex) => {
@@ -299,9 +299,8 @@ const Collection = () => {
                                   {/* === 병 그리드 컨테이너 === */}
                                   <div
                                     className={`
-                                                                absolute left-0 right-0 grid grid-cols-5 px-2 h-full
-                                                                bottom-15.5
-                                                            `}
+                                      absolute left-0 right-0 grid grid-cols-5 px-2 h-full 
+                                      bottom-15.5`}
                                   >
                                     {/* 선반당 슬롯 개수(5개)만큼 반복 */}
                                     {Array.from({
