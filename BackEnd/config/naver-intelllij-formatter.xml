@@ -22,6 +22,8 @@
             <emptyLine/>
             <package name="com.naver" withSubpackages="true" static="false"/>
             <emptyLine/>
+            <package name="lombok" withSubpackages="true" static="false"/>
+            <emptyLine/>
         </value>
     </option>
     <option name="RIGHT_MARGIN" value="120"/>
