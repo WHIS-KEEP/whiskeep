@@ -35,5 +35,6 @@ public interface RecordRepository extends JpaRepository<Record, Long> {
 
 	List<MyRecordResponseDto.RecordSummaryDto> findAllByMemberAndWhisky(Member member, Whisky whisky);
 
-	Set<Long> findDistinctWhiskyIdsByMember(Member member);
+	@Query("SELECT DISTINCT r. whisky.whiskyId FROM Record r WHERE r.member = :member")
+	Set<Long> findDistinctWhiskyIdsByMember(@Param("member") Member member);
 }

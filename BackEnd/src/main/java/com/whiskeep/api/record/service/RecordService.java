@@ -78,6 +78,7 @@ public class RecordService {
 
 		// 3. 기록한 위스키가 3병 이상일 경우, 사용자 점수 갱신
 		Set<Long> distinctWhiskyIds = recordRepository.findDistinctWhiskyIdsByMember(member);
+		System.out.println("위스키 아이디 리스트 : " + distinctWhiskyIds);
 
 		if (distinctWhiskyIds.size() >= 3) {
 			List<Whisky> whiskyList = whiskyRepository.findAllById(distinctWhiskyIds);
