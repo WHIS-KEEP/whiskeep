@@ -1,5 +1,7 @@
 package com.whiskeep.api.member.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.whiskeep.api.member.dto.BeginnerPreferenceRequestDto;
 import com.whiskeep.api.member.dto.FamiliarPreferenceRequestDto;
 import com.whiskeep.api.member.dto.MemberScoreResponseDto;
+import com.whiskeep.api.member.dto.PopularWhiskyResponseDto;
 import com.whiskeep.api.member.service.MemberService;
 import com.whiskeep.api.member.service.PreferenceService;
 import com.whiskeep.common.auth.annotation.Auth;
@@ -44,6 +47,13 @@ public class PreferenceController {
 	public ResponseEntity<?> getPreferenceScore(@Auth Long memberId) {
 		MemberScoreResponseDto memberScore = preferenceService.getMemberPreferenceScore(memberId);
 		return ResponseEntity.ok(memberScore);
+	}
+
+	// 초기 숙련자 설문조사 시, 위스키 TOP 9 조회하기
+	@GetMapping("popular-whiskies")
+	public ResponseEntity<List<PopularWhiskyResponseDto>> getPreferencePopularWhiskies() {
+		List<PopularWhiskyResponseDto> popularWhiskyList = preferenceService.getPopularWhiskyList();
+		return ResponseEntity.ok(popularWhiskyList);
 	}
 
 }

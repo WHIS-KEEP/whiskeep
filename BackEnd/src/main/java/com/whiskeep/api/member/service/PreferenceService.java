@@ -12,6 +12,7 @@ import com.whiskeep.api.member.domain.MemberPreference;
 import com.whiskeep.api.member.dto.BeginnerPreferenceRequestDto;
 import com.whiskeep.api.member.dto.FamiliarPreferenceRequestDto;
 import com.whiskeep.api.member.dto.MemberScoreResponseDto;
+import com.whiskeep.api.member.dto.PopularWhiskyResponseDto;
 import com.whiskeep.api.member.repository.FamiliarWhiskyPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberRepository;
@@ -184,5 +185,19 @@ public class PreferenceService {
 		}
 
 		return memberPreference;
+	}
+
+	// 숙련자 설문조사 시, 선택할 위스키 9개 정보 조회하기
+	public List<PopularWhiskyResponseDto> getPopularWhiskyList() {
+
+		// 인기 있는 위스키 TOP 9
+		List<Long> popularWhiskyIds = List.of(1705L, 1764L, 2083L, 2003L, 1934L, 1509L,
+			2001L, 1253L, 1870L);
+
+		return whiskyRepository.findAllById(popularWhiskyIds)
+			.stream()
+			.map(whisky -> new PopularWhiskyResponseDto(whisky.getWhiskyId(), whisky.getKoName(),
+				whisky.getWhiskyImg()))
+			.toList();
 	}
 }
