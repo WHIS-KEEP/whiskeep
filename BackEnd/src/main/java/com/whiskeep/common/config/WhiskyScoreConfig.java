@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @Slf4j
 @RequiredArgsConstructor
-public class WhiskyScoreConfig{
+public class WhiskyScoreConfig {
 	/* TODO 개발환경에서 한번만 실행시키고 주석처리
 	 *   (DB에 적재후엔 안돌아가도록)	*/
 	private final WhiskyRepository whiskyRepository;
@@ -34,7 +34,7 @@ public class WhiskyScoreConfig{
 	public CommandLineRunner runCalculator() {
 		return args -> {
 
-			// if(true) return;
+			if(true) return;
 			log.info("Running whisky calculator...");
 			saveAllWhiskyScores();
 			log.info("Finished running whisky calculator...");
