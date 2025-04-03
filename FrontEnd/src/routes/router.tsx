@@ -13,6 +13,10 @@ import { JSX } from 'react';
 import Layout from '@/components/layout/Layout';
 import DetailPage from '@/pages/DetailPage';
 import RecordCreatePage from '@/pages/RecordCreatePage';
+import PreferenceSurveyIntroPage from '@/pages/preference/PreferenceSurveyIntroPage';
+import BeginnerSurveyPage from '@/pages/preference/BeginnerSurveyPage';
+import FamiliarSurveyPage from '@/pages/preference/FamiliarSurveyPage';
+import PreferenceCompletePage from '@/pages/preference/PreferenceCompletePage';
 
 // 보호된 페이지 (로그인한 사용자만 접근 가능)
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -56,6 +60,10 @@ const Router = () => {
           </PublicRoute>
         }
       />
+      <Route path="/preference" element={<PreferenceSurveyIntroPage />} />
+      <Route path="/preference/beginner" element={<BeginnerSurveyPage />} />
+      <Route path="/preference/familiar" element={<FamiliarSurveyPage />} />
+      <Route path="/preference/complete" element={<PreferenceCompletePage />} />
 
       <Route element={<Layout />}>
         <Route
