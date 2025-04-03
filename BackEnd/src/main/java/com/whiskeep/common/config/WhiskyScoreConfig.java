@@ -34,7 +34,9 @@ public class WhiskyScoreConfig {
 	public CommandLineRunner runCalculator() {
 		return args -> {
 
-			if(true) return;
+			if (true) {
+				return;
+			}
 			log.info("Running whisky calculator...");
 			saveAllWhiskyScores();
 			log.info("Finished running whisky calculator...");
