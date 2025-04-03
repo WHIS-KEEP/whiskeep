@@ -31,7 +31,6 @@ import { Star } from 'lucide-react';
 import { Search } from 'lucide-react';
 
 // 이미지 임포트 추가
-import sampleImage from '../../assets/sample.png';
 import exampleImage from '../../assets/example.png';
 
 // --- TypeScript Interface ---
@@ -64,16 +63,17 @@ const variantTitles: Record<PromptVariant, string> = {
 const dummySearchResults: WhiskySearchResult[] = [
   // ... (Keep dummy data as is) ...
   {
-    id: 'whisky_1',
-    name: '맥켈란 12년산 셰리 오크',
-    enName: 'Macallan 12 Years Sherry Oak',
-    type: '싱글 몰트',
-    country: '스코틀랜드',
+    id: '1257',
+    name: '아드베그 5년산',
+    enName: 'Ardbeg 5 Years',
+    type: 'Single Malt Whisky',
+    country: 'Scotland',
     avgRating: 4.7,
     recordCounts: 1250,
     popularity: 300,
-    imageUrl: sampleImage,
-    abv: 40,
+    imageUrl:
+      'https://whiskeep-bucket.s3.amazonaws.com/whisky/images/Ardbeg_5_Years.png',
+    abv: 47,
   },
   {
     id: 'whisky_2',
