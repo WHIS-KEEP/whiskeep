@@ -76,8 +76,6 @@ const Router = () => {
           <Route path="list" element={<List />} />
           <Route path="collection" element={<Collection />} />
           <Route path="mypage" element={<Mypage />} />
-          {/* 새로 추가한 라우트 */}
-          <Route path="detail/:whiskyId" element={<DetailPage />} />
           <Route path="/records/create" element={<RecordCreatePage />} />
           <Route path="/records/:whiskyId" element={<WhiskyRecordPage />} />
         </Route>
