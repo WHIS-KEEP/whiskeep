@@ -13,7 +13,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const savedToken = sessionStorage.getItem('accessToken');
     const savedUser = sessionStorage.getItem('user');
-    
+
     if (savedToken) {
       setToken(savedToken);
     }
