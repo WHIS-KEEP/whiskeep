@@ -202,7 +202,7 @@ export function SearchPage() {
       <div className="flex-1 min-h-0 mb-4">
         <ScrollArea className="w-full h-full">
           {processedResults.length > 0 ? (
-            <div className="flex flex-col gap-2  p-1">
+            <div className="flex flex-col gap-2 p-1">
               {processedResults.map((item) => (
                 <Button
                   key={item.id}
