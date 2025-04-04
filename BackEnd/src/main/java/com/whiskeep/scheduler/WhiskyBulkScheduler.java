@@ -20,7 +20,9 @@ import co.elastic.clients.elasticsearch.core.BulkResponse;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class WhiskyBulkScheduler {
@@ -44,7 +46,7 @@ public class WhiskyBulkScheduler {
 	private void indexWhiskies() throws IOException {
 		List<WhiskyDocument> docs = buildWhiskyDocuments();
 		sendBulkIndexRequest(docs);
-		System.out.printf("✅ [Elasticsearch 색인 완료] 문서 개수: %d%n", docs.size());
+		log.info("✅ [Elasticsearch 색인 완료] 문서 개수: {}", docs.size());
 	}
 
 	private List<WhiskyDocument> buildWhiskyDocuments() {
@@ -83,9 +85,9 @@ public class WhiskyBulkScheduler {
 		BulkResponse response = elasticsearchClient.bulk(request);
 
 		if (response.errors()) {
-			System.err.println("⚠️ 일부 문서 색인 중 오류 발생!");
+			log.error("⚠️ 일부 문서 색인 중 오류 발생!");
 		} else {
-			System.out.println("✅ Elasticsearch Bulk 색인 성공");
+			log.info("✅ Elasticsearch Bulk 색인 성공");
 		}
 	}
 }

@@ -40,8 +40,9 @@ dependencies {
 	// === Hibernate ===
 	implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.7.3'
 
-	// === P6Spy ===
+	// === Log & P6Spy ===
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.2'
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
 
 	// === apache Math ===
 	implementation 'org.apache.commons:commons-math3:3.6.1'
