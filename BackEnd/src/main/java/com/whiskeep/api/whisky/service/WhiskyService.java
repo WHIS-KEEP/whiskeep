@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.whiskeep.api.record.service.RecordService;
 import com.whiskeep.api.whisky.document.WhiskyDocument;
 import com.whiskeep.api.whisky.domain.Whisky;
-import com.whiskeep.api.whisky.dto.reqeust.WhiskySearchRequest;
+import com.whiskeep.api.whisky.dto.reqeust.WhiskySearchRequestDto;
 import com.whiskeep.api.whisky.dto.response.WhiskyDetailResponseDto;
-import com.whiskeep.api.whisky.dto.response.WhiskySearchResponse;
+import com.whiskeep.api.whisky.dto.response.WhiskySearchResponseDto;
 import com.whiskeep.api.whisky.dto.response.WhiskySearchResult;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
 import com.whiskeep.common.enumclass.WhiskyType;
@@ -78,7 +78,7 @@ public class WhiskyService {
 			.build();
 	}
 
-	public WhiskySearchResponse searchWithFuzziness(WhiskySearchRequest request) throws IOException {
+	public WhiskySearchResponseDto searchWithFuzziness(WhiskySearchRequestDto request) throws IOException {
 		SortOrder sortOrder = request.desc() ? SortOrder.Desc : SortOrder.Asc;
 		String sortField = request.sortField() != null ? request.sortField() : "recordCounts";
 
@@ -153,7 +153,7 @@ public class WhiskyService {
 
 		boolean hasNext = results.size() == request.pageSize();
 
-		return new WhiskySearchResponse(results, nextSearchAfter, hasNext);
+		return new WhiskySearchResponseDto(results, nextSearchAfter, hasNext);
 	}
 
 	private Object extractFieldValue(FieldValue fieldValue) {

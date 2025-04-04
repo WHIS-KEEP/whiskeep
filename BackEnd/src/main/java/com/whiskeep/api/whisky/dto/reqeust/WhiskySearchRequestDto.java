@@ -2,7 +2,7 @@ package com.whiskeep.api.whisky.dto.reqeust;
 
 import java.util.List;
 
-public record WhiskySearchRequest(
+public record WhiskySearchRequestDto(
 	String keyword,
 	int pageSize,
 	List<Object> searchAfter,
