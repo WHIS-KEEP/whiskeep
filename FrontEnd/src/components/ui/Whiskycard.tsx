@@ -3,55 +3,8 @@ import { Heart } from 'lucide-react';
 import { Card, CardContent } from '../shadcn/card';
 import defaultBgImg from '../../assets/issac.webp';
 import defaultWhiskyImg from '../../assets/sample.png';
-import { useState, useRef } from 'react'; // useRef 추가
-import React, { PureComponent } from 'react';
-import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  ResponsiveContainer,
-} from 'recharts';
-
-const data = [
-  {
-    subject: 'Sweet',
-    A: 120,
-    B: 110,
-    fullMark: 150,
-  },
-  {
-    subject: 'Smoky',
-    A: 98,
-    B: 130,
-    fullMark: 150,
-  },
-  {
-    subject: 'Fruity',
-    A: 86,
-    B: 130,
-    fullMark: 150,
-  },
-  {
-    subject: 'Body',
-    A: 99,
-    B: 100,
-    fullMark: 150,
-  },
-  {
-    subject: 'Spice',
-    A: 85,
-    B: 90,
-    fullMark: 150,
-  },
-  {
-    subject: 'Floral',
-    A: 65,
-    B: 85,
-    fullMark: 150,
-  },
-];
+import { useState, useRef } from 'react';
+import TastingRadarChart, { TastingProfile } from './Tastingchart';
 
 // Props 인터페이스 정의
 interface WhiskycardProps extends React.ComponentProps<typeof Card> {
@@ -61,34 +14,8 @@ interface WhiskycardProps extends React.ComponentProps<typeof Card> {
   whiskyImage?: string; // 위스키 이미지 URL (선택적)
   showLikeButton?: boolean; // 하트 버튼 표시 여부 (선택적)
   showChart?: boolean; // 차트 표시 여부 (선택적)
-}
-
-class Example extends PureComponent {
-  render() {
-    return (
-      <ResponsiveContainer width="100%" height="100%">
-        <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
-          <PolarGrid />
-          <PolarAngleAxis dataKey="subject" tick={false} />
-          <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} />
-          <Radar
-            name="A"
-            dataKey="A"
-            stroke="#F9B233"
-            fill="#F9B233"
-            fillOpacity={0.85}
-          />
-          <Radar
-            name="B"
-            dataKey="B"
-            stroke="9C723E"
-            fill="#9C723E"
-            fillOpacity={0.55}
-          />
-        </RadarChart>
-      </ResponsiveContainer>
-    );
-  }
+  whiskyId?: number; // 위스키 ID (차트 데이터를 가져오기 위함)
+  tastingProfile?: TastingProfile; // 테이스팅 프로필 (선택적, 직접 제공할 경우)
 }
 
 export function Whiskycard({
@@ -99,6 +26,8 @@ export function Whiskycard({
   whiskyImage = defaultWhiskyImg, // 기본값으로 에셋 이미지 사용
   showLikeButton = true, // 기본값은 하트 버튼 표시
   showChart = true, // 기본값은 차트 표시
+  whiskyId,
+  tastingProfile,
   ...props
 }: WhiskycardProps) {
   const [isLiked, setIsLiked] = useState(false); // 찜 상태를 관리하는 state
@@ -160,7 +89,12 @@ export function Whiskycard({
           {/* Radar Chart를 우측 상단에 배치 */}
           {showChart && (
             <div className="absolute bottom-26 left-29 w-[60px] h-[60px]">
-              <Example />
+              <TastingRadarChart
+                whiskyId={whiskyId}
+                profile={tastingProfile}
+                width="60px"
+                height="60px"
+              />
             </div>
           )}
         </CardContent>
