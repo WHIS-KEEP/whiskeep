@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.whiskeep.api.record.domain.QRecord;
+import com.whiskeep.api.record.dto.RecordStats;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +17,7 @@ public class RecordRepositoryImpl implements RecordCustomRepository {
 
 	private final JPAQueryFactory jpaQueryFactory;
 	@Override
-	public Map<Long, RecordStatsDto> findAllWhiskyStats() {
+	public Map<Long, RecordStats> findAllWhiskyStats() {
 		QRecord qr = QRecord.record;
 
 		var avgRatingExpr = qr.rating.avg();
@@ -36,7 +37,7 @@ public class RecordRepositoryImpl implements RecordCustomRepository {
 		return result.stream()
 			.collect(Collectors.toMap(
 				tuple -> tuple.get(qr.whisky.whiskyId),
-				tuple -> RecordStatsDto.of(
+				tuple -> new RecordStats(
 					tuple.get(avgRatingExpr),
 					tuple.get(countExpr).intValue()
 				)

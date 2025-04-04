@@ -2,6 +2,8 @@ package com.whiskeep.api.record.repository;
 
 import java.util.Map;
 
+import com.whiskeep.api.record.dto.RecordStats;
+
 public interface RecordCustomRepository {
-	Map<Long, RecordStatsDto> findAllWhiskyStats();
+	Map<Long, RecordStats> findAllWhiskyStats();
 }
