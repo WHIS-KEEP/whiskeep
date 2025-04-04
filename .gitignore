@@ -75,3 +75,4 @@ dist-ssr/
 Icon
 *.icloud
 
+.metadata
