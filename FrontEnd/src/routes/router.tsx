@@ -16,6 +16,7 @@ import BeginnerSurveyPage from '@/pages/preference/BeginnerSurveyPage';
 import FamiliarSurveyPage from '@/pages/preference/FamiliarSurveyPage';
 import PreferenceCompletePage from '@/pages/preference/PreferenceCompletePage';
 import WhiskyRecordPage from '@/pages/WhiskyRecordPage';
+import LikePage from '@/pages/LikePage';
 
 // 보호된 페이지 (로그인한 사용자만 접근 가능)
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -78,6 +79,7 @@ const Router = () => {
           <Route path="mypage" element={<Mypage />} />
           <Route path="/records/create" element={<RecordCreatePage />} />
           <Route path="/records/:whiskyId" element={<WhiskyRecordPage />} />
+          <Route path="/like" element={<LikePage />} />
         </Route>
       </Route>
 
