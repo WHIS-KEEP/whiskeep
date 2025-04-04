@@ -67,9 +67,9 @@ const Router = () => {
       <Route element={<Layout />}>
         <Route
           element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
             <Outlet />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         >
           <Route path="main" element={<Main />} />
