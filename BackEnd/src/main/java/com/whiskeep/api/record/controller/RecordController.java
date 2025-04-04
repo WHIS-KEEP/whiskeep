@@ -15,14 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.record.dto.RecordImageResponseDto;
 import com.whiskeep.api.record.dto.request.RecordCreateRequestDto;
 import com.whiskeep.api.record.dto.request.RecordUpdateRequestDto;
 import com.whiskeep.api.record.dto.response.MyRecordResponseDto;
 import com.whiskeep.api.record.dto.response.RecordDetailResponseDto;
 import com.whiskeep.api.record.service.RecordService;
-import com.whiskeep.api.whisky.dto.WhiskyRecordResponseDto;
+import com.whiskeep.api.whisky.dto.response.WhiskyRecordResponseDto;
 import com.whiskeep.common.auth.annotation.Auth;
 
 import lombok.RequiredArgsConstructor;

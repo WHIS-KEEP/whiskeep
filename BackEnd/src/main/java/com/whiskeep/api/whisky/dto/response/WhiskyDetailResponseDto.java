@@ -1,4 +1,4 @@
-package com.whiskeep.api.whisky.dto;
+package com.whiskeep.api.whisky.dto.response;
 
 import java.util.List;
 

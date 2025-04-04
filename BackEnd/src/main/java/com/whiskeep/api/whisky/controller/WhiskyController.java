@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whiskeep.api.record.service.RecordService;
-import com.whiskeep.api.whisky.dto.RecordListResponseDto;
-import com.whiskeep.api.whisky.dto.WhiskyDetailResponseDto;
+import com.whiskeep.api.whisky.dto.response.RecordListResponseDto;
+import com.whiskeep.api.whisky.dto.response.WhiskyDetailResponseDto;
 import com.whiskeep.api.whisky.service.WhiskyService;
 
 import lombok.RequiredArgsConstructor;
