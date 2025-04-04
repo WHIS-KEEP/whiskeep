@@ -10,7 +10,6 @@ import LoginSuccess from '@/pages/LoginSuccess';
 import useAuth from '@/store/useContext';
 import { JSX } from 'react';
 import Layout from '@/components/layout/Layout';
-import DetailPage from '@/pages/DetailPage';
 import RecordCreatePage from '@/pages/RecordCreatePage';
 import PreferenceSurveyIntroPage from '@/pages/preference/PreferenceSurveyIntroPage';
 import BeginnerSurveyPage from '@/pages/preference/BeginnerSurveyPage';

@@ -6,106 +6,26 @@ import {
   useMemo,
   useEffect,
 } from 'react';
-import api from '../lib/util/axiosInstance';
-import { AxiosError } from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import {
+  fetchWhiskyCollection,
+  COLLECTION_QUERY_KEY,
+} from '../lib/api/collection';
 
 // --- 상수 정의 ---
-const BOTTLES_PER_SHELF = 5; // 선반당 병 개수
+const BOTTLES_PER_SHELF = 4; // 선반당 병 개수
 const SHELVES_PER_PAGE = 3; // 페이지당 선반 개수
-const BOTTLES_PER_PAGE = BOTTLES_PER_SHELF * SHELVES_PER_PAGE; // 페이지당 최대 병 개수 (15)
-
-// 위스키 타입 정의
-interface Whisky {
-  whiskyId: number;
-  whiskyImg: string;
-}
+const BOTTLES_PER_PAGE = BOTTLES_PER_SHELF * SHELVES_PER_PAGE; // 페이지당 최대 병 개수 (12)
 
 // --- 컴포넌트 ---
 const Collection = () => {
-  const [items, setItems] = useState<{ id: number; image: string }[]>([]);
-  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
 
-  // API에서 위스키 데이터 가져오기
-  useEffect(() => {
-    const fetchWhiskyData = async () => {
-      try {
-        setLoading(true);
-
-        // 디버깅을 위해 API 요청 정보 출력
-        console.log('🔍 API 요청 준비:', {
-          method: 'GET',
-          url: '/records',
-        });
-
-        const startTime = performance.now();
-        const response = await api.get<Whisky[]>('/records');
-        const endTime = performance.now();
-
-        // 디버깅을 위해 API 응답 정보 출력
-        console.log(`✅ API 응답 (${Math.round(endTime - startTime)}ms):`, {
-          status: response.status,
-          statusText: response.statusText,
-          headers: response.headers,
-          endpoint: response.config?.url,
-          fullUrl: response.config?.baseURL
-            ? `${response.config.baseURL}${response.config.url || ''}`
-            : response.config?.url,
-        });
-        console.log('📊 응답 데이터:', response.data);
-
-        // API 응답 데이터를 기존 형식에 맞게 변환
-        const formattedData = response.data.map((whisky) => ({
-          id: whisky.whiskyId,
-          image: whisky.whiskyImg,
-        }));
-
-        console.log('🔄 변환된 데이터:', formattedData);
-
-        setItems(formattedData);
-      } catch (error: unknown) {
-        // unknown 타입으로 변경하고 타입 가드 사용
-        console.error('❌ 위스키 데이터를 불러오는 중 오류 발생:', error);
-
-        // 상세한 오류 정보 출력
-        if (error instanceof AxiosError && error.response) {
-          // 서버가 응답을 반환한 경우
-          console.error('📡 응답 데이터:', {
-            status: error.response.status,
-            statusText: error.response.statusText,
-            headers: error.response.headers,
-            data: error.response.data,
-            endpoint: error.config?.url,
-            fullUrl: error.config?.baseURL
-              ? `${error.config.baseURL}${error.config.url || ''}`
-              : error.config?.url,
-          });
-        } else if (error instanceof AxiosError && error.request) {
-          // 요청은 보냈지만 응답을 받지 못한 경우
-          console.error('📡 요청 정보:', {
-            request: error.request,
-            endpoint: error.config?.url,
-            fullUrl: error.config?.baseURL
-              ? `${error.config.baseURL}${error.config.url || ''}`
-              : error.config?.url,
-          });
-        } else if (error instanceof Error) {
-          // 요청 설정 과정에서 오류가 발생한 경우
-          console.error('📡 요청 준비 오류:', {
-            message: error.message,
-            config: error instanceof AxiosError ? error.config : undefined,
-          });
-        }
-
-        // 오류 발생 시 빈 배열로 설정
-        setItems([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWhiskyData();
-  }, []);
+  // React Query를 사용하여 위스키 데이터 가져오기
+  const { data: items = [], isPending } = useQuery({
+    queryKey: [COLLECTION_QUERY_KEY],
+    queryFn: fetchWhiskyCollection,
+  });
 
   const totalPages = useMemo(
     () => Math.ceil(items.length / BOTTLES_PER_PAGE) || 1,
@@ -200,11 +120,9 @@ const Collection = () => {
       const targetTranslate = -currentPage * sliderWidth;
 
       // 드래그 중이 아닐 때만 부드럽게 이동하도록 처리
-      // (드래그 종료 시에는 dragEnd에서 이미 최종 위치로 설정됨)
       // 만약 닷(dot) 클릭 등으로 페이지가 변경될 경우 이 useEffect가 애니메이션을 담당
       if (!isDragging) {
         // requestAnimationFrame을 사용하여 다음 프레임에서 translate 업데이트
-        // 이렇게 하면 CSS transition이 적용될 시간을 확보할 수 있음
         const frameId = requestAnimationFrame(() => {
           setCurrentTranslate(targetTranslate);
           // prevTranslate도 동기화하여 다음 드래그 시작 시점 문제 방지
@@ -213,8 +131,6 @@ const Collection = () => {
         return () => cancelAnimationFrame(frameId); // 클린업 함수
       } else {
         // 드래그 중에는 dragMove가 translate를 제어하므로 여기서는 아무것도 안 함
-        // 단, prevTranslate는 동기화해주는 것이 안전할 수 있음 (선택 사항)
-        // setPrevTranslate(targetTranslate);
       }
     }
   }, [currentPage, isDragging]); // currentPage 변경 시 실행
@@ -224,7 +140,7 @@ const Collection = () => {
       {/* 여기에 상단바가 있다고 가정 */}
       <div className="flex-1 overflow-hidden bg-[#efebe0]">
         <div className="h-full flex items-center justify-center">
-          {loading ? (
+          {isPending ? (
             <div className="flex flex-col items-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
               <p className="mt-3 text-gray-700">데이터를 불러오는 중...</p>
@@ -296,16 +212,16 @@ const Collection = () => {
                                   style={{
                                     backgroundImage:
                                       "url('./src/assets/woodshelf.png')",
-                                    backgroundSize: '100% 60%',
+                                    backgroundSize: '110% 30%',
                                   }}
                                 >
                                   {/* === 병 그리드 컨테이너 === */}
                                   <div
                                     className={`
-                                      absolute left-0 right-0 grid grid-cols-5 px-2 h-full 
-                                      bottom-15.5`}
+                                      absolute left-0 right-0 grid grid-cols-4 px-2 h-full 
+                                      bottom-15`}
                                   >
-                                    {/* 선반당 슬롯 개수(5개)만큼 반복 */}
+                                    {/* 선반당 슬롯 개수만큼 반복 */}
                                     {Array.from({
                                       length: BOTTLES_PER_SHELF,
                                     }).map((_, slotIndex) => {
@@ -314,19 +230,18 @@ const Collection = () => {
                                       return (
                                         <div
                                           key={`slot-${pageIndex}-${shelfIndex}-${slotIndex}`}
-                                          // 슬롯 자체의 정렬보다는 병 이미지 크기 조절이 더 중요할 수 있음
-                                          className="flex justify-center items-center h-full" // 중앙 정렬 (필요에 따라 items-start, items-end 등으로 변경 가능)
+                                          className="flex justify-center items-center h-full" // 중앙 정렬
                                         >
                                           {bottle ? (
                                             <img
                                               src={bottle.image}
                                               alt={`병 ${bottle.id}`}
                                               // max-h 값 조절로 선반 내 병 크기 제어
-                                              className="max-h-[70%] sm:max-h-[75%] md:max-h-[80%] object-contain select-none"
+                                              className="max-h-[80%] object-contain select-none"
                                               draggable="false"
                                             />
                                           ) : (
-                                            <div className="w-full h-full"></div> // 빈 슬롯
+                                            <div className="w-0 h-0"></div> // 빈 슬롯
                                           )}
                                         </div>
                                       );
