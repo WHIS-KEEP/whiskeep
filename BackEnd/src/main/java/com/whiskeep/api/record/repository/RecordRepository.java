@@ -18,7 +18,7 @@ import com.whiskeep.api.record.domain.Record;
 import com.whiskeep.api.record.dto.response.MyRecordResponseDto;
 import com.whiskeep.api.whisky.domain.Whisky;
 
-public interface RecordRepository extends JpaRepository<Record, Long> {
+public interface RecordRepository extends JpaRepository<Record, Long>, RecordCustomRepository {
 
 
 	@Query("SELECT AVG(r.rating) FROM Record r WHERE r.whisky.whiskyId = :whiskyId")
