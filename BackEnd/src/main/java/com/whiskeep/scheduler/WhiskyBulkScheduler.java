@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 
 import com.whiskeep.api.record.dto.RecordStats;
 import com.whiskeep.api.record.repository.RecordRepository;
+import com.whiskeep.api.whisky.document.WhiskyDocument;
 import com.whiskeep.api.whisky.domain.Whisky;
-import com.whiskeep.api.whisky.domain.document.WhiskyDocument;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;

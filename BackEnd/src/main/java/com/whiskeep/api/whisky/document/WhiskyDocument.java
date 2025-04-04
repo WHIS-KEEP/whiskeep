@@ -1,4 +1,4 @@
-package com.whiskeep.api.whisky.domain.document;
+package com.whiskeep.api.whisky.document;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
