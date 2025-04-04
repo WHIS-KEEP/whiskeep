@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // react-router-dom을 사용하여 페이지 이동
 
 import logo from '../assets/logo.svg';
