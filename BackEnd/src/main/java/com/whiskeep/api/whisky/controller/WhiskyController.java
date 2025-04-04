@@ -1,15 +1,21 @@
 package com.whiskeep.api.whisky.controller;
 
+import java.io.IOException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whiskeep.api.record.service.RecordService;
+import com.whiskeep.api.whisky.dto.reqeust.WhiskySearchRequest;
 import com.whiskeep.api.whisky.dto.response.RecordListResponseDto;
 import com.whiskeep.api.whisky.dto.response.WhiskyDetailResponseDto;
+import com.whiskeep.api.whisky.dto.response.WhiskySearchResponse;
 import com.whiskeep.api.whisky.service.WhiskyService;
 
 import lombok.RequiredArgsConstructor;
@@ -37,5 +43,11 @@ public class WhiskyController {
 
 		return ResponseEntity.ok(records);
 
+	}
+
+	@PostMapping("/search")
+	public ResponseEntity<WhiskySearchResponse> search(@RequestBody WhiskySearchRequest request) throws IOException {
+		WhiskySearchResponse response = whiskyService.searchWithFuzziness(request);
+		return ResponseEntity.ok(response);
 	}
 }
