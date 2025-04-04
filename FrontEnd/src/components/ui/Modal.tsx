@@ -1,4 +1,4 @@
-// FILE: WhiskySelectionDialog.tsx
+// FILE: Modal.tsx
 import React, { useState } from 'react';
 import { cn } from '@/lib/util/utils';
 import {
