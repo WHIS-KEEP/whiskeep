@@ -7,6 +7,7 @@ import {
   useEffect,
 } from 'react';
 import api from '../lib/util/axiosInstance';
+import { AxiosError } from 'axios';
 
 // --- 상수 정의 ---
 const BOTTLES_PER_SHELF = 5; // 선반당 병 개수
@@ -62,12 +63,12 @@ const Collection = () => {
         console.log('🔄 변환된 데이터:', formattedData);
 
         setItems(formattedData);
-      } catch (error: any) {
-        // any 타입으로 지정
+      } catch (error: unknown) {
+        // unknown 타입으로 변경하고 타입 가드 사용
         console.error('❌ 위스키 데이터를 불러오는 중 오류 발생:', error);
 
         // 상세한 오류 정보 출력
-        if (error.response) {
+        if (error instanceof AxiosError && error.response) {
           // 서버가 응답을 반환한 경우
           console.error('📡 응답 데이터:', {
             status: error.response.status,
@@ -79,7 +80,7 @@ const Collection = () => {
               ? `${error.config.baseURL}${error.config.url || ''}`
               : error.config?.url,
           });
-        } else if (error.request) {
+        } else if (error instanceof AxiosError && error.request) {
           // 요청은 보냈지만 응답을 받지 못한 경우
           console.error('📡 요청 정보:', {
             request: error.request,
@@ -88,11 +89,11 @@ const Collection = () => {
               ? `${error.config.baseURL}${error.config.url || ''}`
               : error.config?.url,
           });
-        } else {
+        } else if (error instanceof Error) {
           // 요청 설정 과정에서 오류가 발생한 경우
           console.error('📡 요청 준비 오류:', {
             message: error.message,
-            config: error.config,
+            config: error instanceof AxiosError ? error.config : undefined,
           });
         }
 
