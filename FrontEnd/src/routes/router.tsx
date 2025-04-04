@@ -13,6 +13,7 @@ import { JSX } from 'react';
 import Layout from '@/components/layout/Layout';
 import DetailPage from '@/pages/DetailPage';
 import RecordCreatePage from '@/pages/RecordCreatePage';
+import LikePage from '@/pages/LikePage';
 
 // 보호된 페이지 (로그인한 사용자만 접근 가능)
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -29,9 +30,9 @@ const Router = () => {
       <Route element={<Layout />}>
         <Route
           element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
             <Outlet />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         >
           <Route path="main" element={<Main />} />
@@ -40,6 +41,7 @@ const Router = () => {
           <Route path="mypage" element={<Mypage />} />
           <Route path="detail/:whiskyId" element={<DetailPage />} />
           <Route path="/records/create" element={<RecordCreatePage />} />
+          <Route path="/like" element={<LikePage />} />
         </Route>
       </Route>
 
