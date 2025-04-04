@@ -7,12 +7,10 @@ export const RECORD_FIELDS = {
   WHISKY_ID: 'whiskyId',
   RATING: 'rating', //1~5
   CONTENT: 'content',
-  RECORD_IMG: 'recordImg',  // 유저가 직접 기록하는 이미지
+  RECORD_IMG: 'recordImg', // 유저가 직접 기록하는 이미지
   IS_PUBLIC: 'isPublic',
-  WHISKY_IMG: 'whiskyImg',  // 위스키 고유 이미지
+  WHISKY_IMG: 'whiskyImg', // 위스키 고유 이미지
 } as const;
-
-
 
 // 위스키 관련 필드명
 export const WHISKY_FIELDS = {

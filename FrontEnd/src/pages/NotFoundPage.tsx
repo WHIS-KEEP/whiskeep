@@ -1,16 +1,32 @@
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import NotFoundImage from '../assets/notfound.png'; // 이미지 import
 
 const NotFound = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const navigationDelay = 3000;
+    setTimeout(() => {
+      navigate('/main');
+    }, navigationDelay);
+  }, [navigate]);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 bg-bg-muted rounded-lg">
-      <h1 className="text-4xl font-bold mb-4 text-point-red-dark">404</h1>
+    <div className="flex flex-col items-center justify-center min-h-[100vh] p-6 bg-bg-muted rounded-lg">
+      <img
+        src={NotFoundImage}
+        alt="페이지를 찾을 수 없음"
+        className="mb-4"
+        style={{ maxWidth: '400px', height: 'auto' }}
+      />
+      <h1 className="text-4xl font-bold mb-4 text-primary">
+        ): 404 Not Found :(
+      </h1>
       <p className="text-xl mb-6 text-text-muted">페이지를 찾을 수 없습니다.</p>
-      <Link
-        to="/"
-        className="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded transition-colors"
-      >
-        홈으로 돌아가기
-      </Link>
+      <p className="text-md mb-6 text-text-muted">
+        5초 후에 홈으로 돌아갑니다.
+      </p>
     </div>
   );
 };
