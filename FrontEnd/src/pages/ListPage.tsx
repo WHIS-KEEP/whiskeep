@@ -66,15 +66,15 @@ export function SearchPage() {
   const countries = ['미국', '아일랜드', '캐나다', '스코틀랜드'];
   const types = ['버번', '싱글 몰트', '그레인', '블렌디드 몰트'];
 
-  const handleConfirm = () => {
-    console.log('선택된 아이템 ID:', selectedItemId);
-    // TODO: 선택된 아이템 ID로 작업 수행
-    navigate('/Main'); // 메인 페이지로 이동
-  };
+  // const handleConfirm = () => {
+  //   console.log('선택된 아이템 ID:', selectedItemId);
+  //   // TODO: 선택된 아이템 ID로 작업 수행
+  //   navigate('/Main'); // 메인 페이지로 이동
+  // };
 
-  const handleCancel = () => {
-    navigate('/Main'); // 메인 페이지로 이동
-  };
+  // const handleCancel = () => {
+  //   navigate('/Main'); // 메인 페이지로 이동
+  // };
 
   const handleSelectItem = (id: number) => {
     setSelectedItemId((prevId) => (prevId === id ? null : id));
