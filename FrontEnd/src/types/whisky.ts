@@ -2,6 +2,7 @@
 export interface WhiskyDetail {
   whiskyId: number;
   whiskyImg: string;
+  isLiked: boolean;
   koName: string;
   enName: string;
   distillery: string;

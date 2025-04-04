@@ -3,7 +3,6 @@ import { WhiskyDetail, RecordListResponse } from '@/types/whisky';
 
 
 // 위스키 상세 정보 조회 API
-// 변경 후:
 export const getWhiskyDetail = async (whiskyId: number): Promise<WhiskyDetail> => {
     try {
       const response = await api.get<WhiskyDetail>(`/whiskies/${whiskyId}`);
@@ -17,8 +16,8 @@ export const getWhiskyDetail = async (whiskyId: number): Promise<WhiskyDetail> =
 // 위스키 리뷰 목록 조회 API
 export const getWhiskyRecords = async (
     whiskyId: number,
-    page: number = 1,
-    size: number = 10
+    page: number = 0,
+    size: number = 3
   ): Promise<RecordListResponse> => {
     try {
       const response = await api.get<RecordListResponse>(

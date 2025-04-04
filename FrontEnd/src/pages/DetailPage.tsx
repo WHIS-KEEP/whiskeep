@@ -1,83 +1,48 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 import { Heart, ChevronLeft, Star } from 'lucide-react';
 import { Button } from '@/components/shadcn/Button';
 import PaginationBtn from '@/components/ui/PagenationBtn';
+import useAuth from '@/store/useContext';
 
 import { cn } from '@/lib/util/utils';
 import { formatDateTime } from '@/lib/util/formatDate';
 
 
-// API 및 타입 임포트
-import { WhiskyDetail, RecordListResponse } from '@/types/whisky';
-import { getWhiskyDetail, getWhiskyRecords, toggleWhiskyLike } from '@/lib/api/whisky';
+// React Query 훅 임포트
+import { useWhiskyDetail, useWhiskyRecords } from '@/hooks/queries/useWhiskyQueries';
+import { useToggleWhiskyLike } from '@/hooks/mutations/useWhiskyMutations';
 
 // 샘플 이미지 (실제 구현 시 경로 수정 필요)
-import sampleImage from '@/assets/sample.png';
+import backgroundImage from '@/assets/whisky_background.png';
 
 const DetailPage = () => {
   const { whiskyId } = useParams<{ whiskyId: string }>();
+  const whiskyIdNumber = whiskyId ? parseInt(whiskyId, 10) : 0;
+  
   const [page, setPage] = useState(1);
-  const [isLiked, setIsLiked] = useState(false);
 
-  // 데이터 상태
-  const [whiskyDetail, setWhiskyDetail] = useState<WhiskyDetail | null>(null);
-  const [recordsData, setRecordsData] = useState<RecordListResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // 위스키 상세 정보 조회
-  useEffect(() => {
-    const fetchWhiskyDetail = async () => {
-      if (!whiskyId) return;
-      
-      setIsLoading(true);
-      try {
-        // string을 number로 변환
-        const data = await getWhiskyDetail(parseInt(whiskyId, 10));
-        setWhiskyDetail(data);
-        setError(null);
-      } catch (err) {
-        console.error('위스키 상세 정보 조회 실패:', err);
-        setError('위스키 정보를 불러오는데 실패했습니다.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchWhiskyDetail();
-  }, [whiskyId]);
-
-  // 위스키 리뷰 목록 조회
-  useEffect(() => {
-    const fetchWhiskyRecords = async () => {
-      if (!whiskyId) return;
-      
-      try {
-        // string을 number로 변환
-        const apiPage = page - 1;
-        const data = await getWhiskyRecords(parseInt(whiskyId, 10,), apiPage);
-        setRecordsData(data);
-      } catch (err) {
-        console.error('위스키 리뷰 목록 조회 실패:', err);
-      }
-    };
-
-    fetchWhiskyRecords();
-  }, [whiskyId, page]);
+  const { user } = useAuth();
+  console.log('현재 사용자:', user);
+  
+  // React Query 훅 사용
+  const { 
+    data: whiskyDetail, 
+    isLoading: isDetailLoading, 
+    error: detailError 
+  } = useWhiskyDetail(whiskyIdNumber);
+  
+  const { 
+    data: recordsData, 
+    isLoading: isRecordsLoading 
+  } = useWhiskyRecords(whiskyIdNumber, page);
+  
+  const { mutate: toggleLike } = useToggleWhiskyLike(whiskyIdNumber);
 
   // 좋아요 토글
-  const handleLikeToggle = async () => {
-    if (!whiskyId) return;
-    
-    try {
-      // string을 number로 변환
-      const result = await toggleWhiskyLike(parseInt(whiskyId, 10));
-      setIsLiked(result.isLiked); // API 응답의 실제 상태 사용
-    } catch (err) {
-      console.error('위스키 좋아요 토글 실패:', err);
-    }
+  const handleLikeToggle = () => {
+    toggleLike();
   };
 
   // 페이지 변경
@@ -105,7 +70,7 @@ const DetailPage = () => {
   );
 
   // 로딩 상태 처리
-  if (isLoading) {
+  if (isDetailLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <p>위스키 정보를 불러오는 중...</p>
@@ -114,17 +79,17 @@ const DetailPage = () => {
   }
 
   // 에러 상태 처리
-  if (error) {
+  if (detailError) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>{error}</p>
+        <p>위스키 정보를 불러오는데 실패했습니다.</p>
       </div>
     );
   }
 
   return (
     <ScrollArea className="flex-1 bg-white w-[412px] mx-auto">
-      <div style={{ paddingBottom: '150px' }}>
+      <div style={{ paddingBottom: '30px' }}>
         {/* 헤더 백 버튼 */}
         <div className="flex items-center p-4">
           <Link to="/list" className="mr-2">
@@ -134,43 +99,59 @@ const DetailPage = () => {
 
         {/* 위스키 이미지 섹션 */}
         <div className="relative">
-          <div className="w-full h-64 bg-gradient-to-b from-blue-100 to-purple-100 flex items-center justify-center overflow-hidden">
-            <img
-              src={whiskyDetail?.whiskyImg || sampleImage}
-              alt={whiskyDetail?.koName}
-              className="object-contain h-full"
-            />
+        <div 
+            className="w-full h-[300px] relative" 
+            style={{
+              backgroundImage: `url(${backgroundImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
+          >
+            {/* 위스키 이미지를 오른쪽으로 배치 */}
+            {whiskyDetail?.whiskyImg && (
+              <div className="absolute bottom-0 right-12 h-[280px] flex items-end">
+                <img
+                  src={whiskyDetail.whiskyImg}
+                  alt={whiskyDetail.koName}
+                  className="h-full object-contain z-10"
+                />
+              </div>
+            )}
           </div>
 
           {/* Wiskeep's Pick 배지 */}
-          <div className="absolute top-4 left-4 bg-rose-300 text-white px-3 py-1 rounded-full text-sm">
+          <div className="absolute left-4 bottom-4 bg-rose-300 bg-opacity-90 text-white px-4 py-2 rounded-full text-sm z-20">
             Whiskeep's Pick
           </div>
-          
-          {/* 좋아요 버튼 */}
-          <Button 
-            onClick={handleLikeToggle}
-            variant="ghost"
-            size="icon"
-            className="absolute top-4 right-4 bg-white bg-opacity-70 rounded-full h-10 w-10"
-          >
-            <Heart 
-              size={20} 
-              fill={isLiked ? "#D42B2B" : "none"} 
-              color={isLiked ? "#D42B2B" : "#000"} 
-            />
-          </Button>
+   
         </div>
 
-        {/* 제품 정보 섹션 */}
-        <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold">{whiskyDetail?.koName}</h1>
-          <p className="text-gray-600 text-sm">{whiskyDetail?.enName}</p>
+        {/* 제품 정보 섹션 - 좋아요 버튼을 이름 옆으로 배치 */}
+        <div className="p-4">
+          <div className="mb-2">
+            <div className="flex justify-between items-start">
+              <h1 className="text-xl font-bold">{whiskyDetail?.koName}</h1>
+              <Button 
+                onClick={handleLikeToggle}
+                variant="ghost"
+                size="icon"
+                className="rounded-full h-10 w-10 -mt-1"
+              >
+                <Heart 
+                  size={24} 
+                  fill={whiskyDetail?.isLiked ? "#D42B2B" : "none"} 
+                  color={whiskyDetail?.isLiked ? "#D42B2B" : "#000"} 
+                />
+              </Button>
+            </div>
+            <p className="text-gray-600 text-sm">{whiskyDetail?.enName}</p>
+          </div>
         </div>
-
         {/* 테이스팅 프로필 섹션 */}
         <div className="p-4 border-b border-gray-200">
-          <h2 className="text-sm font-medium text-gray-500 mb-2">홍길동님 취향 분석</h2>
+          <h2 className="text-sm font-medium text-gray-500 mb-2">
+          {user ? `${user.nickname}님` : '게스트님'} 취향 분석
+          </h2>
           <div className="bg-gray-100 p-4 rounded-lg">
             <div className="flex justify-between text-xs text-gray-500 mb-2">
               <span>Nosing</span>
@@ -247,56 +228,73 @@ const DetailPage = () => {
             <div className="flex items-center text-sm">
               <span className="font-bold mr-1">평점</span>
               <span className="mr-1">{whiskyDetail?.recordInfo.ratingAvg.toFixed(1)}</span>
-              <span className="text-gray-500">({whiskyDetail?.recordInfo.recordCnt}+)</span>
+              <span className="text-gray-500">({whiskyDetail?.recordInfo.recordCnt})</span>
             </div>
           </div>
 
-          {/* 리뷰 목록 */}
-          <div className="space-y-4">
-            {recordsData?.records.map((record) => (
-              <div key={record.recordId} className="border-b border-gray-200 pb-4">
-                <div className="flex items-center mb-2">
-                  <div className="w-8 h-8 bg-rose-200 rounded-full flex items-center justify-center text-white text-xs mr-2">
-                    {record.profileImage ? (
-                      <img 
-                        src={record.profileImage} 
-                        alt={record.nickname} 
-                        className="w-full h-full rounded-full object-cover" 
-                      />
-                    ) : (
-                      record.nickname.charAt(0)
-                    )}
-                  </div>
-                  <div>
-                    <div className="font-medium">{record.nickname}</div>
-                    <div className="text-xs text-gray-500">{formatDateTime(record.createdAt)}</div>
-                  </div>
-                </div>
-                <p className="text-sm mb-2">{record.content}</p>
-                {record.recordImg && (
-                  <div className="mb-2">
-                    <img 
-                      src={record.recordImg} 
-                      alt="리뷰 이미지" 
-                      className="w-16 h-16 object-cover rounded-md" 
-                    />
-                  </div>
+{/* 리뷰 목록 */}
+<div className="space-y-8"> {/* space-y-4에서 space-y-8로 변경하여 리뷰 간격 넓힘 */}
+  {isRecordsLoading ? (
+    <p className="text-center py-4">리뷰를 불러오는 중...</p>
+  ) : (
+    recordsData?.records.map((record) => (
+      <div key={record.recordId} className="border-b border-gray-200 pb-6"> {/* pb-4에서 pb-6으로 변경하여 하단 여백 증가 */}
+        <div className="flex justify-between">
+          {/* 왼쪽: 프로필, 이름, 내용, 별점 */}
+          <div className="flex-1 pr-3">
+            {/* 프로필 및 이름 */}
+            <div className="flex items-center mb-3"> {/* mb-2에서 mb-3으로 변경하여 이름과 내용 사이 간격 증가 */}
+              <div className="w-10 h-10 bg-rose-200 rounded-full flex items-center justify-center text-white text-sm mr-3"> {/* 크기와 여백 증가 */}
+                {record.profileImage ? (
+                  <img 
+                    src={record.profileImage} 
+                    alt={record.nickname} 
+                    className="w-full h-full rounded-full object-cover" 
+                  />
+                ) : (
+                  record.nickname.charAt(0)
                 )}
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                      <Heart size={16} className="text-gray-400" />
-                    </Button>
-                    <span className="text-xs">3</span>
-                  </div>
-                  <StarRating rating={record.rating} />
+              </div>
+              <div>
+                <div className="text-medium font-medium"> {/* 이름 글자 크기 증가 */}
+                  {record.nickname}
+                </div>
+                <div className="text-sm text-gray-500"> {/* 날짜 글자 크기 증가 */}
+                  {formatDateTime(record.createdAt)}
                 </div>
               </div>
-            ))}
+            </div>
+            
+            {/* 내용 - 왼쪽 정렬로 변경 및 글씨 크기 증가 */}
+            <p className="text-base mb-3 text-left"> {/* text-center → text-left, text-sm → text-base, mb-2 → mb-3 */}
+              {record.content}
+            </p>
+            
+            {/* 별점을 내용 아래, 왼쪽으로 배치 */}
+            <div>
+              <StarRating rating={record.rating} />
+            </div>
           </div>
+          
+          {/* 오른쪽: 이미지 (더 크게) */}
+          {record.recordImg && (
+            <div className="ml-3"> {/* ml-2에서 ml-3으로 여백 증가 */}
+              <img 
+                src={record.recordImg} 
+                alt="리뷰 이미지" 
+                className="w-28 h-28 object-cover rounded-md" /* w-24 h-24에서 w-28 h-28로 크기 증가 */
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    ))
+  )}
+</div>
 
-          {/* 페이지네이션 */}
-          {recordsData && recordsData.pageInfo && recordsData.pageInfo.totalPages  > 0 && (
+
+ {/* 페이지네이션 */}
+ {recordsData?.pageInfo && recordsData.pageInfo.totalPages > 0 && (
             <div className="flex justify-center items-center mt-6 space-x-2">
               <PaginationBtn 
                 type="prev"
