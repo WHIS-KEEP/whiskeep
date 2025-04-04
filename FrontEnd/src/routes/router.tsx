@@ -69,7 +69,7 @@ const Router = () => {
           element={
             // <ProtectedRoute>
             <Outlet />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           }
         >
           <Route path="main" element={<Main />} />

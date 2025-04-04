@@ -188,7 +188,7 @@ const Collection = () => {
                         role="tabpanel"
                         // hidden 속성 제거: translateX로 시각적 제어
                       >
-                        <div className="flex flex-col items-center gap-y-15 px-2  ">
+                        <div className="flex flex-col items-center gap-y-15 px-2 ">
                           {/* === 선반 렌더링 === */}
                           {Array.from({ length: SHELVES_PER_PAGE }).map(
                             (_, shelfIndex) => {
