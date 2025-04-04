@@ -30,20 +30,20 @@ const PaginationBtn = ({
     if (disabled) {
       return {
         color: 'color-text-muted-40',
-        className: 'text-primary-50 cursor-not-allowed'
+        className: 'text-primary-50 cursor-not-allowed',
       };
     }
-    
+
     if (isActive) {
       return {
         color: 'color-primary',
-        className: 'text-white font-medium'
+        className: 'text-white font-medium',
       };
     }
-    
+
     return {
       color: 'default',
-      className: 'text-primary-dark hover:bg-gray-100'
+      className: 'text-primary-dark hover:bg-gray-100',
     };
   };
 
@@ -52,15 +52,15 @@ const PaginationBtn = ({
   return (
     <Button
       variant="outline"
-      size="icon" 
-      color={colorProps.color as 'default' | 'color-primary' | 'color-text-muted-40'}
+      size="icon"
+      color={
+        colorProps.color as 'default' | 'color-primary' | 'color-text-muted-40'
+      }
       className={`w-8 h-8 rounded-full flex items-center justify-center p-0 border-0 ${colorProps.className} ${className}`}
       onClick={onClick}
       asChild
     >
-      <button disabled={disabled}>
-        {getButtonContent()}
-      </button>
+      <button disabled={disabled}>{getButtonContent()}</button>
     </Button>
   );
 };

@@ -14,8 +14,8 @@ export const useWhiskyDetail = (whiskyId: number) => {
 export const useWhiskyRecords = (whiskyId: number, page: number = 1) => {
   return useQuery({
     queryKey: ['whiskyRecords', whiskyId, page],
-    queryFn: () => getWhiskyRecords(whiskyId, page-1, 3),
+    queryFn: () => getWhiskyRecords(whiskyId, page - 1, 3),
     enabled: !!whiskyId,
-    placeholderData: keepPreviousData, 
+    placeholderData: keepPreviousData,
   });
 };

@@ -14,7 +14,7 @@ function Header() {
   };
   return (
     <div
-      className= {`flex items-center justify-between ${getBackgroundColor()} `}
+      className={`flex items-center justify-between ${getBackgroundColor()} `}
       style={{ padding: '1.25rem' }}
     >
       <Link to="/main">
