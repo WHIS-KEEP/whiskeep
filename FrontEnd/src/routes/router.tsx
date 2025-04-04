@@ -10,7 +10,6 @@ import LoginSuccess from '@/pages/LoginSuccess';
 import useAuth from '@/store/useContext';
 import { JSX } from 'react';
 import Layout from '@/components/layout/Layout';
-import DetailPage from '@/pages/DetailPage';
 import RecordCreatePage from '@/pages/RecordCreatePage';
 import LikePage from '@/pages/LikePage';
 
@@ -38,7 +37,6 @@ const Router = () => {
           <Route path="list" element={<List />} />
           <Route path="collection" element={<Collection />} />
           <Route path="mypage" element={<Mypage />} />
-          <Route path="detail/:whiskyId" element={<DetailPage />} />
           <Route path="/records/create" element={<RecordCreatePage />} />
           <Route path="/like" element={<LikePage />} />
         </Route>
