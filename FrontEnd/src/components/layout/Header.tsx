@@ -1,11 +1,20 @@
 import logo from '../../assets/logo.svg';
 import { Heart } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 function Header() {
+  const location = useLocation();
+
+  // 현재 경로에 따른 배경색 매핑
+  const getBackgroundColor = () => {
+    if (location.pathname.startsWith('/detail/')) {
+      return 'bg-white'; // 디테일 페이지는 흰색 배경
+    }
+    return 'bg-bg-muted'; // 기본 배경색
+  };
   return (
     <div
-      className="flex items-center justify-between bg-bg-muted"
+      className= {`flex items-center justify-between ${getBackgroundColor()} `}
       style={{ padding: '1.25rem' }}
     >
       <Link to="/main">
