@@ -13,6 +13,8 @@ import { Switch } from '@/components/shadcn/switch';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 import { Star, Send, Plus } from 'lucide-react'; // Using lucide-react for icons
 
+import useAuth from '@/store/useContext'; 
+
 // Import the dialog content component
 import WhiskySelectionDialog from '@/components/ui/Modal';
 // Import your Whiskycard component
@@ -73,6 +75,7 @@ const StarRating = ({
 );
 
 export function MainPageContent() {
+  const { user } = useAuth();
   // State for the input field and toggle
   const [comment, setComment] = useState('');
   const [isPublic, setIsPublic] = useState(false);
@@ -210,7 +213,7 @@ export function MainPageContent() {
 
       {/* --- 현진 님을 위한 위스키 추천 Section --- */}
       <div className="flex flex-col gap-3">
-        <h2 className="font-semibold text-lg">현진 님을 위한 위스키 추천</h2>
+        <h2 className="font-semibold text-lg">{user?.name} 님을 위한 위스키 추천</h2>
         <ScrollArea className="w-full whitespace-nowrap rounded-md border">
           <div className="flex space-x-4 pb-4 p-2">
             {dummyRecommendations.map((whisky) => (

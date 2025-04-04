@@ -1,27 +1,41 @@
 // AuthProvider.tsx
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext'; // AuthContext import
 import { MemberResponse } from './AuthContext'; // MemberResponse 타입 import
 
 // Provider 컴포넌트
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(
-    localStorage.getItem('accessToken') || null,
+    sessionStorage.getItem('accessToken') || null,
   );
   const [user, setUser] = useState<MemberResponse | null>(null);
+
+  useEffect(() => {
+    const savedToken = sessionStorage.getItem('accessToken');
+    const savedUser = sessionStorage.getItem('user');
+    
+    if (savedToken) {
+      setToken(savedToken);
+    }
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   // 로그인 처리
   const login = (newToken: string, newUser: MemberResponse) => {
     setToken(newToken);
     setUser(newUser);
-    localStorage.setItem('accessToken', newToken);
+    sessionStorage.setItem('accessToken', newToken);
+    sessionStorage.setItem('user', JSON.stringify(newUser));
   };
 
   // 로그아웃 처리
   const logout = () => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem('accessToken');
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('user');
   };
 
   return (

@@ -26,7 +26,7 @@ const LoginSuccess = () => {
           `${import.meta.env.VITE_API_URL}/members/login/success?code=${code}`,
         );
 
-        // 받은 access-token을 localStorage에 저장
+        // 받은 access-token을 sessionStorage 저장
         const { accessToken, member } = response.data;
         login(accessToken, member);
 

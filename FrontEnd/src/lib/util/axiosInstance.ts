@@ -8,7 +8,7 @@ const API = axios.create({
 // 요청 인터셉터 (Access Token을 자동으로 헤더에 추가)
 API.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = sessionStorage.getItem('accessToken');
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -23,7 +23,7 @@ API.interceptors.response.use(
   async (error) => {
     if (error.response && error.response.status === 401) {
       alert('다시 로그인해주세요.');
-      localStorage.removeItem('accessToken');
+      sessionStorage.removeItem('accessToken');
       window.location.href = '/login';
     }
     return Promise.reject(error);
