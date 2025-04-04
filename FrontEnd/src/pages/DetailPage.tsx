@@ -88,8 +88,8 @@ const DetailPage = () => {
   }
 
   return (
-    <ScrollArea className="flex-1 bg-white w-[412px] mx-auto">
-      <div style={{ paddingBottom: '30px' }}>
+    <ScrollArea className="flex-1 bg-white w-[412px] mx-auto ">
+      <div style={{ paddingBottom: '0' }}>
         {/* 헤더 백 버튼 */}
         <div className="flex items-center p-4">
           <Link to="/list" className="mr-2">
