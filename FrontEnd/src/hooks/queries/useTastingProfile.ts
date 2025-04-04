@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchTastingProfile } from '@/lib/api/tastingProfile';
-import { TastingProfile } from '@/components/ui/Tastingchart';
 
 /**
  * 위스키의 테이스팅 프로필을 불러오는 커스텀 훅
