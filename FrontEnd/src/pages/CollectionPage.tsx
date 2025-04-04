@@ -293,7 +293,9 @@ const Collection = () => {
                                   key={`shelf-${pageIndex}-${shelfIndex}`}
                                   className="relative w-full max-w-4xl h-[20vh] bg-contain bg-no-repeat bg-center"
                                   style={{
-                                    backgroundImage: "url('./IMG_3143.png')",
+                                    backgroundImage:
+                                      "url('./src/assets/woodshelf.png')",
+                                    backgroundSize: '100% 60%',
                                   }}
                                 >
                                   {/* === 병 그리드 컨테이너 === */}
