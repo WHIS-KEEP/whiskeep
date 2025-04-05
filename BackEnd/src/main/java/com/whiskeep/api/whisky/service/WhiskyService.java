@@ -192,6 +192,7 @@ public class WhiskyService {
 	}
 
 	// 위스키 맛 프로필 별 점수 조회하기
+	@Transactional(readOnly = true)
 	public WhiskyScoreResponseDto getWhiskyScore(Long whiskyId) {
 		Whisky whisky = whiskyRepository.findById(whiskyId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
