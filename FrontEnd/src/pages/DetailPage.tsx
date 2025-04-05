@@ -26,7 +26,6 @@ const DetailPage = () => {
   const [page, setPage] = useState(1);
 
   const { user } = useAuth();
-  console.log('현재 사용자:', user);
 
   // React Query 훅 사용
   const {
