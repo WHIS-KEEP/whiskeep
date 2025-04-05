@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useWhiskyRecord } from '@/hooks/queries/useRecordQueries';
 import { ChevronLeft } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
-import { Separator } from '@/components/shadcn/separator';
 import { AspectRatio } from '@/components/shadcn/aspect-ratio';
 
 const WhiskyRecordPage: React.FC = () => {
@@ -112,43 +111,50 @@ const WhiskyRecordPage: React.FC = () => {
           </div>
 
           {/* 구분선 */}
-          <Separator className="my-2" />
+          {/* <Separator className="my-2" /> */}
 
-          {/* 2. 나의 기록 섹션 */}
-          <div className="space-y-3">
-            {/* 기록 제목 */}
-            <h2 className="text-lg font-semibold text-primary-dark">
-              나의 기록
-              {data.recordList && (
-                <span className="text-sm text-primary-50 ml-1">
-                  ({data.recordList.length})
-                </span>
-              )}
-            </h2>
+          {/* 나의 기록 섹션 - 수정된 버전 */}
+          <div className="mt-6">
+            <div className="flex items-center">
+              {/* <div className="flex-grow h-px bg-gray-200"></div> */}
+              <h2 className="px-4 text-medium font-semibold text-primary-dark">
+                나의 기록
+                {data.recordList && (
+                  <span className="text-sm text-primary-50 ml-1">
+                    ({data.recordList.length})
+                  </span>
+                )}
+              </h2>
+              <div className="flex-grow h-px bg-gray-200"></div>
+            </div>
 
             {/* 기록 이미지 그리드 */}
-            {data.recordList && data.recordList.length > 0 ? (
-              <div className="grid grid-cols-3 gap-1">
-                {data.recordList.map((record) => (
-                  <AspectRatio
-                    key={record.recordId}
-                    ratio={1 / 1}
-                    className="bg-primary-30 rounded-sm overflow-hidden"
-                  >
-                    <img
-                      src={record.recordImg}
-                      alt={`Record ${record.recordId}`}
-                      className="object-cover w-full h-full transition-transform hover:scale-105"
-                      onClick={() => handleImageClick(record.recordId)}
-                    />
-                  </AspectRatio>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center py-4 text-primary-50">
-                아직 기록이 없습니다.
-              </p>
-            )}
+            <div className="mt-4">
+              {data.recordList && data.recordList.length > 0 ? (
+                <div className="grid grid-cols-3 gap-1">
+                  {data.recordList.map((record) => (
+                    <AspectRatio
+                      key={record.recordId}
+                      ratio={1 / 1}
+                      className="bg-primary-30 rounded-sm overflow-hidden"
+                    >
+                      <img
+                        src={record.recordImg}
+                        alt={`Record ${record.recordId}`}
+                        className="object-cover w-full h-full transition-transform hover:scale-105"
+                        onClick={() => handleImageClick(record.recordId)}
+                      />
+                    </AspectRatio>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex items-center justify-center min-h-[300px] rounded-md">
+                  <p className="text-center py-8 text-primary-50">
+                    아직 기록이 없습니다.
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
