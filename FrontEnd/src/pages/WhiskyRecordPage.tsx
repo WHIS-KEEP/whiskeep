@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useWhiskyRecord } from '@/hooks/queries/useRecordQueries';
 import { ChevronLeft } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
@@ -9,28 +9,25 @@ import { AspectRatio } from '@/components/shadcn/aspect-ratio';
 const WhiskyRecordPage: React.FC = () => {
   const { whiskyId } = useParams<{ whiskyId: string }>();
   const id = whiskyId ? parseInt(whiskyId) : 0;
+  const navigate = useNavigate();
   
   // React Query 훅 사용
   const { data, isLoading, error } = useWhiskyRecord(id);
   
   // 상태 관리
   const [imgLoaded, setImgLoaded] = useState<boolean>(false);
-  const [selectedImg, setSelectedImg] = useState<string | null>(null);
   
   // 뒤로가기 핸들러
   const handleGoBack = () => {
     window.history.back();
   };
   
-  // 이미지 클릭 핸들러
-  const handleImageClick = (imgUrl: string) => {
-    setSelectedImg(imgUrl);
+  // 이미지 클릭 핸들러 - 상세 페이지로 이동 
+  const handleImageClick = (recordId: number) => {
+    navigate(`/records/${whiskyId}/${recordId}`);
   };
   
-  // 이미지 모달 닫기 핸들러
-  const closeModal = () => {
-    setSelectedImg(null);
-  };
+
   
   // 로딩 상태 처리
   if (isLoading) {
@@ -141,7 +138,7 @@ const WhiskyRecordPage: React.FC = () => {
                       src={record.recordImg}
                       alt={`Record ${record.recordId}`}
                       className="object-cover w-full h-full transition-transform hover:scale-105"
-                      onClick={() => handleImageClick(record.recordImg)}
+                      onClick={() => handleImageClick(record.recordId)}
                     />
                   </AspectRatio>
                 ))}
@@ -156,30 +153,6 @@ const WhiskyRecordPage: React.FC = () => {
       </div>
       <ScrollBar orientation="vertical" />
       
-      {/* 이미지 확대 모달 */}
-      {selectedImg && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
-          onClick={closeModal}
-        >
-          <div className="relative w-full max-w-md">
-            <img 
-              src={selectedImg} 
-              alt="확대된 이미지" 
-              className="w-full h-auto"
-            />
-            <button 
-              className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full p-2"
-              onClick={(e) => {
-                e.stopPropagation();
-                closeModal();
-              }}
-            >
-              X
-            </button>
-          </div>
-        </div>
-      )}
     </ScrollArea>
   );
 };
