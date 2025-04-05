@@ -204,8 +204,8 @@ public class RecommendService {
 			.whiskyImg(newWhisky.getWhiskyImg())
 			.abv(newWhisky.getAbv())
 			.similarity(avgSimilarity)
+			.tastingScore(RecommendResponseDto.CategoryScore.from(newWhisky.getTasting()))
 			.build();
 	}
-
 }
 
