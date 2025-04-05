@@ -1,7 +1,6 @@
 package com.whiskeep.api.member.dto;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import static com.whiskeep.common.formatter.ScoreFormatter.round;
 
 import com.whiskeep.api.member.domain.MemberPreference;
 import com.whiskeep.common.model.TastingProfile;
@@ -29,14 +28,6 @@ public record MemberScoreResponseDto(
 				round(profile.getHerbal().getScore()),
 				round(profile.getBriny().getScore())
 			);
-		}
-
-		// 소수점 둘째 자리에서 반올림
-		private static Double round(Double value) {
-			if (value == null) {
-				return null;
-			}
-			return BigDecimal.valueOf(value).setScale(1, RoundingMode.HALF_UP).doubleValue();
 		}
 	}
 

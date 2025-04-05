@@ -1,10 +1,7 @@
 package com.whiskeep.api.recommend.dto;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import static com.whiskeep.common.formatter.ScoreFormatter.round;
 
-import com.whiskeep.common.exception.ErrorMessage;
-import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
 
@@ -34,10 +31,6 @@ public class RecommendResponseDto {
 		private Double brinyScore;
 
 		public static CategoryScore from(TastingProfile<?> tastingProfile) {
-			if (tastingProfile == null) {
-				throw new NotFoundException(ErrorMessage.PROFILE_NOT_FOUND);
-			}
-
 			return CategoryScore.builder()
 				.fruityScore(round(getScore(tastingProfile.getFruity())))
 				.sweetScore(round(getScore(tastingProfile.getSweet())))
@@ -50,14 +43,6 @@ public class RecommendResponseDto {
 
 		private static Double getScore(TastingComponent<?> component) {
 			return component != null ? component.getScore() : null;
-		}
-
-		// 소수점 둘째 자리에서 반올림
-		private static Double round(Double value) {
-			if (value == null) {
-				return null;
-			}
-			return BigDecimal.valueOf(value).setScale(1, RoundingMode.HALF_UP).doubleValue();
 		}
 	}
 }
