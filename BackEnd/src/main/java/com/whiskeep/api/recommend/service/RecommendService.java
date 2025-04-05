@@ -28,7 +28,6 @@ import com.whiskeep.common.model.TastingProfile;
 
 import lombok.RequiredArgsConstructor;
 
-
 @Service
 @RequiredArgsConstructor
 public class RecommendService {
@@ -41,8 +40,7 @@ public class RecommendService {
 
 	public RecommendedListResponseDto recommend(Long memberId) {
 		Member member =
-			memberRepository.findById(memberId).orElseThrow(()-> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
-
+			memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		int recordCnt = recordRepository.countByMember(member);
 
@@ -197,6 +195,10 @@ public class RecommendService {
 
 		//가중 산술 평균으로 가중치
 		double avgSimilarity = totalWeight > 0 ? totalSimilarity / totalWeight : 0.0;
+
+		if (newWhisky.getTasting() == null) {
+			throw new NotFoundException(ErrorMessage.PROFILE_NOT_FOUND);
+		}
 
 		return RecommendResponseDto.builder()
 			.whiskyId(newWhisky.getWhiskyId())

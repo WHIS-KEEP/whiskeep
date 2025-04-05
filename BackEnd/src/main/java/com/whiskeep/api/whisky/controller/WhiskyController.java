@@ -15,6 +15,7 @@ import com.whiskeep.api.record.service.RecordService;
 import com.whiskeep.api.whisky.dto.reqeust.WhiskySearchRequestDto;
 import com.whiskeep.api.whisky.dto.response.RecordListResponseDto;
 import com.whiskeep.api.whisky.dto.response.WhiskyDetailResponseDto;
+import com.whiskeep.api.whisky.dto.response.WhiskyScoreResponseDto;
 import com.whiskeep.api.whisky.dto.response.WhiskySearchResponseDto;
 import com.whiskeep.api.whisky.service.WhiskyService;
 
@@ -50,5 +51,12 @@ public class WhiskyController {
 		@RequestBody WhiskySearchRequestDto request) throws IOException {
 		WhiskySearchResponseDto response = whiskyService.searchWithFuzziness(request);
 		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/{whiskyId}/score")
+	public ResponseEntity<WhiskyScoreResponseDto> getWhiskyScore(@PathVariable Long whiskyId) {
+		WhiskyScoreResponseDto whiskyScore = whiskyService.getWhiskyScore(whiskyId);
+		return ResponseEntity.ok(whiskyScore);
+
 	}
 }

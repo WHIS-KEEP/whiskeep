@@ -13,6 +13,7 @@ import com.whiskeep.api.whisky.document.WhiskyDocument;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.dto.reqeust.WhiskySearchRequestDto;
 import com.whiskeep.api.whisky.dto.response.WhiskyDetailResponseDto;
+import com.whiskeep.api.whisky.dto.response.WhiskyScoreResponseDto;
 import com.whiskeep.api.whisky.dto.response.WhiskySearchResponseDto;
 import com.whiskeep.api.whisky.dto.response.WhiskySearchResult;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
@@ -28,6 +29,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -46,11 +48,9 @@ public class WhiskyService {
 		Whisky whisky = whiskyRepository.findById(whiskyId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
 
-
 		List<String> nosingList = tastingProfileService.extractTopFeatures(whisky.getNosing());
 		List<String> tastingList = tastingProfileService.extractTopFeatures(whisky.getTasting());
 		List<String> finishList = tastingProfileService.extractTopFeatures(whisky.getFinish());
-
 
 		Integer recordCnt = recordService.countRecord(whiskyId);
 		Double recordAvg = recordService.getAverageRating(whiskyId);
@@ -190,5 +190,22 @@ public class WhiskyService {
 		);
 
 		boolBuilder.filter(f -> f.range(rangeQuery));
+	}
+
+	// 위스키 맛 프로필 별 점수 조회하기
+	public WhiskyScoreResponseDto getWhiskyScore(Long whiskyId) {
+		Whisky whisky = whiskyRepository.findById(whiskyId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
+
+		if (whisky.getNosing() == null || whisky.getTasting() == null || whisky.getFinish() == null) {
+			throw new NotFoundException(ErrorMessage.PROFILE_NOT_FOUND);
+		}
+
+		return WhiskyScoreResponseDto.from(
+			whisky.getWhiskyId(),
+			whisky.getNosing(),
+			whisky.getTasting(),
+			whisky.getFinish()
+		);
 	}
 }
