@@ -8,7 +8,7 @@ import { MyRecordResponse } from '@/types/record';
  * @returns 위스키 정보와 기록 목록
  */
 export const getWhiskyRecord = async (
-  whiskyId: number
+  whiskyId: number,
 ): Promise<MyRecordResponse> => {
   try {
     const response = await api.get<MyRecordResponse>(`/records/${whiskyId}`);

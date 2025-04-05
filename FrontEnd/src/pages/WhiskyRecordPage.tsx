@@ -10,25 +10,23 @@ const WhiskyRecordPage: React.FC = () => {
   const { whiskyId } = useParams<{ whiskyId: string }>();
   const id = whiskyId ? parseInt(whiskyId) : 0;
   const navigate = useNavigate();
-  
+
   // React Query 훅 사용
   const { data, isLoading, error } = useWhiskyRecord(id);
-  
+
   // 상태 관리
   const [imgLoaded, setImgLoaded] = useState<boolean>(false);
-  
+
   // 뒤로가기 핸들러
   const handleGoBack = () => {
     window.history.back();
   };
-  
-  // 이미지 클릭 핸들러 - 상세 페이지로 이동 
+
+  // 이미지 클릭 핸들러 - 상세 페이지로 이동
   const handleImageClick = (recordId: number) => {
     navigate(`/records/${whiskyId}/${recordId}`);
   };
-  
 
-  
   // 로딩 상태 처리
   if (isLoading) {
     return (
@@ -37,13 +35,13 @@ const WhiskyRecordPage: React.FC = () => {
       </div>
     );
   }
-  
-  // 에러 상태 처리 
+
+  // 에러 상태 처리
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-4">
         <div className="text-primary-dark">정보를 불러올 수 없습니다.</div>
-        <button 
+        <button
           className="px-4 py-2 bg-gray-200 rounded"
           onClick={handleGoBack}
         >
@@ -52,13 +50,13 @@ const WhiskyRecordPage: React.FC = () => {
       </div>
     );
   }
-  
+
   // 데이터가 없는 경우
   if (!data) {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-4">
         <div className="text-primary-dark">데이터가 없습니다.</div>
-        <button 
+        <button
           className="px-4 py-2 bg-gray-200 rounded"
           onClick={handleGoBack}
         >
@@ -73,15 +71,15 @@ const WhiskyRecordPage: React.FC = () => {
       <div style={{ paddingBottom: '150px' }}>
         {/* 뒤로가기 버튼 */}
         <div className="flex items-center p-4">
-          <button 
-            className="text-primary-dark" 
+          <button
+            className="text-primary-dark"
             onClick={handleGoBack}
             aria-label="뒤로가기"
           >
             <ChevronLeft size={24} />
           </button>
         </div>
-        
+
         <div className="p-4 space-y-6">
           {/* 1. 위스키 정보 섹션 */}
           <div className="flex flex-col items-center space-y-4">
@@ -92,7 +90,10 @@ const WhiskyRecordPage: React.FC = () => {
                 alt={data.whiskyKoName}
                 className="object-contain w-full h-auto max-h-64 mx-auto"
                 onLoad={() => setImgLoaded(true)}
-                style={{ opacity: imgLoaded ? 1 : 0, transition: 'opacity 0.3s ease' }}
+                style={{
+                  opacity: imgLoaded ? 1 : 0,
+                  transition: 'opacity 0.3s ease',
+                }}
               />
               {!imgLoaded && (
                 <div className="flex justify-center items-center h-64">
@@ -117,7 +118,7 @@ const WhiskyRecordPage: React.FC = () => {
           <div className="space-y-3">
             {/* 기록 제목 */}
             <h2 className="text-lg font-semibold text-primary-dark">
-              나의 기록 
+              나의 기록
               {data.recordList && (
                 <span className="text-sm text-primary-50 ml-1">
                   ({data.recordList.length})
@@ -152,7 +153,6 @@ const WhiskyRecordPage: React.FC = () => {
         </div>
       </div>
       <ScrollBar orientation="vertical" />
-      
     </ScrollArea>
   );
 };

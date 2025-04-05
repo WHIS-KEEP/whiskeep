@@ -9,14 +9,14 @@ function Header() {
   const getBackgroundColor = () => {
 
     if (
-      location.pathname.startsWith('/detail/') || 
+      location.pathname.startsWith('/detail/') ||
       location.pathname.startsWith('/records/')
     ) {
       return 'bg-white'; // 디테일 페이지와 records 페이지는 흰색 배경
     }
     return 'bg-bg-muted'; // 기본 배경색
   };
-  
+
   return (
     <div
       className={`flex items-center justify-between ${getBackgroundColor()} `}
