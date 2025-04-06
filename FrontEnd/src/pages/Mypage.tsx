@@ -1,4 +1,3 @@
-// 📁 MyPage.tsx
 import {
   Avatar,
   AvatarFallback,
@@ -16,50 +15,62 @@ import {
 } from '@/components/shadcn/drawer';
 import Btn from '@/components/ui/Btn';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
-import API from '@/lib/util/axiosInstance';
 import { useEffect, useRef, useState } from 'react';
-
-interface UserData {
-  name: string;
-  email: string;
-  nickname: string;
-  profileImageUrl?: string;
-}
+import { useNavigate } from 'react-router-dom';
+import { useMyPageQuery } from '@/hooks/queries/useMyPageQuery';
+import {
+  useCheckNicknameMutation,
+  useUpdateUserMutation,
+} from '@/hooks/mutations/useMyPageMutations';
 
 const MyPage = () => {
-  const [userData, setUserData] = useState<UserData>({
-    name: '',
-    email: '',
-    nickname: '',
-    profileImageUrl: '',
-  });
-  const [newNickname, setNewNickname] = useState('');
+  const { data: userData, isLoading } = useMyPageQuery();
+  const { mutate: checkNickname } = useCheckNicknameMutation();
+  const { mutate: updateUser, isPending } = useUpdateUserMutation();
+  
   const [nicknameEditable, setNicknameEditable] = useState(false);
   const [nicknameChecked, setNicknameChecked] = useState(false);
-  const [editedNickname, setEditedNickname] = useState(userData.nickname);
+  const [nicknameCheckMessage, setNicknameCheckMessage] = useState('');
+  const [editedNickname, setEditedNickname] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [changesMade, setChangesMade] = useState(false);
-
+  
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    API.get('/members').then((response) => {
-      setUserData({
-        name: response.data.name,
-        email: response.data.email,
-        nickname: response.data.nickname,
-        profileImageUrl:
-          response.data.profileImg || 'https://github.com/shadcn.png',
-      });
-    });
-  }, []);
+    if (userData) {
+      setEditedNickname(userData.nickname);
+    }
+  }, [userData]);
 
-  const handleTakePhoto = () => {
-    console.log('카메라로 촬영하기 클릭');
+  const handleNicknameEditClick = () => {
+    setNicknameEditable(true);
+    setNicknameChecked(false);
+    setChangesMade(true);
   };
 
-  const handleChooseFromGallery = () => {
-    fileInputRef.current?.click();
+  const handleCheckDuplicate = () => {
+    if (!editedNickname.trim()) {
+      alert('닉네임을 입력해주세요.');
+      return;
+    }
+
+    checkNickname(editedNickname, {
+      onSuccess: (isAvailable) => {
+        if (isAvailable) {
+          setNicknameCheckMessage('사용 가능한 닉네임입니다.');
+          setNicknameChecked(true);
+        } else {
+          setNicknameCheckMessage('이미 사용 중인 닉네임입니다.');
+          setNicknameChecked(false);
+        }
+      },
+      onError: () => {
+        setNicknameCheckMessage('중복 확인 중 오류가 발생했습니다.');
+        setNicknameChecked(false);
+      },
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,71 +81,59 @@ const MyPage = () => {
     }
   };
 
-  const handleNicknameEditClick = () => {
-    setNicknameEditable(true);
-    setNewNickname(userData.nickname);
-    setNicknameChecked(false);
-    setChangesMade(true);
+  const handleChooseFromGallery = () => {
+    fileInputRef.current?.click();
   };
 
-  const handleCheckDuplicate = () => {
-    API.post(`/members/check-nickname`, { nickname: editedNickname }).then(
-      (res) => {
-        if (res.data.available) {
-          alert('사용 가능한 닉네임입니다.');
-          setNicknameChecked(true);
-        } else {
-          alert('이미 사용 중인 닉네임입니다.');
-          setNicknameChecked(false);
-        }
-      },
-    );
-  };
-
-  const handleSaveChanges = async () => {
-    if (!nicknameChecked) {
+  const handleSaveChanges = () => {
+    if (nicknameEditable && !nicknameChecked) {
       alert('닉네임 중복 확인을 해주세요.');
       return;
     }
 
-    if (!editedNickname) {
+    if (nicknameEditable && !editedNickname.trim()) {
       alert('닉네임을 입력해주세요.');
       return;
     }
 
-    const formData = new FormData();
-
-    const member = {
-      nickname: editedNickname,
-    };
-
-    formData.append(
-      'member',
-      new Blob([JSON.stringify(member)], { type: 'application/json' }),
-    );
-
-    if (selectedImage) {
-      formData.append('profileImg', selectedImage);
-    }
-
-    await API.put('/members', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    updateUser(
+      {
+        nickname: editedNickname,
+        profileImage: selectedImage,
       },
-    });
+      {
+        onSuccess: (updatedUser) => {
+          alert('프로필이 수정되었습니다.');
+          setChangesMade(false);
+          setNicknameEditable(false);
+          setNicknameChecked(false);
+          setSelectedImage(null);
 
-    alert('프로필이 수정되었습니다.');
-    setChangesMade(false);
-    setNicknameEditable(false);
-    setNicknameChecked(false);
+          const userInfoToSave = {
+            nickname: updatedUser.nickname,
+            profileImg: updatedUser.profileImg,
+          };
+
+          sessionStorage.setItem('user', JSON.stringify(userInfoToSave));
+
+          navigate('/mypage');
+        },
+      },
+    );
   };
 
   const handleCancelChanges = () => {
+    if (userData) {
+      setEditedNickname(userData.nickname);
+    }
     setNicknameEditable(false);
     setNicknameChecked(false);
+    setNicknameCheckMessage('');
     setSelectedImage(null);
     setChangesMade(false);
   };
+
+  if (isLoading || !userData) return <div>로딩 중...</div>;
 
   return (
     <ScrollArea className="flex-1 bg-background rounded-[18px]">
@@ -144,10 +143,14 @@ const MyPage = () => {
           <div className="relative mb-2">
             <Avatar className="h-32 w-32 border">
               <AvatarImage
-                src={selectedImage ? URL.createObjectURL(selectedImage) : userData?.profileImageUrl}
+                src={
+                  selectedImage
+                    ? URL.createObjectURL(selectedImage)
+                    : userData?.profileImg || 'https://github.com/shadcn.png'
+                }
                 alt="사용자 프로필 이미지"
               />
-              <AvatarFallback>{userData.name?.charAt(0) || 'U'}</AvatarFallback>
+              <AvatarFallback>{userData.name.charAt(0)}</AvatarFallback>
             </Avatar>
 
             <Drawer>
@@ -170,15 +173,25 @@ const MyPage = () => {
                   </DrawerClose>
                 </DrawerHeader>
                 <div className="grid gap-3 p-4 sm:p-6">
-                  <Button variant="outline" className="w-full justify-start gap-3 py-6 text-base" onClick={handleTakePhoto}>
+                  <Button variant="outline" className="w-full justify-start gap-3 py-6 text-base">
                     <Camera size={20} className="text-muted-foreground" />
                     카메라로 촬영하기
                   </Button>
-                  <Button variant="outline" className="w-full justify-start gap-3 py-6 text-base" onClick={handleChooseFromGallery}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-3 py-6 text-base"
+                    onClick={handleChooseFromGallery}
+                  >
                     <ImageIcon size={20} className="text-muted-foreground" />
                     갤러리에서 선택하기
                   </Button>
-                  <input type="file" ref={fileInputRef} accept="image/*" className="hidden" onChange={handleImageChange} />
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                  />
                 </div>
               </DrawerContent>
             </Drawer>
@@ -187,17 +200,8 @@ const MyPage = () => {
         </div>
 
         <div className="mb-8 w-full space-y-5 px-4 sm:px-0 sm:max-w-sm sm:mx-auto">
-          <div className="flex items-center justify-between">
-            <span className="w-16 text-sm font-medium text-foreground">이름</span>
-            <span className="flex-1 text-right text-sm text-primary-30">{userData.name}</span>
-            <div className="w-6"></div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <span className="w-16 text-sm font-medium text-foreground">이메일</span>
-            <span className="flex-1 text-right text-sm text-primary-30">{userData.email}</span>
-            <div className="w-6"></div>
-          </div>
+          <InfoRow label="이름" value={userData.name} />
+          <InfoRow label="이메일" value={userData.email} />
 
           <div className="flex items-center justify-between gap-2">
             <span className="w-16 text-sm font-medium text-foreground">닉네임</span>
@@ -216,7 +220,9 @@ const MyPage = () => {
               <span className="flex-1 text-right text-sm text-primary-dark">{userData.nickname}</span>
             )}
             {nicknameEditable ? (
-              <Button size="sm" onClick={handleCheckDuplicate}>중복확인</Button>
+              <Button size="sm" onClick={handleCheckDuplicate}>
+                중복확인
+              </Button>
             ) : (
               <button
                 onClick={handleNicknameEditClick}
@@ -227,6 +233,12 @@ const MyPage = () => {
               </button>
             )}
           </div>
+
+          {nicknameEditable && nicknameCheckMessage && (
+            <p className={`text-sm ${nicknameChecked ? 'text-blue-500' : 'text-red-500'}`}>
+              {nicknameCheckMessage}
+            </p>
+          )}
         </div>
 
         <div className="mb-10 flex justify-center gap-4">
@@ -236,7 +248,11 @@ const MyPage = () => {
             color="color-wood-70"
             textColor="text-white"
             onClick={handleSaveChanges}
-            disabled={!changesMade || (nicknameEditable && !nicknameChecked)}
+            disabled={
+              isPending ||
+              !changesMade ||
+              (nicknameEditable && (!editedNickname.trim() || !nicknameChecked))
+            }
           />
           <Btn
             text="취소"
@@ -249,14 +265,26 @@ const MyPage = () => {
         </div>
 
         <div className="mt-auto flex items-center justify-center gap-3 text-sm text-muted-foreground">
-          <button onClick={() => console.log('로그아웃 클릭')} className="hover:underline hover:text-foreground">로그아웃</button>
+          <button onClick={() => console.log('로그아웃 클릭')} className="hover:underline hover:text-foreground">
+            로그아웃
+          </button>
           <span className="text-gray-300 dark:text-gray-600">|</span>
-          <button onClick={() => console.log('회원 탈퇴 클릭')} className="hover:underline hover:text-foreground">회원 탈퇴하기</button>
+          <button onClick={() => console.log('회원 탈퇴 클릭')} className="hover:underline hover:text-foreground">
+            회원 탈퇴하기
+          </button>
         </div>
       </div>
       <ScrollBar orientation="vertical" />
     </ScrollArea>
   );
 };
+
+const InfoRow = ({ label, value }: { label: string; value: string }) => (
+  <div className="flex items-center justify-between">
+    <span className="w-16 text-sm font-medium text-foreground">{label}</span>
+    <span className="flex-1 text-right text-sm text-primary-30">{value}</span>
+    <div className="w-6"></div>
+  </div>
+);
 
 export default MyPage;

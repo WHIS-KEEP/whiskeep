@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
-  headers: { 'Content-Type': 'application/json' },
 });
 
 // 요청 인터셉터 (Access Token을 자동으로 헤더에 추가)

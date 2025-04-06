@@ -1,6 +1,5 @@
 package com.whiskeep.api.member.controller;
 
-import org.apache.coyote.Response;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +51,7 @@ public class MemberController {
 	@PostMapping("/check-nickname")
 	public ResponseEntity<Boolean> checkNicknameDuplicate(@RequestBody MemberUpdateRequestDto request) {
 		boolean isAvailable = memberService.isNicknameAvailable(request.nickname());
-		System.out.println(isAvailable);
+
 		return ResponseEntity.ok().body(isAvailable);
 	}
 }
