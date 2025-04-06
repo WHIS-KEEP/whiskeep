@@ -177,7 +177,11 @@ public class PreferenceService {
 		// 3. 계산된 score 값으로 MemberPreference 객체 생성
 		MemberPreference memberPreference = memberPreferenceRepository.findByMember(member)
 			.orElse(MemberPreference.builder()
-				.member(member).build());
+				.member(member)
+				.nosing(nosing)
+				.tasting(tasting)
+				.finish(finish)
+				.build());
 
 		// 4. 업데이트가 필요할 경우, update
 		if (isUpdate) {
