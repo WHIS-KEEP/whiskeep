@@ -7,7 +7,6 @@ function Header() {
 
   // 현재 경로에 따른 배경색 매핑
   const getBackgroundColor = () => {
-
     if (
       location.pathname.startsWith('/detail/') ||
       location.pathname.startsWith('/records/')
