@@ -67,18 +67,22 @@ public class RecordController {
 	}
 
 	@PutMapping("/{whiskyId}/{recordId}")
-	public ResponseEntity<?> updateRecordDetail(@Auth Long memberId, @PathVariable("recordId") Long recordId,
+	public ResponseEntity<?> updateRecordDetail(@Auth Long memberId,
+		@PathVariable("whiskyId") Long whiskyId,
+		@PathVariable("recordId") Long recordId,
 		@RequestBody RecordUpdateRequestDto recordUpdateRequestDto) {
 
-		recordService.updateRecord(memberId, recordId, recordUpdateRequestDto);
+		recordService.updateRecord(memberId, whiskyId, recordId, recordUpdateRequestDto);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{whiskyId}/{recordId}")
-	public ResponseEntity<?> deleteRecord(@Auth Long memberId, @PathVariable("recordId") Long recordId) {
+	public ResponseEntity<?> deleteRecord(@Auth Long memberId,
+		@PathVariable("whiskyId") Long whiskyId,
+		@PathVariable("recordId") Long recordId) {
 
-		recordService.deleteRecord(memberId, recordId);
+		recordService.deleteRecord(memberId, whiskyId, recordId);
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

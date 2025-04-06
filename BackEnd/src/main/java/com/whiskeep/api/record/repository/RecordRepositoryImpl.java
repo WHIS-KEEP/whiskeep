@@ -1,6 +1,7 @@
 package com.whiskeep.api.record.repository;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -42,5 +43,28 @@ public class RecordRepositoryImpl implements RecordCustomRepository {
 					tuple.get(countExpr).intValue()
 				)
 			));
+	}
+
+	@Override
+	public Optional<RecordStats> findStatsByWhiskyId(Long whiskyId) {
+		QRecord qr = QRecord.record;
+
+		var avgExpr = qr.rating.avg();
+		var cntExpr = qr.count();
+
+		var tuple = jpaQueryFactory
+			.select(avgExpr, cntExpr)
+			.from(qr)
+			.where(qr.whisky.whiskyId.eq(whiskyId))
+			.fetchOne();
+
+		if (tuple == null || tuple.get(cntExpr) == null) {
+			return Optional.empty();
+		}
+
+		return Optional.of(new RecordStats(
+			tuple.get(avgExpr),
+			tuple.get(cntExpr).intValue()
+		));
 	}
 }

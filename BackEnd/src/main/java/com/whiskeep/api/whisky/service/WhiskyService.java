@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.whiskeep.api.record.service.RecordService;
+import com.whiskeep.api.record.dto.RecordStats;
+import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.document.WhiskyDocument;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.dto.reqeust.WhiskySearchRequestDto;
@@ -37,13 +38,12 @@ import lombok.RequiredArgsConstructor;
 public class WhiskyService {
 
 	private final WhiskyRepository whiskyRepository;
+	private final RecordRepository recordRepository;
 	private final TastingProfileService tastingProfileService;
-	private final RecordService recordService;
 	private final ElasticsearchClient elasticsearchClient;
 
 	// 위스키 세부 조회
 	public WhiskyDetailResponseDto getWhiskyById(Long whiskyId) {
-
 		Whisky whisky = whiskyRepository.findById(whiskyId)
 			.orElseThrow(() -> new NotFoundException(ErrorMessage.WHISKY_NOT_FOUND));
 
@@ -51,8 +51,8 @@ public class WhiskyService {
 		List<String> tastingList = tastingProfileService.extractTopFeatures(whisky.getTasting());
 		List<String> finishList = tastingProfileService.extractTopFeatures(whisky.getFinish());
 
-		Integer recordCnt = recordService.countRecord(whiskyId);
-		Double recordAvg = recordService.getAverageRating(whiskyId);
+		RecordStats stats = recordRepository.findStatsByWhiskyId(whiskyId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
 
 		return WhiskyDetailResponseDto.builder()
 			.whiskyId(whisky.getWhiskyId())
@@ -71,8 +71,8 @@ public class WhiskyService {
 				.build())
 			.description(whisky.getDescription()).recordInfo(WhiskyDetailResponseDto.RecordInfo
 				.builder()
-				.ratingAvg(recordAvg)
-				.recordCnt(recordCnt)
+				.ratingAvg(stats.avgRating())
+				.recordCnt(stats.count())
 				.build())
 			.build();
 	}
@@ -146,7 +146,7 @@ public class WhiskyService {
 		// 마지막 hit의 sort 값을 다음 페이지 조회에 사용
 		List<Object> nextSearchAfter = response.hits().hits().isEmpty()
 			? Collections.emptyList()
-			: response.hits().hits().get(response.hits().hits().size() - 1).sort().stream()
+			: response.hits().hits().getLast().sort().stream()
 			.map(this::extractFieldValue)
 			.collect(Collectors.toList());
 
