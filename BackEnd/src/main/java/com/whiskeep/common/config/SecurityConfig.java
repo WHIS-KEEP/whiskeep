@@ -32,8 +32,7 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf.disable()) // CSRF 보안 해제 (API 서버의 경우 비활성화 가능)
 			.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/api/members/login/**", "/api/whiskies/**").permitAll()
-				// .requestMatchers("/api/members/login/**").permitAll() // 누구나 접근 가능
+				.requestMatchers("/api/members/login/**").permitAll() // 누구나 접근 가능
 				.anyRequest().authenticated() // 그 외 요청은 인증 필요
 			)
 			.oauth2Login(oauth2 -> oauth2.disable()
