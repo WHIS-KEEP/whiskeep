@@ -15,5 +15,5 @@ export interface RecommendResponse {
 
 export const getRecommendations = async (): Promise<RecommendWhisky[]> => {
   const res = await API.get<RecommendResponse>('/recommends');
-  return res.data.recommendations;
+  return res.data.recommendations ?? []; // 추천 결과가 없을 경우 빈 배열 반환
 };

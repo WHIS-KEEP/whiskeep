@@ -2,14 +2,13 @@ import { cn } from '@/lib/util/utils';
 import { Heart } from 'lucide-react';
 import { Card, CardContent } from '../shadcn/card';
 import defaultBgImg from '../../assets/issac.webp';
-import defaultWhiskyImg from '../../assets/sample.png';
 import { useState, useRef } from 'react';
 import TastingRadarChart, { TastingProfile } from './Tastingchart';
 
 // Props 인터페이스 정의
 interface WhiskycardProps extends React.ComponentProps<typeof Card> {
   title: string;
-  description: string;
+  abv: number; // 알콜 도수
   bgImage?: string; // 배경 이미지 URL (선택적)
   whiskyImage?: string; // 위스키 이미지 URL (선택적)
   showLikeButton?: boolean; // 하트 버튼 표시 여부 (선택적)
@@ -21,9 +20,9 @@ interface WhiskycardProps extends React.ComponentProps<typeof Card> {
 export function Whiskycard({
   className,
   title,
-  description,
+  abv,
   bgImage = defaultBgImg, // 기본값으로 에셋 이미지 사용
-  whiskyImage = defaultWhiskyImg, // 기본값으로 에셋 이미지 사용
+  whiskyImage, // 기본값으로 에셋 이미지 사용
   showLikeButton = true, // 기본값은 하트 버튼 표시
   showChart = true, // 기본값은 차트 표시
   whiskyId,
@@ -116,7 +115,7 @@ export function Whiskycard({
                 {title} {/* props로 받은 title 사용 */}
               </p>
               <p className="text-xs max-w-[123px] text-white overflow-hidden whitespace-nowrap text-ellipsis">
-                {description} {/* props로 받은 description 사용 */}
+                {abv} {/* props로 받은 abv 사용 */}
               </p>
             </div>
           </div>
