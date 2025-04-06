@@ -80,6 +80,9 @@ export function MainPageContent() {
   const score = useMemberStore((state) => state.score);
 
   useEffect(() => {
+    {
+      /* 바로 이어 MainPage 진행 예정! 로그 사용 후 삭제할게요! */
+    }
     console.log('사용자 점수:', score);
   }, [score]);
 
