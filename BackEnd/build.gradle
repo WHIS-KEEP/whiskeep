@@ -109,7 +109,9 @@ tasks.named('compileJava', JavaCompile).configure {
 	]
 }
 
-tasks.named('checkstyleMain', Checkstyle) {
-	source = source.filter { !it.path.contains('querydsl') }
+tasks.withType(Checkstyle).configureEach {
+	setSource(fileTree("src/main/java") {
+		exclude("**/generated/querydsl/**")
+	})
 }
 
