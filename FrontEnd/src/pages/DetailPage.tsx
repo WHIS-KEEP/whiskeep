@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 import { Heart, ChevronLeft, Star } from 'lucide-react';
 import { Button } from '@/components/shadcn/Button';
 import PaginationBtn from '@/components/ui/PagenationBtn';
 import useAuth from '@/store/useContext';
+import TastingRadarChart from '@/components/ui/TastingRadarChart';
 
 import { cn } from '@/lib/util/utils';
 import { formatDateTime } from '@/lib/util/formatDate';
@@ -40,6 +41,11 @@ const DetailPage = () => {
   );
 
   const { mutate: toggleLike } = useToggleWhiskyLike(whiskyIdNumber);
+
+  // 뒤로가기 핸들러 
+  const handleGoBack = () => {
+    window.history.back();
+  };
 
   // 좋아요 토글
   const handleLikeToggle = () => {
@@ -99,9 +105,13 @@ const DetailPage = () => {
       <div style={{ paddingBottom: '0' }}>
         {/* 헤더 백 버튼 */}
         <div className="flex items-center p-4">
-          <Link to="/list" className="mr-2">
+          <button
+            className="mr-2 text-primary-dark"
+            onClick={handleGoBack}
+            aria-label="뒤로가기"
+          >
             <ChevronLeft size={24} />
-          </Link>
+          </button>
         </div>
 
         {/* 위스키 이미지 섹션 */}
@@ -132,7 +142,6 @@ const DetailPage = () => {
           </div>
         </div>
 
-        {/* 제품 정보 섹션 - 좋아요 버튼을 이름 옆으로 배치 */}
         <div className="p-4">
           <div className="mb-2">
             <div className="flex justify-between items-start">
@@ -155,22 +164,21 @@ const DetailPage = () => {
         </div>
         {/* 테이스팅 프로필 섹션 */}
         <div className="p-4 border-b border-gray-200">
-          <h2 className="text-sm font-medium text-gray-500 mb-2">
-            {user ? `${user.nickname}님` : '게스트님'} 취향 분석
+          <div 
+    className="p-4 rounded-lg text-white" 
+    style={{ backgroundColor: 'var(--color-wood-30)' }}
+>
+          <h2 className="text-m font-medium text-gray-500 mb-2">
+            {user ? `${user.name}님` : '게스트님'} 취향 분석
           </h2>
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <div className="flex justify-between text-xs text-gray-500 mb-2">
-              <span>Nosing</span>
-              <span>|</span>
-              <span>Tasting</span>
-              <span>|</span>
-              <span>Finish</span>
-            </div>
-            <div className="flex justify-center">
-              {/* 테이스팅 프로필 차트 (백엔드에서 제공되면 추가) */}
-              <div className="w-full h-40 bg-gray-200 rounded flex items-center justify-center">
-                <p className="text-gray-500">테이스팅 프로필 차트</p>
-              </div>
+            {/* 테이스팅 프로필 차트 추가 - 이제 내부에 탭 선택 UI 포함 */}
+            <div className="w-full h-48 flex items-center justify-center mt-6">
+              <TastingRadarChart
+                whiskyId={whiskyIdNumber}
+                height="100%"
+                width="100%"
+                className="w-full h-full"
+              />
             </div>
           </div>
         </div>
@@ -251,7 +259,6 @@ const DetailPage = () => {
           {/* 리뷰 목록 */}
           <div className="space-y-8">
             {' '}
-            {/* space-y-4에서 space-y-8로 변경하여 리뷰 간격 넓힘 */}
             {isRecordsLoading ? (
               <p className="text-center py-4">리뷰를 불러오는 중...</p>
             ) : (
@@ -261,17 +268,14 @@ const DetailPage = () => {
                   className="border-b border-gray-200 pb-6"
                 >
                   {' '}
-                  {/* pb-4에서 pb-6으로 변경하여 하단 여백 증가 */}
                   <div className="flex justify-between">
                     {/* 왼쪽: 프로필, 이름, 내용, 별점 */}
                     <div className="flex-1 pr-3">
                       {/* 프로필 및 이름 */}
                       <div className="flex items-center mb-3">
                         {' '}
-                        {/* mb-2에서 mb-3으로 변경하여 이름과 내용 사이 간격 증가 */}
                         <div className="w-10 h-10 bg-rose-200 rounded-full flex items-center justify-center text-white text-sm mr-3">
                           {' '}
-                          {/* 크기와 여백 증가 */}
                           {record.profileImage ? (
                             <img
                               src={record.profileImage}
@@ -285,12 +289,10 @@ const DetailPage = () => {
                         <div>
                           <div className="text-medium font-medium">
                             {' '}
-                            {/* 이름 글자 크기 증가 */}
                             {record.nickname}
                           </div>
                           <div className="text-sm text-gray-500">
                             {' '}
-                            {/* 날짜 글자 크기 증가 */}
                             {formatDateTime(record.createdAt)}
                           </div>
                         </div>
@@ -299,7 +301,6 @@ const DetailPage = () => {
                       {/* 내용 - 왼쪽 정렬로 변경 및 글씨 크기 증가 */}
                       <p className="text-base mb-3 text-left">
                         {' '}
-                        {/* text-center → text-left, text-sm → text-base, mb-2 → mb-3 */}
                         {record.content}
                       </p>
 
@@ -313,7 +314,6 @@ const DetailPage = () => {
                     {record.recordImg && (
                       <div className="ml-3">
                         {' '}
-                        {/* ml-2에서 ml-3으로 여백 증가 */}
                         <img
                           src={record.recordImg}
                           alt="리뷰 이미지"
