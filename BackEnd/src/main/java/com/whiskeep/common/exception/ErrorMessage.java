@@ -17,9 +17,13 @@ public enum ErrorMessage {
 	PREFERENCE_ALREADY_REGISTERED("이미 선호 정보가 등록되어 있습니다"),
 	FILE_NOT_INCLUDED("파일이 포함되지 않았습니다"),
 	FILE_UPLOAD_FAIL("파일 업로드 중 오류가 발생했습니다"),
+<<<<<<< HEAD
 	ELASTICSEARCH_UPDATE_FAIL("ES 업데이트 중 오류가 발생했습니다"),
 	LIKE_ALREADY_REGISTERED("이미 찜한 위스키입니다."),
 	LIKE_UNREGISTERED("아직 찜하지 않은 위스키입니다."),
+=======
+	UNSUPPORTED_PROVIDER("지원하지 않는 소셜입니다"),
+>>>>>>> e1d5e4f ([S12P21A409-125] fix: 커스텀예외를 사ì사용하라)
 
 	// 401 Unauthorized 관련 오류 (UnauthorizedException)
 	UNAUTHORIZED("인증에 실패했습니다"),

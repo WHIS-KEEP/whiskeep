@@ -1,4 +1,4 @@
-package com.whiskeep.api.oauth;
+package com.whiskeep.api.oauth.dto;
 
 public record LoginUserDto(
 	String nickName,

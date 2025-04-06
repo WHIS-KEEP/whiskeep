@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.whiskeep.api.member.dto.MemberResponseDto;
-import com.whiskeep.api.oauth.LoginUserDto;
 import com.whiskeep.api.oauth.dto.LoginRequestDto;
 import com.whiskeep.api.oauth.dto.LoginResponseDto;
+import com.whiskeep.api.oauth.dto.LoginUserDto;
 import com.whiskeep.api.oauth.dto.OAuthTokenResponseDto;
 import com.whiskeep.api.oauth.service.OauthService;
 

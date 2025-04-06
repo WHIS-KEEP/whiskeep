@@ -20,6 +20,8 @@ import com.whiskeep.api.oauth.dto.google.GoogleUserResponseDto;
 import com.whiskeep.api.oauth.dto.kakao.KakaoUserResponseDto;
 import com.whiskeep.common.auth.jwt.JwtTokenProvider;
 import com.whiskeep.common.enumclass.Provider;
+import com.whiskeep.common.exception.BadRequestException;
+import com.whiskeep.common.exception.ErrorMessage;
 
 import lombok.RequiredArgsConstructor;
 
@@ -65,7 +67,7 @@ public class OauthService {
 		return switch (provider) {
 			case "google" -> new OAuthProviderInfo(googleAuthorizationUri, googleClientId, googleRedirectUri);
 			case "kakao" -> new OAuthProviderInfo(kakaoAuthorizationUri, kakaoClientId, kakaoRedirectUri);
-			default -> throw new IllegalStateException("지원하지 않는 소셜: " + provider);
+			default -> throw new BadRequestException(ErrorMessage.UNSUPPORTED_PROVIDER);
 		};
 	}
 
@@ -78,7 +80,7 @@ public class OauthService {
 			case "kakao" -> new OAuthProviderTokenConfig(
 				provider, kakaoClientId, kakaoClientSecret, kakaoRedirectUri, kakaoTokenUri
 			);
-			default -> throw new IllegalArgumentException("지원하지 않는 소셜 로그인: " + provider);
+			default -> throw new BadRequestException(ErrorMessage.UNSUPPORTED_PROVIDER);
 		};
 	}
 
@@ -87,7 +89,7 @@ public class OauthService {
 		return switch (provider.toLowerCase()) {
 			case "google" -> new OAuthUserInfoConfig(googleUserInfoUri, GoogleUserResponseDto.class);
 			case "kakao" -> new OAuthUserInfoConfig(kakaoUserInfoUri, KakaoUserResponseDto.class);
-			default -> throw new IllegalArgumentException("지원하지 않는 소셜 로그인: " + provider);
+			default -> throw new BadRequestException(ErrorMessage.UNSUPPORTED_PROVIDER);
 		};
 	}
 
