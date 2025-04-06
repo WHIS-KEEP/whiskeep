@@ -387,4 +387,4 @@ const DetailPage = () => {
   );
 };
 
-// export default WhiskyDetailPage; // 메인 컴포넌트 내보내기
+export default DetailPage; // 메인 컴포넌트 내보내기
