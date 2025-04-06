@@ -1,6 +1,7 @@
 package com.whiskeep.api.oauth.dto.google;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.whiskeep.api.oauth.dto.OAuthUserInfo;
 
 public record GoogleUserResponseDto(
 	@JsonProperty("id") String id, // Google 사용자 oAuth 고유 id
@@ -11,5 +12,10 @@ public record GoogleUserResponseDto(
 	@JsonProperty("family_name") String familyName, // 성
 	@JsonProperty("picture") String picture,
 	@JsonProperty("hd") String hd // 이메일에서 @ 뒷 부분
-) {
+) implements OAuthUserInfo {
+
+	@Override
+	public String profileImg() {
+		return picture;
+	}
 }

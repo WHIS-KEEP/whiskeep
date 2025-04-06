@@ -3,12 +3,8 @@ import { createContext } from 'react';
 
 // 사용자 정보 타입 정의
 export interface MemberResponse {
-  memberId: number;
-  email: string;
-  name: string;
-  nickname: string;
+  nickName: string;
   profileImg: string;
-  provider: string;
 }
 
 // AuthContext 타입 정의

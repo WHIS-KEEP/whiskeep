@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '@/lib/util/axiosInstance'; // API 요청을 위한 axios 인스턴스
 import useAuth from '@/store/useContext'; // 전역 로그인 상태 관리
 import { useMemberScoreQuery } from '@/hooks/queries/useMemberQuery';
 import useMemberStore from '@/store/useMemberStore';
@@ -17,22 +17,37 @@ const LoginSuccess = () => {
     const fetchAccessTokenAndScore = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get('code');
+      const provider = sessionStorage.getItem('provider');
 
-      if (!code) {
+      if (!code || !provider) {
         alert('다시 시도해주세요!');
+<<<<<<< HEAD
         navigate('/login');
+=======
+        sessionStorage.removeItem('provider'); // 세션 스토리지에 provider 남는 것 방지
+        navigate('/login'); // 로그인 페이지로 리디렉트
+>>>>>>> 0866be8 ([S12P21A409-1255] feat: kakao로그인 기능을 개발하라)
         return;
       }
 
       try {
+<<<<<<< HEAD
         // 1. accessToken 발급 요청
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/members/login/success?code=${code}`,
         );
+=======
+        // 백엔드의 access-token 발급 API 호출
+        const response = await api.post(`/members/login/success`, { 
+            provider : provider,
+            code: code,
+          });
+>>>>>>> 0866be8 ([S12P21A409-1255] feat: kakao로그인 기능을 개발하라)
 
         const { accessToken, member } = response.data;
         login(accessToken, member); // Context에 저장
 
+<<<<<<< HEAD
         // 2. 사용자 점수 조회
         const { data } = await refetch();
 
@@ -48,6 +63,16 @@ const LoginSuccess = () => {
         console.error('로그인 또는 점수 조회 실패:', error);
         alert('문제가 발생했습니다. 다시 시도해주세요.');
         navigate('/login');
+=======
+        sessionStorage.removeItem('provider'); // 세션 스토리지에서 provider 제거
+        // 메인 페이지로 이동
+        navigate('/main');
+      } catch (error) {
+        console.error('로그인 실패:', error);
+        alert('로그인 실패! 다시 시도해주세요.');
+        sessionStorage.removeItem('provider'); // 세션 스토리지에서 provider 제거
+        navigate('/login'); // 로그인 실패 시 로그인 페이지로 리디렉트
+>>>>>>> 0866be8 ([S12P21A409-1255] feat: kakao로그인 기능을 개발하라)
       }
     };
 

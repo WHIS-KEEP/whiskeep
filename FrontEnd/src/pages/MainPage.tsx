@@ -224,7 +224,7 @@ export function MainPageContent() {
       {/* --- 현진 님을 위한 위스키 추천 Section --- */}
       <div className="flex flex-col gap-3">
         <h2 className="font-semibold text-lg">
-          {user?.name} 님을 위한 위스키 추천
+          {user?.nickName} 님을 위한 위스키 추천
         </h2>
         <ScrollArea className="w-full whitespace-nowrap rounded-md border">
           <div className="flex space-x-4 pb-4 p-2">

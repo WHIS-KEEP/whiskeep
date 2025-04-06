@@ -57,7 +57,6 @@ dependencies {
 	// === 개발 도구 ===
 //    developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-
 	// === DB 드라이버 ===
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	runtimeOnly 'org.postgresql:postgresql:42.5.0'
@@ -113,4 +112,3 @@ tasks.withType(Checkstyle).configureEach {
 		exclude("**/generated/querydsl/**")
 	})
 }
-

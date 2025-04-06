@@ -1,8 +1,8 @@
 package com.whiskeep.api.oauth.dto;
 
-import com.whiskeep.api.member.dto.MemberResponseDto;
+import com.whiskeep.api.oauth.LoginUserDto;
 
 public record LoginResponseDto(
 	String accessToken,
-	MemberResponseDto member
+	LoginUserDto member
 ) { }

@@ -36,6 +36,24 @@ spring:
             scope:
               - profile
               - email
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: ${KAKAO_REDIRECT_URI}
+            authorization-grant-type: authorization_code
+            scope:
+              - profile
+              - account_email
+        provider:
+          google:
+            authorization-uri: ${GOOGLE_AUTHORIZATION_URI}
+            token-uri: ${GOOGLE_TOKEN_URI}
+            user-info-uri: ${GOOGLE_USER_INFO_URI}
+          kakao:
+            authorization-uri: ${KAKAO_AUTHORIZATION_URI}
+            token-uri: ${KAKAO_TOKEN_URI}
+            user-info-uri: ${KAKAO_USER_INFO_URI}
+
     jwt:
       secret-key: ${JWT_SECRET}
       expiration-time: ${JWT_EXPIRATION}
@@ -47,17 +65,6 @@ decorator:
       enable-logging: ${DECORATOR_DATASOURCE_P6SPY_ENABLE_LOGGING}
 
 
-## KAKAO 소셜 로그인 환경변수
-#kakao:
-#  client:
-#    id: ${KAKAO_CLIENT_ID}
-#  token:
-#    uri: ${KAKAO_TOKEN_URI}
-#  user:
-#    uri: ${KAKAO_USER_URI}
-#  redirect:
-#    uri: ${KAKAO_REDIRECT_URI}
-#
 
 
 ##AWS
