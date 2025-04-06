@@ -13,10 +13,10 @@ const useWhiskyTastingProfile = (whiskyId?: number) => {
     queryKey: ['whiskyTastingProfile', whiskyId],
     queryFn: async () => {
       if (!whiskyId) return null;
-      
+
       const response = await API.get(`/whiskies/${whiskyId}/score`);
       const data = response.data;
-      
+
       // API 응답 형식에 맞게 데이터 변환
       return {
         nosing: {
@@ -42,7 +42,7 @@ const useWhiskyTastingProfile = (whiskyId?: number) => {
           oakyScore: data.finish?.oakyScore || 0,
           herbalScore: data.finish?.herbalScore || 0,
           brinyScore: data.finish?.brinyScore || 0,
-        }
+        },
       } as TastingProfile;
     },
     enabled: !!whiskyId,

@@ -30,7 +30,6 @@ export interface TastingProfile {
   finish: TasteScore;
 }
 
-
 // 컴포넌트 Props 인터페이스 정의
 interface TastingRadarChartProps {
   whiskyId?: number;
@@ -76,8 +75,6 @@ const formatChartData = (whiskyProfile: TasteScore) => {
   ];
 };
 
-
-
 export function TastingRadarChart({
   whiskyId,
   width = '100%',
@@ -92,11 +89,10 @@ export function TastingRadarChart({
   const { data: whiskyProfile, isLoading } = useWhiskyTastingProfile(whiskyId);
 
   // 사용할 위스키 프로필 결정 (제공된 프로필 > 가져온 프로필 > 기본값)
-  const whiskeyData = providedProfile || whiskyProfile ;
-  
+  const whiskeyData = providedProfile || whiskyProfile;
 
   // whiskeyData가 존재할 때만 차트 데이터 표시
-if (!whiskeyData) {
+  if (!whiskeyData) {
     return (
       <div className="flex items-center justify-center w-full h-full">
         <p className="text-sm text-gray-600">데이터를 불러올 수 없습니다.</p>
@@ -105,11 +101,9 @@ if (!whiskeyData) {
   }
   // 현재 선택된 프로필 가져오기
   const currentWhiskyProfile = whiskeyData[activeProfile];
-  
+
   // 차트 데이터 준비 (위스키 프로필만 표시)
   const chartData = formatChartData(currentWhiskyProfile);
-  
-
 
   // 선택된 프로필 타입 변경
   const handleProfileTypeChange = (type: ProfileType) => {
@@ -118,66 +112,68 @@ if (!whiskeyData) {
 
   return (
     <div className={className} style={{ width, height }}>
-    {/* 프로필 타입 선택 탭 - 검정색 텍스트로 변경 */}
-    <div className="flex justify-between items-center text-xs text-gray-600 mb-2 border-b border-gray-300 pb-1">
-      <button
-        className={`px-2 py-1 ${activeProfile === 'nosing' ? 'text-primary-dark font-bold' : ''}`}
-        onClick={() => handleProfileTypeChange('nosing')}
-      >
-        Nosing
-      </button>
-      <span className="text-gray-400">|</span>
-      <button
-        className={`px-2 py-1 ${activeProfile === 'tasting' ? 'text-primary-dark font-bold' : ''}`}
-        onClick={() => handleProfileTypeChange('tasting')}
-      >
-        Tasting
-      </button>
-      <span className="text-gray-400">|</span>
-      <button
-        className={`px-2 py-1 ${activeProfile === 'finish' ? 'text-primary-dark font-bold' : ''}`}
-        onClick={() => handleProfileTypeChange('finish')}
-      >
-        Finish
-      </button>
-    </div>
+      {/* 프로필 타입 선택 탭 - 검정색 텍스트로 변경 */}
+      <div className="flex justify-between items-center text-xs text-gray-600 mb-2 border-b border-gray-300 pb-1">
+        <button
+          className={`px-2 py-1 ${activeProfile === 'nosing' ? 'text-primary-dark font-bold' : ''}`}
+          onClick={() => handleProfileTypeChange('nosing')}
+        >
+          Nosing
+        </button>
+        <span className="text-gray-400">|</span>
+        <button
+          className={`px-2 py-1 ${activeProfile === 'tasting' ? 'text-primary-dark font-bold' : ''}`}
+          onClick={() => handleProfileTypeChange('tasting')}
+        >
+          Tasting
+        </button>
+        <span className="text-gray-400">|</span>
+        <button
+          className={`px-2 py-1 ${activeProfile === 'finish' ? 'text-primary-dark font-bold' : ''}`}
+          onClick={() => handleProfileTypeChange('finish')}
+        >
+          Finish
+        </button>
+      </div>
 
       {/* 차트 컨테이너 */}
-        {isLoading ? (
-          <div className="flex items-center justify-center w-full h-full">
-            <p className="text-sm text-gray-600">차트 로딩 중...</p>
-          </div>
-        ) : (
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
-              <PolarGrid stroke="rgba(255, 255, 255, 0.3)" />
-              <PolarAngleAxis
-                dataKey="subject"
-                tick={{ fontSize: 10, fill: '#333333' }} // 글씨만 검정색으로
-                stroke="rgba(255, 255, 255, 0.5)"
-              />
-              <PolarRadiusAxis
-                angle={30}
-                domain={[0, 100]}
-                tick={false}
-                axisLine={false}
-                stroke="rgba(255, 255, 255, 0)"
-              />
-              {/* 위스키 프로필 레이더 */}
-              <Radar
-                name="위스키"
-                dataKey="whisky"
-                stroke="#F9B233"
-                fill="#F9B233"
-                fillOpacity={0.65}
-              />
-              <Legend
-                iconSize={10}
-                wrapperStyle={{ fontSize: '10px', color: '#333333' }}
-                formatter={(value) => <span style={{ color: '#333333' }}>{value}</span>}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
+      {isLoading ? (
+        <div className="flex items-center justify-center w-full h-full">
+          <p className="text-sm text-gray-600">차트 로딩 중...</p>
+        </div>
+      ) : (
+        <ResponsiveContainer width="100%" height="100%">
+          <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
+            <PolarGrid stroke="rgba(255, 255, 255, 0.3)" />
+            <PolarAngleAxis
+              dataKey="subject"
+              tick={{ fontSize: 10, fill: '#333333' }} // 글씨만 검정색으로
+              stroke="rgba(255, 255, 255, 0.5)"
+            />
+            <PolarRadiusAxis
+              angle={30}
+              domain={[0, 100]}
+              tick={false}
+              axisLine={false}
+              stroke="rgba(255, 255, 255, 0)"
+            />
+            {/* 위스키 프로필 레이더 */}
+            <Radar
+              name="위스키"
+              dataKey="whisky"
+              stroke="#F9B233"
+              fill="#F9B233"
+              fillOpacity={0.65}
+            />
+            <Legend
+              iconSize={10}
+              wrapperStyle={{ fontSize: '10px', color: '#333333' }}
+              formatter={(value) => (
+                <span style={{ color: '#333333' }}>{value}</span>
+              )}
+            />
+          </RadarChart>
+        </ResponsiveContainer>
       )}
     </div>
   );

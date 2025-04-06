@@ -42,7 +42,7 @@ const DetailPage = () => {
 
   const { mutate: toggleLike } = useToggleWhiskyLike(whiskyIdNumber);
 
-  // 뒤로가기 핸들러 
+  // 뒤로가기 핸들러
   const handleGoBack = () => {
     window.history.back();
   };
@@ -164,13 +164,13 @@ const DetailPage = () => {
         </div>
         {/* 테이스팅 프로필 섹션 */}
         <div className="p-4 border-b border-gray-200">
-          <div 
-    className="p-4 rounded-lg text-white" 
-    style={{ backgroundColor: 'var(--color-wood-30)' }}
->
-          <h2 className="text-m font-medium text-gray-500 mb-2">
-            {user ? `${user.name}님` : '게스트님'} 취향 분석
-          </h2>
+          <div
+            className="p-4 rounded-lg text-white"
+            style={{ backgroundColor: 'var(--color-wood-30)' }}
+          >
+            <h2 className="text-m font-medium text-gray-500 mb-2">
+              {user ? `${user.name}님` : '게스트님'} 취향 분석
+            </h2>
             {/* 테이스팅 프로필 차트 추가 - 이제 내부에 탭 선택 UI 포함 */}
             <div className="w-full h-48 flex items-center justify-center mt-6">
               <TastingRadarChart
