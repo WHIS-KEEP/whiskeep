@@ -202,14 +202,14 @@ export function SearchPage() {
       <div className="flex-1 min-h-0 mb-4">
         <ScrollArea className="w-full h-full">
           {processedResults.length > 0 ? (
-            <div className="flex flex-col gap-2  p-1">
+            <div className="flex flex-col gap-2 p-1">
               {processedResults.map((item) => (
                 <Button
                   key={item.id}
                   variant="outline"
                   className={cn(
                     'h-auto w-full justify-start rounded-[10px] p-1.5 text-left flex items-center gap-2',
-                    selectedItemId === item.id
+                    selectedItemId === item.id.toString()
                       ? 'border bg-accent'
                       : 'border hover:bg-accent/50',
                   )}
