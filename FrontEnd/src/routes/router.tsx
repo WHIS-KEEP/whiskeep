@@ -35,6 +35,12 @@ const PreferenceProtectedRoute = ({ children }: { children: JSX.Element }) => {
   return score ? children : <Navigate to="/preference" replace />;
 };
 
+// 설문을 이미 한 사람은 접근 불가
+const BlockIfAlreadyHasScore = ({ children }: { children: JSX.Element }) => {
+  const score = useMemberStore((state) => state.score);
+  return score ? <Navigate to="/main" replace /> : children;
+};
+
 // 로그인한 사용자는 접근 불가
 const PublicRoute = ({ children }: { children: JSX.Element }) => {
   const { token } = useAuth();
@@ -71,10 +77,38 @@ const Router = () => {
           </PublicRoute>
         }
       />
-      <Route path="/preference" element={<PreferenceSurveyIntroPage />} />
-      <Route path="/preference/beginner" element={<BeginnerSurveyPage />} />
-      <Route path="/preference/familiar" element={<FamiliarSurveyPage />} />
-      <Route path="/preference/complete" element={<PreferenceCompletePage />} />
+      <Route
+        path="/preference"
+        element={
+          <BlockIfAlreadyHasScore>
+            <PreferenceSurveyIntroPage />
+          </BlockIfAlreadyHasScore>
+        }
+      />
+      <Route
+        path="/preference/beginner"
+        element={
+          <BlockIfAlreadyHasScore>
+            <BeginnerSurveyPage />
+          </BlockIfAlreadyHasScore>
+        }
+      />
+      <Route
+        path="/preference/familiar"
+        element={
+          <BlockIfAlreadyHasScore>
+            <FamiliarSurveyPage />
+          </BlockIfAlreadyHasScore>
+        }
+      />
+      <Route
+        path="/preference/complete"
+        element={
+          <BlockIfAlreadyHasScore>
+            <PreferenceCompletePage />
+          </BlockIfAlreadyHasScore>
+        }
+      />
 
       <Route element={<Layout />}>
         <Route
