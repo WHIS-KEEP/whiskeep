@@ -219,13 +219,13 @@ public class RecordService {
 		}
 	}
 
-	private String createFileName(String fileName, String dirName) {
+	public String createFileName(String fileName, String dirName) {
 		String uuid = UUID.randomUUID().toString().replace("-", "");
 		String extension = getFileExtension(fileName);
 		return dirName + uuid + extension;
 	}
 
-	private String getFileExtension(String fileName) {
+	public String getFileExtension(String fileName) {
 		if (fileName == null || !fileName.contains(".")) {
 			throw new BadRequestException(ErrorMessage.INVALID_FILE_FORMAT);
 		}

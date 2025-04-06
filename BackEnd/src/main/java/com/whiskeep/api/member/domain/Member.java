@@ -46,4 +46,13 @@ public class Member extends BaseTimeEntity {
 	@Column(nullable = false, unique = true)
 	private String providerId;
 
+	// 닉네임 업데이트
+	public void updateNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	// 프로필 이미지 URL 업데이트
+	public void updateProfileImg(String profileImg) {
+		this.profileImg = profileImg;
+	}
 }
