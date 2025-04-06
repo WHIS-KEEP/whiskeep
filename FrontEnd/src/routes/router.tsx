@@ -15,14 +15,24 @@ import PreferenceSurveyIntroPage from '@/pages/survey/PreferenceSurveyIntroPage'
 import BeginnerSurveyPage from '@/pages/survey/BeginnerSurveyPage';
 import FamiliarSurveyPage from '@/pages/survey/FamiliarSurveyPage';
 import PreferenceCompletePage from '@/pages/survey/PreferenceCompletePage';
+
 import WhiskyRecordPage from '@/pages/WhiskyRecordPage';
 import LikePage from '@/pages/LikePage';
 import DetailPage from '@/pages/DetailPage';
+
+import useMemberStore from '@/store/useMemberStore';
 
 // 보호된 페이지 (로그인한 사용자만 접근 가능)
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const { token } = useAuth();
   return token ? children : <Navigate to="/login" replace />;
+};
+
+// 설문조사를 하기 전 사용자
+const PreferenceProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const score = useMemberStore((state) => state.score);
+
+  return score ? children : <Navigate to="/preference" replace />;
 };
 
 // 로그인한 사용자는 접근 불가
@@ -70,7 +80,9 @@ const Router = () => {
         <Route
           element={
             <ProtectedRoute>
-              <Outlet />
+              <PreferenceProtectedRoute>
+                <Outlet />
+              </PreferenceProtectedRoute>
             </ProtectedRoute>
           }
         >

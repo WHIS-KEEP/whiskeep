@@ -1,5 +1,5 @@
 // FILE: MainPageContent.tsx
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/util/utils';
 import {
   Dialog,
@@ -23,6 +23,7 @@ import Whiskycard from '@/components/ui/Whiskycard'; // Adjust path as needed
 // 이미지 임포트 추가
 import sampleImage from '../assets/sample.png';
 import exampleImage from '../assets/example.png';
+import useMemberStore from '@/store/useMemberStore';
 
 // 위스키 데이터 인터페이스 추가
 interface WhiskyData {
@@ -76,6 +77,12 @@ const StarRating = ({
 
 export function MainPageContent() {
   const { user } = useAuth();
+  const score = useMemberStore((state) => state.score);
+
+  useEffect(() => {
+    console.log('사용자 점수:', score);
+  }, [score]);
+
   // State for the input field and toggle
   const [comment, setComment] = useState('');
   const [isPublic, setIsPublic] = useState(false);
