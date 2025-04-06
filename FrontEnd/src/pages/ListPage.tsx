@@ -3,11 +3,9 @@
 
 import { useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
-// import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/util/utils';
 import { Button } from '@/components/shadcn/Button'; // shadcn/ui Button
 import { Input } from '@/components/shadcn/input';
-import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 import {
   Select,
@@ -16,25 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/shadcn/select';
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from '@/components/shadcn/toggle/toggle-group';
-import { Star, Search } from 'lucide-react';
-
-// --- Sorting Criteria Definition ---
-type SortCriteria =
-  | 'popularity_desc'
-  | 'rating_desc'
-  | 'rating_asc'
-  | 'records_desc';
-
-const sortOptions: { value: SortCriteria; label: string }[] = [
-  { value: 'popularity_desc', label: '인기순' },
-  { value: 'rating_desc', label: '별점 높은 순' },
-  { value: 'rating_asc', label: '별점 낮은 순' },
-  { value: 'records_desc', label: '기록 많은 순' },
-];
 import {
   ToggleGroup,
   ToggleGroupItem,
@@ -74,33 +53,8 @@ const dummySearchResults = Array.from({ length: 20 }, (_, i) => ({
   popularity: Math.floor(Math.random() * 500),
   abv: Math.floor(40 + Math.random() * 10),
 }));
-  enName: `Dummy Whisky ${i + 1}`,
-  type: i % 3 === 0 ? '싱글 몰트' : i % 3 === 1 ? '버번' : '블렌디드',
-  country:
-    i % 4 === 0
-      ? '스코틀랜드'
-      : i % 4 === 1
-        ? '미국'
-        : i % 4 === 2
-          ? '아일랜드'
-          : '캐나다',
-  avgRating: Math.round((3.0 + Math.random() * 1.9) * 10) / 10,
-  recordCounts: Math.floor(Math.random() * 1500),
-  popularity: Math.floor(Math.random() * 500),
-  abv: Math.floor(40 + Math.random() * 10),
-}));
 
 export function SearchPage() {
-  // const navigate = useNavigate();
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortCriteria, setSortCriteria] =
-    useState<SortCriteria>('popularity_desc');
-
-  const countries = ['미국', '아일랜드', '캐나다', '스코틀랜드'];
-  const types = ['버번', '싱글 몰트', '그레인', '블렌디드 몰트'];
   // const navigate = useNavigate();
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -148,125 +102,12 @@ export function SearchPage() {
 
   const formatCount = (count: number): string => {
     return count > 999 ? '(999+)' : `(${count})`;
-    setSelectedItemId(id.toString());
-  };
-
-  const handleCountryChange = (value: string) =>
-    setSelectedCountry(value || null);
-  const handleTypeChange = (value: string) => setSelectedType(value || null);
-
-  const processedResults = dummySearchResults
-    .filter((item) => {
-      const searchTermMatch =
-        !searchTerm ||
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.enName &&
-          item.enName.toLowerCase().includes(searchTerm.toLowerCase()));
-      const countryMatch = !selectedCountry || item.country === selectedCountry;
-      const typeMatch = !selectedType || item.type === selectedType;
-      return searchTermMatch && countryMatch && typeMatch;
-    })
-    .sort((a, b) => {
-      switch (sortCriteria) {
-        case 'rating_desc':
-          return b.avgRating - a.avgRating;
-        case 'rating_asc':
-          return a.avgRating - b.avgRating;
-        case 'records_desc':
-          return b.recordCounts - a.recordCounts;
-        case 'popularity_desc':
-          return (b.popularity ?? 0) - (a.popularity ?? 0);
-        default:
-          return 0;
-      }
-    });
-
-  const formatCount = (count: number): string => {
-    return count > 999 ? '(999+)' : `(${count})`;
   };
 
   return (
     <div className="container rounded-[18px] bg-white mx-auto flex h-[calc(100vh-150px)] flex-col p-4">
       {/* 페이지 제목 */}
-    <div className="container rounded-[18px] bg-white mx-auto flex h-[calc(100vh-150px)] flex-col p-4">
-      {/* 페이지 제목 */}
       <h1 className="mb-4 text-xl font-semibold">위스키 검색</h1>
-      {/* 1. 검색창 - SearchWhiskyDialogContent와 동일한 스타일 */}
-      <div className="relative mb-3">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="위스키 이름을 검색하세요..."
-          className="h-9 text-sm rounded-[18px] pl-10"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      {/* 2. 필터 영역 - ToggleGroup으로 변경 */}
-      <div className="mb-1 flex flex-col gap-1">
-        <div className="flex items-center gap-1.5">
-          <p className="text-xs font-medium text-muted-foreground flex-shrink-0">
-            국가별
-          </p>
-          <ScrollArea className="w-full whitespace-nowrap rounded-md pb-1">
-            <ToggleGroup
-              type="single"
-              variant="outline"
-              size="sm"
-              value={selectedCountry ?? ''}
-              onValueChange={handleCountryChange}
-              className="flex justify-start gap-1.5"
-            >
-              {countries.map((country) => (
-                <ToggleGroupItem
-                  key={country}
-                  value={country}
-                  className="rounded-[20px] h-6 px-4 text-xs data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex-shrink-0 border"
-                  aria-label={`Filter by ${country}`}
-                >
-                  {country}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-            <ScrollBar orientation="horizontal" className="h-1.5" />
-          </ScrollArea>
-        </div>
-        <div className="flex items-center gap-1.5">
-          <p className="text-xs font-medium text-muted-foreground flex-shrink-0">
-            타입별
-          </p>
-          <ScrollArea className="w-full whitespace-nowrap rounded-">
-            <ToggleGroup
-              type="single"
-              variant="outline"
-              size="sm"
-              value={selectedType ?? ''}
-              onValueChange={handleTypeChange}
-              className="flex justify-start gap-1.5"
-            >
-              {types.map((type) => (
-                <ToggleGroupItem
-                  key={type}
-                  value={type}
-                  className="rounded-[20px] h-6 px-4 text-xs data-[state=on]:bg-primary data-[state=on]:text-primary-foreground flex-shrink-0 border"
-                  aria-label={`Filter by ${type}`}
-                >
-                  {type}
-                </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
-            <ScrollBar orientation="horizontal" className="h-1.5" />
-          </ScrollArea>
-        </div>
-      </div>
-      {/* 3. 정렬 - Select 드롭다운으로 변경 */}
-      <div className="mb-1 w-full flex justify-end items-center text-xs">
-        <Select
-          value={sortCriteria}
-          onValueChange={(value) => setSortCriteria(value as SortCriteria)}
-        >
-          <SelectTrigger className="w-auto h-5 text-xs px-1 border-none focus:ring-0 bg-transparent text-muted-foreground hover:text-foreground">
-            <SelectValue />
       {/* 1. 검색창 - SearchWhiskyDialogContent와 동일한 스타일 */}
       <div className="relative mb-3">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -354,15 +195,6 @@ export function SearchPage() {
                 {option.label}
               </SelectItem>
             ))}
-            {sortOptions.map((option) => (
-              <SelectItem
-                key={option.value}
-                value={option.value}
-                className="text-xs min-h-[1.5rem]"
-              >
-                {option.label}
-              </SelectItem>
-            ))}
           </SelectContent>
         </Select>
       </div>
@@ -377,7 +209,7 @@ export function SearchPage() {
                   variant="outline"
                   className={cn(
                     'h-auto w-full justify-start rounded-[10px] p-1.5 text-left flex items-center gap-2',
-                    selectedItemId === item.id
+                    selectedItemId === item.id.toString()
                       ? 'border bg-accent'
                       : 'border hover:bg-accent/50',
                   )}
