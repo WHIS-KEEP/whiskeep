@@ -3,7 +3,7 @@ import FlavorScoreQuestion from '@/components/ui/survey/FlavorScoreQuestion';
 import PreferenceOrderQuestion from '@/components/ui/survey/PreferenceOrderQuestion';
 import { useBeginnerSurveyMutation } from '@/hooks/mutations/useSurveyMutation';
 import { BeginnerSurveyRequest } from '@/lib/api/survey';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import fruitImg from '@/assets/survey/fruit.avif';
 import sweetImg from '@/assets/survey/sweet.jpg';
@@ -110,6 +110,18 @@ const BeginnerSurveyPage = () => {
     });
     return [result.nosing, result.tasting, result.finish];
   };
+
+  // ✅ 다음 질문 이미지 미리 로드
+  useEffect(() => {
+    if (step >= 0 && step < 6) {
+      const nextImage = scoreQuestions[step]?.image;
+      if (nextImage) {
+        const preload = new Image();
+        preload.src = nextImage;
+      }
+    }
+  }, [step]);
+
   return (
     <div className="min-h-screen bg-[var(--bg-muted)]">
       {/* Header 대신 */}
@@ -139,6 +151,19 @@ const BeginnerSurveyPage = () => {
           }
           onPrev={handlePrev}
           onNext={handleNext}
+          isLast={step === 6}
+          onSubmit={() => {
+            submitSurvey(
+              {
+                preferenceOrder: getPreferenceWeight(order),
+                tastingScore: scores,
+              },
+              {
+                onSuccess: () => navigate('/preference/complete'),
+                onError: () => navigate('*'),
+              },
+            );
+          }}
         />
       )}
     </div>

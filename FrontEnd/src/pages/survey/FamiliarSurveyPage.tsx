@@ -92,20 +92,20 @@ const FamiliarSurveyPage = () => {
       </div>
       {/* 버튼 영역 */}
       <div className="px-6 flex gap-3 pb-8">
-        {/* 선택 완료 */}
-        <button
-          onClick={handleSubmit}
-          className="w-full h-12 rounded-[12px] bg-[var(--primary-dark)] text-white font-semibold text-[15px] transition-colors hover:bg-[var(--primary-50)] border border-[var(--primary-dark)]"
-        >
-          선택 완료
-        </button>
-
         {/* 뒤로 가기 */}
         <button
           onClick={() => navigate('/preference')}
           className="w-full h-12 rounded-[12px] bg-transparent text-[var(--primary-dark)] font-semibold text-[15px] border border-[var(--primary-dark)] transition-colors hover:bg-[var(--primary-30)]"
         >
           뒤로 가기
+        </button>
+
+        {/* 선택 완료 */}
+        <button
+          onClick={handleSubmit}
+          className="w-full h-12 rounded-[12px] bg-[var(--primary-dark)] text-white font-semibold text-[15px] transition-colors hover:bg-[var(--primary-50)] border border-[var(--primary-dark)]"
+        >
+          선택 완료
         </button>
       </div>
     </div>
