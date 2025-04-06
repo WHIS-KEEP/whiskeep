@@ -209,7 +209,7 @@ export function SearchPage() {
                   variant="outline"
                   className={cn(
                     'h-auto w-full justify-start rounded-[10px] p-1.5 text-left flex items-center gap-2',
-                    selectedItemId === item.id
+                    selectedItemId === item.id.toString()
                       ? 'border bg-accent'
                       : 'border hover:bg-accent/50',
                   )}
