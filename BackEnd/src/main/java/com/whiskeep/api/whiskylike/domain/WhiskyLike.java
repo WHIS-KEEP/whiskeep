@@ -2,6 +2,7 @@ package com.whiskeep.api.whiskylike.domain;
 
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.whisky.domain.Whisky;
+import com.whiskeep.common.entity.BaseTimeEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Table(uniqueConstraints = {
 	@UniqueConstraint(columnNames = {"member_id", "whisky_id"})
 })
-public class WhiskyLike {
+public class WhiskyLike extends BaseTimeEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
