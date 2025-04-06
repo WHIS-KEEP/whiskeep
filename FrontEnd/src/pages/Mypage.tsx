@@ -27,14 +27,14 @@ const MyPage = () => {
   const { data: userData, isLoading } = useMyPageQuery();
   const { mutate: checkNickname } = useCheckNicknameMutation();
   const { mutate: updateUser, isPending } = useUpdateUserMutation();
-  
+
   const [nicknameEditable, setNicknameEditable] = useState(false);
   const [nicknameChecked, setNicknameChecked] = useState(false);
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState('');
   const [editedNickname, setEditedNickname] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [changesMade, setChangesMade] = useState(false);
-  
+
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -138,7 +138,9 @@ const MyPage = () => {
   return (
     <ScrollArea className="flex-1 bg-background rounded-[18px]">
       <div className="p-4 pb-57">
-        <h2 className="mb-6 text-lg font-semibold text-foreground">마이페이지</h2>
+        <h2 className="mb-6 text-lg font-semibold text-foreground">
+          마이페이지
+        </h2>
         <div className="mb-8 flex flex-col items-center">
           <div className="relative mb-2">
             <Avatar className="h-32 w-32 border">
@@ -165,15 +167,25 @@ const MyPage = () => {
 
               <DrawerContent className="bg-background">
                 <DrawerHeader className="flex items-center justify-between px-4 pt-4 sm:px-6">
-                  <DrawerTitle className="text-lg font-semibold">사진 등록하기</DrawerTitle>
+                  <DrawerTitle className="text-lg font-semibold">
+                    사진 등록하기
+                  </DrawerTitle>
                   <DrawerClose asChild>
-                    <Button variant="ghost" size="icon" className="-mr-2 h-8 w-8" aria-label="닫기">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="-mr-2 h-8 w-8"
+                      aria-label="닫기"
+                    >
                       <X size={20} />
                     </Button>
                   </DrawerClose>
                 </DrawerHeader>
                 <div className="grid gap-3 p-4 sm:p-6">
-                  <Button variant="outline" className="w-full justify-start gap-3 py-6 text-base">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-3 py-6 text-base"
+                  >
                     <Camera size={20} className="text-muted-foreground" />
                     카메라로 촬영하기
                   </Button>
@@ -204,7 +216,9 @@ const MyPage = () => {
           <InfoRow label="이메일" value={userData.email} />
 
           <div className="flex items-center justify-between gap-2">
-            <span className="w-16 text-sm font-medium text-foreground">닉네임</span>
+            <span className="w-16 text-sm font-medium text-foreground">
+              닉네임
+            </span>
             {nicknameEditable ? (
               <input
                 value={editedNickname}
@@ -217,7 +231,9 @@ const MyPage = () => {
                 placeholder="닉네임을 입력하세요"
               />
             ) : (
-              <span className="flex-1 text-right text-sm text-primary-dark">{userData.nickname}</span>
+              <span className="flex-1 text-right text-sm text-primary-dark">
+                {userData.nickname}
+              </span>
             )}
             {nicknameEditable ? (
               <Button size="sm" onClick={handleCheckDuplicate}>
@@ -235,7 +251,9 @@ const MyPage = () => {
           </div>
 
           {nicknameEditable && nicknameCheckMessage && (
-            <p className={`text-sm ${nicknameChecked ? 'text-blue-500' : 'text-red-500'}`}>
+            <p
+              className={`text-sm ${nicknameChecked ? 'text-blue-500' : 'text-red-500'}`}
+            >
               {nicknameCheckMessage}
             </p>
           )}
@@ -265,11 +283,17 @@ const MyPage = () => {
         </div>
 
         <div className="mt-auto flex items-center justify-center gap-3 text-sm text-muted-foreground">
-          <button onClick={() => console.log('로그아웃 클릭')} className="hover:underline hover:text-foreground">
+          <button
+            onClick={() => console.log('로그아웃 클릭')}
+            className="hover:underline hover:text-foreground"
+          >
             로그아웃
           </button>
           <span className="text-gray-300 dark:text-gray-600">|</span>
-          <button onClick={() => console.log('회원 탈퇴 클릭')} className="hover:underline hover:text-foreground">
+          <button
+            onClick={() => console.log('회원 탈퇴 클릭')}
+            className="hover:underline hover:text-foreground"
+          >
             회원 탈퇴하기
           </button>
         </div>

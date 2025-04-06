@@ -15,7 +15,7 @@ export const useUpdateUserMutation = () => {
         'member',
         new Blob([JSON.stringify({ nickname })], {
           type: 'application/json',
-        })
+        }),
       );
 
       if (profileImage) {
