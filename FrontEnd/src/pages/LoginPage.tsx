@@ -12,13 +12,13 @@ const Login = () => {
         <GoogleButton
           onClick={() => {
             sessionStorage.setItem('provider', 'google');
-            googleLogin.mutate('google')
+            googleLogin.mutate('google');
           }}
         />
         <KakaoButton
           onClick={() => {
             sessionStorage.setItem('provider', 'kakao');
-            kakaoLogin.mutate('kakao')
+            kakaoLogin.mutate('kakao');
           }}
         />
       </div>
