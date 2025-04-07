@@ -72,7 +72,7 @@
     sans-serif;
   --app-background-color: var(--bg-muted);
   --mobile-width: 412px;
-  /* --mobile-height: 915px; */
+  --mobile-height: 915px;
 }
 
 @theme inline {
