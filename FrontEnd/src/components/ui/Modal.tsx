@@ -36,7 +36,7 @@ import exampleImage from '../../assets/example.png';
 // --- TypeScript Interface ---
 interface WhiskySearchResult {
   id: number;
-  name: string;
+  koName: string;
   enName?: string;
   type: string;
   country: string;
@@ -64,7 +64,7 @@ const dummySearchResults: WhiskySearchResult[] = [
   // ... (Keep dummy data as is) ...
   {
     id: 1257,
-    name: '아드베그 5년산',
+    koName: '아드베그 5년산',
     enName: 'Ardbeg 5 Years',
     type: 'Single Malt Whisky',
     country: 'Scotland',
@@ -77,7 +77,7 @@ const dummySearchResults: WhiskySearchResult[] = [
   },
   {
     id: 2,
-    name: '발렌타인 40년산',
+    koName: '발렌타인 40년산',
     enName: "Ballantine's 40 Years Old",
     type: '블렌디드',
     country: '스코틀랜드',
@@ -89,7 +89,7 @@ const dummySearchResults: WhiskySearchResult[] = [
   },
   {
     id: 3,
-    name: '버팔로 트레이스',
+    koName: '버팔로 트레이스',
     enName: 'Buffalo Trace',
     type: '버번',
     country: '미국',
@@ -101,7 +101,7 @@ const dummySearchResults: WhiskySearchResult[] = [
   },
   {
     id: 4,
-    name: '글렌피딕 15년',
+    koName: '글렌피딕 15년',
     enName: 'Glenfiddich 15 Year Old',
     type: '싱글 몰트',
     country: '스코틀랜드',
@@ -113,7 +113,7 @@ const dummySearchResults: WhiskySearchResult[] = [
   },
   {
     id: 5,
-    name: '레드브레스트 12년 CS',
+    koName: '레드브레스트 12년 CS',
     enName: 'Redbreast 12 Year Old Cask Strength',
     type: '싱글 팟 스틸',
     country: '아일랜드',
@@ -125,7 +125,7 @@ const dummySearchResults: WhiskySearchResult[] = [
   },
   ...Array.from({ length: 15 }, (_, i) => ({
     id: i + 6,
-    name: `더미 위스키 ${i + 6}`,
+    koName: `더미 위스키 ${i + 6}`,
     enName: `Dummy Whisky ${i + 6}`,
     type: i % 3 === 0 ? '싱글 몰트' : i % 3 === 1 ? '버번' : '블렌디드',
     country:
@@ -146,16 +146,23 @@ const dummySearchResults: WhiskySearchResult[] = [
 
 interface WishlistItem {
   id: number;
-  name: string;
-  rating: number;
+  koName: string;
+  enName: string;
+  type: string;
+  abv: number;
+  // rating: number;
   imageUrl: string;
 }
+
 const dummyWishlistItems: WishlistItem[] = Array.from(
   { length: 15 },
   (_, i) => ({
     id: i + 1,
-    name: `Wishlist Item ${i + 1}`,
-    rating: Math.round((4 + Math.random()) * 10) / 10,
+    koName: 'dummy whisky',
+    enName: 'dummy whisky',
+    type: 'single malt',
+    abv: 40,
+    // rating: Math.round((4 + Math.random()) * 10) / 10,
     imageUrl: exampleImage,
   }),
 );
@@ -220,7 +227,7 @@ function SearchWhiskyDialogContent({
       /* ... filtering logic ... */
       const searchTermMatch =
         !searchTerm ||
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.koName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.enName &&
           item.enName.toLowerCase().includes(searchTerm.toLowerCase()));
       const countryMatch = !selectedCountry || item.country === selectedCountry;
@@ -365,14 +372,14 @@ function SearchWhiskyDialogContent({
                 <div className="w-10 h-14 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded overflow-hidden">
                   <img
                     src={item.imageUrl || exampleImage}
-                    alt={item.name}
+                    alt={item.koName}
                     className="w-full h-full object-contain"
                     onError={(e) => (e.currentTarget.src = exampleImage)}
                   />
                 </div>
                 <div className="flex-grow flex flex-col justify-center gap-0">
                   <p className="font-semibold text-sm leading-tight truncate">
-                    {item.name}
+                    {item.koName}
                   </p>
                   {item.enName && (
                     <p className="text-xs text-muted-foreground leading-tight truncate">
@@ -474,8 +481,10 @@ function WishlistDialogContent({
               >
                 <Whiskycard
                   className="w-[162px] h-[234px]"
-                  title={item.name}
-                  description={`${item.rating.toFixed(1)}/5.0`}
+                  koName={item.koName}
+                  // enName={item.enName}
+                  abv={item.abv}
+                  // type={item.type}
                   showLikeButton={false}
                   showChart={false}
                   whiskyImage={item.imageUrl}
@@ -609,7 +618,7 @@ export function WhiskySelectionDialog({
           <img
             src={imageUrl}
             alt={
-              'name' in selectedWhisky ? selectedWhisky.name : '선택된 위스키'
+              'name' in selectedWhisky ? selectedWhisky.koName : '선택된 위스키'
             }
             className="w-full h-full object-contain"
             onError={(e) => (e.currentTarget.src = exampleImage)}

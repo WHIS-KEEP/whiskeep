@@ -24,11 +24,12 @@ import Whiskycard from '@/components/ui/Whiskycard'; // Adjust path as needed
 import exampleImage from '../assets/example.png';
 import useMemberStore from '@/store/useMemberStore';
 import { useRecommendQuery } from '@/hooks/queries/useRecommendQuery';
+import { useQueryClient } from '@tanstack/react-query';
 
 // 위스키 데이터 인터페이스 추가
 interface WhiskyData {
   id: number;
-  name: string;
+  koName: string;
   enName?: string;
   type?: string;
   country?: string;
@@ -67,16 +68,15 @@ const StarRating = ({
 
 export function MainPageContent() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
   const score = useMemberStore((state) => state.score);
   const { data: recommends, isLoading, isError } = useRecommendQuery();
-  console.log('recommends', recommends);
+  console.log(score);
 
   useEffect(() => {
-    {
-      /* 바로 이어 MainPage 진행 예정! 로그 사용 후 삭제할게요! */
-    }
-    // console.log('사용자 점수:', score);
-  }, [score]);
+    queryClient.invalidateQueries({ queryKey: ['recommendations'] });
+  }, [queryClient]);
 
   // State for the input field and toggle
   const [comment, setComment] = useState('');
@@ -148,7 +148,7 @@ export function MainPageContent() {
                 {selectedWhisky && selectedWhisky.imageUrl ? (
                   <img
                     src={selectedWhisky.imageUrl}
-                    alt={selectedWhisky.name}
+                    alt={selectedWhisky.koName}
                     className="w-full h-full object-contain"
                     onError={(e) => (e.currentTarget.src = exampleImage)}
                   />
@@ -200,7 +200,7 @@ export function MainPageContent() {
                 <div className="w-full h-full flex items-center justify-center overflow-hidden">
                   <img
                     src={selectedWhisky.imageUrl}
-                    alt={selectedWhisky.name}
+                    alt={selectedWhisky.koName}
                     className="w-full h-full object-contain"
                     onError={(e) => (e.currentTarget.src = exampleImage)}
                   />
@@ -231,7 +231,9 @@ export function MainPageContent() {
             {recommends?.map((whisky) => (
               <Whiskycard
                 key={whisky.whiskyId}
-                title={whisky.koName}
+                koName={whisky.koName}
+                enName={whisky.enName}
+                type={whisky.type}
                 whiskyImage={whisky.whiskyImg}
                 abv={whisky.abv}
                 showLikeButton={false}

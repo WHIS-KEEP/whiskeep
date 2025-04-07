@@ -203,6 +203,8 @@ public class RecommendService {
 		return RecommendResponseDto.builder()
 			.whiskyId(newWhisky.getWhiskyId())
 			.koName(newWhisky.getKoName())
+			.enName(newWhisky.getEnName())
+			.type(newWhisky.getType())
 			.whiskyImg(newWhisky.getWhiskyImg())
 			.abv(newWhisky.getAbv())
 			.similarity(avgSimilarity)

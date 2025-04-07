@@ -53,6 +53,8 @@ public class RecommendBeginnerService {
 			.map(whisky -> RecommendResponseDto.builder()
 				.whiskyId(whisky.getWhiskyId())
 				.koName(whisky.getKoName())
+				.enName(whisky.getEnName())
+				.type(whisky.getType())
 				.whiskyImg(whisky.getWhiskyImg())
 				.abv(whisky.getAbv())
 				.similarity(CosineSimilarityUtil.calculateCosineSimilarity(userVector, extraWhiskyVector(whisky))) //

@@ -7,10 +7,12 @@ import TastingRadarChart, { TastingProfile } from './Tastingchart';
 
 // Props 인터페이스 정의
 interface WhiskycardProps extends React.ComponentProps<typeof Card> {
-  title: string;
+  koName: string;
+  enName?: string; // 영어이름 (선택적)
+  type?: string; // 위스키 타입 (선택적)
   abv: number; // 알콜 도수
   bgImage?: string; // 배경 이미지 URL (선택적)
-  whiskyImage?: string; // 위스키 이미지 URL (선택적)
+  whiskyImage: string; // 위스키 이미지 URL (선택적)
   showLikeButton?: boolean; // 하트 버튼 표시 여부 (선택적)
   showChart?: boolean; // 차트 표시 여부 (선택적)
   whiskyId?: number; // 위스키 ID (차트 데이터를 가져오기 위함)
@@ -19,7 +21,9 @@ interface WhiskycardProps extends React.ComponentProps<typeof Card> {
 
 export function Whiskycard({
   className,
-  title,
+  koName,
+  enName,
+  type,
   abv,
   bgImage = defaultBgImg, // 기본값으로 에셋 이미지 사용
   whiskyImage, // 기본값으로 에셋 이미지 사용
@@ -110,12 +114,15 @@ export function Whiskycard({
         {/* 카드 아랫부분 */}
         <div className="h-[100px] bg-primary-dark rounded-b-[18px] flex items-end justify-between p-2">
           <div className="p-1.5 w-full">
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <p className="text-sm max-w-[150px] font-medium leading-none text-white overflow-hidden whitespace-nowrap text-ellipsis">
-                {title} {/* props로 받은 title 사용 */}
+                {koName}
+              </p>
+              <p className="text-xs max-w-[150px] font-medium leading-none text-white overflow-hidden whitespace-nowrap text-ellipsis">
+                {enName}
               </p>
               <p className="text-xs max-w-[123px] text-white overflow-hidden whitespace-nowrap text-ellipsis">
-                {abv} {/* props로 받은 abv 사용 */}
+                <span>{type}</span> | <span>{abv} %</span>
               </p>
             </div>
           </div>

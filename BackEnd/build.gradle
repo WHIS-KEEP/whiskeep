@@ -104,7 +104,9 @@ sourceSets {
 }
 
 tasks.named('compileJava', JavaCompile).configure {
-	options.annotationProcessorGeneratedSourcesDirectory = querydslDir.get().asFile
+	options.compilerArgs += [
+			"-s", querydslDir.get().asFile.absolutePath
+	]
 }
 
 tasks.withType(Checkstyle).configureEach {

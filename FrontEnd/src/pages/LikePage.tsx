@@ -13,10 +13,9 @@ import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // Scro
 const dummyWishlistItems = Array.from({ length: 15 }, (_, i) => ({
   id: i + 1,
   imageUrl: `/images/whisky-placeholder.png`,
-  name: `찜한 위스키 ${i + 1}`,
-  rating: Math.round((4 + Math.random()) * 10) / 10,
+  koName: `찜한 위스키 ${i + 1}`,
+  abv: 40,
 }));
-// --- 더미 데이터 끝 ---
 
 export function WishlistPage() {
   // 컴포넌트 이름 변경 (e.g., LikePage) 가능
@@ -62,9 +61,9 @@ export function WishlistPage() {
             >
               <Whiskycard
                 // Whiskycard props (실제 컴포넌트에 맞게 조정 필요)
-                title={item.name}
-                description={`${item.rating}/5.0`}
-                // imageUrl={item.imageUrl} // 필요시 사용
+                koName={item.koName}
+                abv={item.abv}
+                whiskyImage={item.imageUrl} // 필요시 사용
               />
             </Button>
           ))}
