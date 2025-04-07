@@ -1,96 +1,116 @@
-// src/pages/WishlistPage.tsx (또는 LikePage.tsx)
+// src/pages/LikePage.tsx
 // Renders at /like (라우터 설정 필요)
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/util/utils';
-import Btn from '@/components/ui/Btn'; // 커스텀 버튼
-import { Button } from '@/components/shadcn/Button'; // shadcn/ui Button
-import Whiskycard from '@/components/ui/Whiskycard'; // Whiskycard 컴포넌트 경로 확인
-import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
+import { Button } from '@/components/shadcn/Button';
+import Whiskycard from '@/components/ui/Whiskycard';
+import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
+import {
+  fetchLikedWhiskies,
+  LIKES_QUERY_KEY,
+  LikedWhisky,
+} from '@/lib/api/like';
 
-// --- 더미 데이터 ---
-const dummyWishlistItems = Array.from({ length: 15 }, (_, i) => ({
-  id: i + 1,
-  imageUrl: `/images/whisky-placeholder.png`,
-  koName: `찜한 위스키 ${i + 1}`,
-  abv: 40,
-}));
-
-export function WishlistPage() {
-  // 컴포넌트 이름 변경 (e.g., LikePage) 가능
+export function LikePage() {
   const navigate = useNavigate();
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
 
-  const handleConfirm = () => {
-    console.log('선택된 아이템 ID:', selectedItemId);
-    // TODO: 선택된 아이템 ID로 작업 수행
-    navigate('/Main'); // 메인 페이지로 이동
+  // React Query를 사용하여 찜 목록 데이터 가져오기
+  const { data, isLoading, isError } = useQuery({
+    queryKey: [LIKES_QUERY_KEY],
+    queryFn: fetchLikedWhiskies,
+  });
+
+  // 디버깅용: 데이터 로딩 확인
+  useEffect(() => {
+    console.log('LikePage data:', data);
+  }, [data]);
+
+  // data가 undefined, null이거나 배열이 아닐 경우 빈 배열로 처리
+  const likedItems: LikedWhisky[] = Array.isArray(data) ? data : [];
+
+  const handleSelectItem = (whiskyId: number) => {
+    setSelectedItemId((prevId) => {
+      if (prevId === whiskyId) {
+        // 이미 선택된 아이템을 다시 클릭하면 디테일 페이지로 이동
+        navigate(`/records/${whiskyId}`);
+        return null;
+      }
+      return whiskyId;
+    });
   };
 
-  const handleCancel = () => {
-    navigate('/Main'); // 메인 페이지로 이동
-  };
+  // 로딩 상태 처리
+  if (isLoading) {
+    return (
+      <div className="container mx-auto flex h-screen max-w-md flex-col items-center justify-center p-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
+        <p>찜 목록을 불러오는 중...</p>
+      </div>
+    );
+  }
 
-  const handleSelectItem = (id: number) => {
-    setSelectedItemId((prevId) => (prevId === id ? null : id));
-  };
+  // 에러 상태 처리
+  if (isError) {
+    return (
+      <div className="container mx-auto flex h-screen max-w-md flex-col items-center justify-center p-4 text-center">
+        <p className="text-red-500 font-semibold mb-2">오류 발생</p>
+        <p>찜 목록을 불러오는 데 실패했습니다.</p>
+        <Button onClick={() => navigate('/main')} className="mt-4">
+          메인으로 돌아가기
+        </Button>
+      </div>
+    );
+  }
 
   return (
-    <div className="container mx-auto flex h-screen max-w-md flex-col p-4">
-      {' '}
-      {/* 페이지 컨테이너 */}
-      {/* 1. 상단 텍스트 */}
-      <h1 className="mb-4 text-xl font-semibold">나의 찜 리스트</h1>
-      {/* 2. 찜 리스트 (스크롤 영역) */}
-      {/* ScrollArea 컴포넌트로 교체 */}
-      <ScrollArea className="w-full flex-grow rounded-md border">
-        <div className="grid grid-cols-2 gap-3 p-2">
-          {dummyWishlistItems.map((item) => (
-            <Button // Button으로 감싸서 선택 기능 구현
-              key={item.id}
-              variant="outline"
-              className={cn(
-                'h-auto w-full rounded-[10px] border p-0', // 내부 패딩 0
-                'transition-all duration-150 ease-in-out',
-                selectedItemId === item.id
-                  ? 'border-2 border-black ring-1 ring-black'
-                  : 'border-gray-200 hover:bg-gray-50',
-              )}
-              onClick={() => handleSelectItem(item.id)}
-            >
-              <Whiskycard
-                // Whiskycard props (실제 컴포넌트에 맞게 조정 필요)
-                koName={item.koName}
-                abv={item.abv}
-                whiskyImage={item.imageUrl} // 필요시 사용
-              />
-            </Button>
-          ))}
-          {/* TODO: 무한 스크롤 로직 구현 */}
-        </div>
+    <div className="container bg-white rounded-[18px] flex h-screen w-full flex-col p-4">
+      <h1 className="mb-4 text-xl pl-1 font-semibold pb-4">나의 찜 리스트</h1>
+      <ScrollArea className="w-full flex-grow rounded-md">
+        {likedItems.length === 0 ? (
+          <div className="flex items-center justify-center h-40 text-gray-500">
+            찜한 위스키가 없습니다.
+          </div>
+        ) : (
+          <div className="flex justify-center">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-6 w-full">
+              {likedItems.map((item) => (
+                <div
+                  key={item.whiskyId}
+                  className="flex justify-center items-center"
+                >
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      'h-auto w-[180px] rounded-[18px] border p-0',
+                      'transition-all duration-150 ease-in-out',
+                      selectedItemId === item.whiskyId
+                        ? 'border-2 border-black ring-1 ring-black'
+                        : 'border-gray-200 hover:bg-gray-50',
+                    )}
+                    onClick={() => handleSelectItem(item.whiskyId)}
+                  >
+                    <Whiskycard
+                      title={item.koName}
+                      description={`${item.abv}%`}
+                      whiskyImage={item.whiskyImg ? item.whiskyImg : undefined}
+                      whiskyId={item.whiskyId}
+                      showLikeButton={true}
+                      showChart={false}
+                    />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         <ScrollBar orientation="vertical" />
       </ScrollArea>
-      {/* 3. 하단 버튼 */}
-      <div className="mt-4 flex w-full shrink-0 justify-center gap-3 border-t pt-4">
-        {' '}
-        {/* 상단 테두리 및 패딩 추가 */}
-        <Btn
-          size="m"
-          //   variant="outline" // Btn 컴포넌트가 variant="outline" 지원 가정
-          text="취소"
-          onClick={handleCancel}
-        />
-        <Btn
-          size="m"
-          // variant="default" // Btn 컴포넌트가 기본 variant 지원 가정
-          text="선택"
-          onClick={handleConfirm}
-          //   disabled={!selectedItemId}
-        />
-      </div>
     </div>
   );
 }
 
-export default WishlistPage; // 또는 export default LikePage;
+export default LikePage;
