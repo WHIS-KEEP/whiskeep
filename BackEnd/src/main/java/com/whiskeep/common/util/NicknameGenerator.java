@@ -2,6 +2,9 @@ package com.whiskeep.common.util;
 
 import java.util.Random;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class NicknameGenerator {
 	// 위스키 느낌의 형용사
 	private static final String[] adjectives = {

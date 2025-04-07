@@ -1,6 +1,6 @@
 package com.whiskeep.api.oauth.dto;
 
 public record LoginUserDto(
-	String nickName,
+	String nickname,
 	String profileImg
 ) { }

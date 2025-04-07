@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.dto.MemberResponseDto;
 import com.whiskeep.api.member.repository.MemberRepository;
+import com.whiskeep.api.member.service.MemberService;
 import com.whiskeep.api.oauth.dto.LoginRequestDto;
 import com.whiskeep.api.oauth.dto.OAuthProviderInfo;
 import com.whiskeep.api.oauth.dto.OAuthProviderTokenConfig;
@@ -22,6 +23,9 @@ import com.whiskeep.common.auth.jwt.JwtTokenProvider;
 import com.whiskeep.common.enumclass.Provider;
 import com.whiskeep.common.exception.BadRequestException;
 import com.whiskeep.common.exception.ErrorMessage;
+import com.whiskeep.common.exception.InternalServerException;
+import com.whiskeep.common.exception.NotFoundException;
+import com.whiskeep.common.util.NicknameGenerator;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +35,8 @@ public class OauthService {
 
 	private final MemberRepository memberRepository;
 	private final JwtTokenProvider jwtTokenProvider;
+	private final NicknameGenerator nicknameGenerator;
+	private final MemberService memberService;
 
 	private static final String RESPONSE_TYPE = "code";
 
@@ -154,7 +160,7 @@ public class OauthService {
 			Member newMember = Member.builder()
 				.email(userInfo.email())
 				.name(userInfo.name())
-				.nickname(generateUniqueNickname(userInfo.name()))
+				.nickname(generateUniqueNickname())
 				.provider(Provider.valueOf(provider.toUpperCase()))
 				.providerId(providerId)
 				.build();
@@ -175,8 +181,20 @@ public class OauthService {
 		return jwtTokenProvider.createToken(memberId);
 	}
 
-	private String generateUniqueNickname(String name) {
-		return name + "_" + System.currentTimeMillis(); // 예: "John_171515151515"
-	}
+	private String generateUniqueNickname() {
+		String nickname;
+		int attempt = 0;
+		int maxAttempts = 10;
 
+		do {
+			nickname = nicknameGenerator.generateNickname();
+			attempt++;
+		} while (!memberService.isNicknameAvailable(nickname) && attempt < maxAttempts);
+
+		if (attempt == maxAttempts) {
+			throw new InternalServerException(ErrorMessage.NICKNAME_GENERATION_FAILED);
+		}
+
+		return nickname;
+	}
 }
