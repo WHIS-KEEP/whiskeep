@@ -42,7 +42,6 @@ export default function WhiskyListResult({
                   src={item.whiskyImg || exampleImage}
                   alt={item.koName}
                   className="w-full h-full object-contain"
-                  onError={(e) => (e.currentTarget.src = exampleImage)}
                 />
               </div>
               <div className="flex-grow flex flex-col justify-center gap-1">
