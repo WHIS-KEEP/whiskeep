@@ -16,7 +16,23 @@ services:
     networks:
       - whiskeep-net
     restart: unless-stopped
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - whiskeep-net
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
 
 networks:
   whiskeep-net:
     external: true
+
+volumes:
+  redis-data:
