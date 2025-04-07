@@ -13,11 +13,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureException;
 
 @Component
 public class JwtTokenProvider {
@@ -25,7 +22,6 @@ public class JwtTokenProvider {
 	private final long expiration;
 	private final String issuer;
 
-	// 생성자에서 값을 주입받도록 변경
 	public JwtTokenProvider(
 		@Value("${spring.security.jwt.secret-key}") String secretKey,
 		@Value("${spring.security.jwt.expiration-time}") long expiration,
@@ -37,34 +33,50 @@ public class JwtTokenProvider {
 	}
 
 	public String createToken(Long memberId) {
+		Date now = new Date();
+		Date expiry = new Date(now.getTime() + expiration);
+
 		return Jwts.builder()
 			.setHeaderParam("typ", "JWT")
 			.setSubject(memberId.toString())
 			.setIssuer(issuer)
-			.setIssuedAt(new Date())
-			.setExpiration(new Date(System.currentTimeMillis() + expiration))
+			.setIssuedAt(now)
+			.setExpiration(expiry)
 			.signWith(key, SignatureAlgorithm.HS256)
 			.compact();
 	}
 
 	public Long getMemberIdFromToken(String token) {
-		Claims claims = Jwts.parserBuilder()
+		Claims claims = parseClaims(token);
+		return Long.parseLong(claims.getSubject());
+	}
+
+	public boolean validateToken(String token) {
+		try {
+			parseClaims(token); // 파싱 성공 == 유효
+			return true;
+		} catch (ExpiredJwtException e) {
+			throw new UnauthorizedException(ErrorMessage.EXPIRED_TOKEN);
+		} catch (JwtException | IllegalArgumentException e) {
+			throw new UnauthorizedException(ErrorMessage.INVALID_TOKEN);
+		}
+	}
+
+	public long getExpiration(String token) {
+		try {
+			Claims claims = parseClaims(token);
+			long now = System.currentTimeMillis();
+			return claims.getExpiration().getTime() - now;
+		} catch (ExpiredJwtException e) {
+			return 0L;
+		}
+	}
+
+	private Claims parseClaims(String token) {
+		return Jwts.parserBuilder()
 			.setSigningKey(key)
 			.build()
 			.parseClaimsJws(token)
 			.getBody();
-		return Long.parseLong(claims.getSubject());
-	}
-
-	// 토큰 유효성 검사
-	public boolean validateToken(String token) {
-		try {
-			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-			return true;
-		} catch (ExpiredJwtException e) {
-			throw new UnauthorizedException(ErrorMessage.EXPIRED_TOKEN); // 🔹 만료된 토큰 예외
-		} catch (UnsupportedJwtException | MalformedJwtException | SecurityException | SignatureException e) {
-			throw new UnauthorizedException(ErrorMessage.INVALID_TOKEN); // 🔹 잘못된 토큰 예외
-		}
 	}
 }

@@ -24,8 +24,8 @@ import com.whiskeep.common.enumclass.Provider;
 import com.whiskeep.common.exception.BadRequestException;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.InternalServerException;
-import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.util.NicknameGenerator;
+import com.whiskeep.common.util.RedisUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,6 +37,7 @@ public class OauthService {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final NicknameGenerator nicknameGenerator;
 	private final MemberService memberService;
+	private final RedisUtil redisUtil;
 
 	private static final String RESPONSE_TYPE = "code";
 
@@ -196,5 +197,14 @@ public class OauthService {
 		}
 
 		return nickname;
+	}
+
+	public void logout(String accessToken) {
+		if (!jwtTokenProvider.validateToken(accessToken)) {
+			return;
+		}
+
+		long expiration = jwtTokenProvider.getExpiration(accessToken);
+		redisUtil.saveBlackListToken(accessToken, expiration);
 	}
 }

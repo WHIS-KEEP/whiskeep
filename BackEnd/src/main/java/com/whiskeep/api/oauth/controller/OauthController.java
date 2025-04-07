@@ -14,24 +14,25 @@ import com.whiskeep.api.oauth.dto.LoginResponseDto;
 import com.whiskeep.api.oauth.dto.LoginUserDto;
 import com.whiskeep.api.oauth.dto.OAuthTokenResponseDto;
 import com.whiskeep.api.oauth.service.OauthService;
+import com.whiskeep.common.util.AuthUtil;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/members/login")
+@RequestMapping("/api/members")
 @RequiredArgsConstructor
 public class OauthController {
 
 	private final OauthService oauthService;
 
-	@GetMapping("/{provider}")
+	@GetMapping("/login/{provider}")
 	public ResponseEntity<String> socialLogin(@PathVariable String provider) {
 		String loginUrl = oauthService.getLoginUrl(provider);
 
 		return ResponseEntity.ok(loginUrl);
 	}
 
-	@PostMapping("/success")
+	@PostMapping("/login/success")
 	public ResponseEntity<LoginResponseDto> socialLoginRedirect(@RequestBody LoginRequestDto request) {
 		MemberResponseDto memberResponseDto = null;
 
@@ -52,4 +53,10 @@ public class OauthController {
 		return ResponseEntity.ok(loginInfo);
 	}
 
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout() {
+		String accessToken = AuthUtil.getCurrentAccessToken(); // 🔥 현재 사용자의 access token
+		oauthService.logout(accessToken); // Redis 블랙리스트 등록
+		return ResponseEntity.ok().build();
+	}
 }

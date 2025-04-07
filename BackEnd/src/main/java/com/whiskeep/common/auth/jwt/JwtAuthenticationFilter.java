@@ -9,40 +9,41 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.whiskeep.common.exception.ErrorMessage;
+import com.whiskeep.common.exception.UnauthorizedException;
+import com.whiskeep.common.util.RedisUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtTokenProvider jwtTokenProvider;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-	public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider,
-		JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint) {
-		this.jwtTokenProvider = jwtTokenProvider;
-		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-	}
+	private final RedisUtil redisUtil;
 
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-		FilterChain filterChain) throws
-		ServletException, IOException {
-		String header = request.getHeader("Authorization");
-
+		FilterChain filterChain) throws ServletException, IOException {
 		try {
-			if (header != null && header.startsWith("Bearer ")) {
-				String token = header.substring(7);
+			String token = extractToken(request);
 
+			if (token != null) {
+				if (redisUtil.isBlacklisted(token)) {
+					throw new UnauthorizedException(ErrorMessage.BLACKLISTED_TOKEN);
+				}
 				if (jwtTokenProvider.validateToken(token)) {
 					Long memberId = jwtTokenProvider.getMemberIdFromToken(token);
-
-					UsernamePasswordAuthenticationToken auth =
-						new UsernamePasswordAuthenticationToken(memberId, null,
-							List.of(new SimpleGrantedAuthority("ROLE_USER")));
-
-					SecurityContextHolder.getContext().setAuthentication(auth);
+					UsernamePasswordAuthenticationToken authentication =
+						new UsernamePasswordAuthenticationToken(
+							memberId,
+							token,
+							List.of(new SimpleGrantedAuthority("ROLE_USER"))
+						);
+					SecurityContextHolder.getContext().setAuthentication(authentication);
 				}
 			}
 			filterChain.doFilter(request, response);
@@ -50,5 +51,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			SecurityContextHolder.clearContext();
 			jwtAuthenticationEntryPoint.commence(request, response, e);
 		}
+	}
+
+	private String extractToken(HttpServletRequest request) {
+		String header = request.getHeader("Authorization");
+		if (header != null && header.startsWith("Bearer ")) {
+			return header.substring(7);
+		}
+		return null;
 	}
 }

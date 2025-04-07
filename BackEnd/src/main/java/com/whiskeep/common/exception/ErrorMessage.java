@@ -27,6 +27,7 @@ public enum ErrorMessage {
 	INVALID_TOKEN("유효하지 않은 토큰입니다"),
 	EXPIRED_TOKEN("만료된 토큰입니다"),
 	INVALID_CREDENTIALS("아이디 또는 비밀번호가 일치하지 않습니다"),
+	BLACKLISTED_TOKEN("이미 로그아웃된 토큰입니다."),
 
 	// 403 Forbidden 관련 오류 (ForbiddenException)
 	FORBIDDEN("접근 권한이 없습니다"),
