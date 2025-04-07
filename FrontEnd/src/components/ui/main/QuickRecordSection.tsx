@@ -12,6 +12,7 @@ import { Plus, Send, Star } from 'lucide-react';
 import WhiskySelectionDialog from '@/components/ui/Modal';
 import exampleImage from '@/assets/example.png';
 import { cn } from '@/lib/util/utils';
+import useRecordSubmit from '@/hooks/mutations/useRecordSubmit';
 
 interface WhiskyData {
   id: number;
@@ -52,7 +53,27 @@ export default function QuickRecordSection() {
   const [selectedWhisky, setSelectedWhisky] = useState<WhiskyData>();
   const [userRating, setUserRating] = useState(0);
 
+  const { submitRecord } = useRecordSubmit();
+
   const handleCloseDialog = () => dialogCloseRef.current?.click();
+
+  const handleSubmitRecord = async () => {
+    const isSuccess = await submitRecord({
+      whiskyId: selectedWhisky?.id,
+      rating: userRating,
+      content: comment,
+      isPublic,
+    });
+
+    if (isSuccess) {
+      alert('기록이 성공적으로 등록되었습니다.');
+      // 등록 성공 후 초기화
+      setSelectedWhisky(undefined);
+      setUserRating(0);
+      setComment('');
+      setIsPublic(false);
+    }
+  };
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -97,6 +118,7 @@ export default function QuickRecordSection() {
                 variant="ghost"
                 size="icon"
                 className="absolute right-0 h-8 w-8"
+                onClick={handleSubmitRecord}
               >
                 <Send size={16} className="text-gray-400" />
               </Button>
