@@ -59,7 +59,7 @@ export default function WhiskyRecommendationSection() {
   return (
     <div className="flex flex-col gap-3 items-center">
       <h2 className="font-semibold text-lg mb-2 px-4 self-start">
-        {user?.name} 님을 위한 위스키 추천
+        {user?.nickname} 님을 위한 위스키 추천
       </h2>
 
       <div className="relative w-full flex justify-center items-center overflow-hidden h-[300px]">
