@@ -26,6 +26,8 @@ import useMemberStore from '@/store/useMemberStore';
 import { useRecommendQuery } from '@/hooks/queries/useRecommendQuery';
 import { useQueryClient } from '@tanstack/react-query';
 
+import '@/styles/LoadingSpinner.css';
+
 // 위스키 데이터 인터페이스 추가
 interface WhiskyData {
   id: number;
@@ -117,11 +119,22 @@ export function MainPageContent() {
   );
 
   if (isLoading) {
-    return <p>추천 위스키를 불러오는 중...</p>;
+    return (
+      <div className="fixed inset-0 flex flex-col justify-center items-center z-50 gap-6">
+        <span className="loader"></span>
+        <div className="flex flex-col justify-center items-center gap-1">
+          <p>위스키를 추천 중입니다...</p>
+        </div>
+      </div>
+    );
   }
 
   if (isError || !recommends || recommends.length === 0) {
-    return <p>추천 결과가 존재하지 않습니다.</p>;
+    return (
+      <div className="fixed inset-0 flex flex-col justify-center items-center z-50 gap-6">
+        <p>알 수 없는 오류가 발생하였습니다.</p>
+      </div>
+    );
   }
 
   return (
