@@ -19,6 +19,9 @@ import PreferenceCompletePage from '@/pages/survey/PreferenceCompletePage';
 import WhiskyRecordPage from '@/pages/WhiskyRecordPage';
 import LikePage from '@/pages/LikePage';
 import DetailPage from '@/pages/DetailPage';
+import OCR from '@/pages/OCR/OCR';
+import ScanningPage from '@/pages/OCR/ScanningPage';
+import ResultPage from '@/pages/OCR/ResultPage';
 
 import useMemberStore from '@/store/useMemberStore';
 
@@ -128,6 +131,9 @@ const Router = () => {
           <Route path="/records/:whiskyId" element={<WhiskyRecordPage />} />
           <Route path="/like" element={<LikePage />} />
           <Route path="detail/:whiskyId" element={<DetailPage />} />
+          <Route path="/ocr" element={<OCR />} />
+          <Route path="/result" element={<ResultPage />} />
+          <Route path="/scanning" element={<ScanningPage />} />
         </Route>
       </Route>
 

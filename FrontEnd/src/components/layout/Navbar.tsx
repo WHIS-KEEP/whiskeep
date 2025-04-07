@@ -63,11 +63,11 @@ function Navbar() {
 
           {/* 카메라 아이콘과 원형 배경 */}
           <div className="relative flex flex-col items-center">
-            {isActive('/camera') && (
+            {isActive('/ocr') && (
               <span className="absolute top-[-0.5rem] w-2 h-2 rounded-full bg-primary-dark"></span>
             )}
             {/* 카메라 부분을 위로 올리기 위해 transform 사용 */}
-            <Link to="/camera" className="flex flex-col items-center">
+            <Link to="/ocr" className="flex flex-col items-center">
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <div
                   className="w-[54px] h-[54px] rounded-full flex justify-center items-center shadow-lg"
@@ -81,7 +81,7 @@ function Navbar() {
                 <div className="h-[40px]"></div>
               </div>
               <span
-                className={`text-xs font-medium mt-1 ${isActive('/camera') ? 'text-primary-dark' : 'text-primary-50'}`}
+                className={`text-xs font-medium mt-1 ${isActive('/ocr') ? 'text-primary-dark' : 'text-primary-50'}`}
               ></span>
             </Link>
           </div>

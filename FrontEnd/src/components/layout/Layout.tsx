@@ -4,7 +4,8 @@ import Navbar from './Navbar';
 
 const Layout = () => {
   const location = useLocation();
-  const hideLayout = location.pathname === '/login'; // 필요한 경우 더 추가 가능
+  const hideLayout =
+    location.pathname === '/login' || location.pathname === '/ocr'; // 필요한 경우 더 추가 가능
 
   return (
     <div className="flex flex-col h-full">
