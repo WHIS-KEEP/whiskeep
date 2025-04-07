@@ -42,14 +42,13 @@ const RecordPage: React.FC = () => {
   // 위스키 선택 시 처리
   const handleSelectWhisky = (whisky: {
     id: number;
-    name: string;
+    koName: string;
     imageUrl?: string;
   }) => {
-    console.log('Selected whisky in RecordPage:', whisky);
     // 선택된 위스키 정보 상태 업데이트
     setSelectedWhisky({
       id: whisky.id,
-      name: whisky.name,
+      name: whisky.koName,
       imageUrl: whisky.imageUrl || whiskyPlaceholder,
     });
 

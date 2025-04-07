@@ -55,7 +55,7 @@ const PreferenceCompletePage = () => {
     };
 
     run();
-  }, [navigate, refetchScore, refetchRecommend, setUserScore]);
+  }, [navigate, refetchScore, refetchRecommend, setUserScore, queryClient]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[var(--bg-muted)]">
