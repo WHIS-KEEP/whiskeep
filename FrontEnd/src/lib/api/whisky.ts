@@ -5,13 +5,8 @@ import { WhiskyDetail, RecordListResponse } from '@/types/whisky';
 export const getWhiskyDetail = async (
   whiskyId: number,
 ): Promise<WhiskyDetail> => {
-  try {
-    const response = await api.get<WhiskyDetail>(`/whiskies/${whiskyId}`);
-    return response.data;
-  } catch (error) {
-    console.error('위스키 상세 정보 조회 실패:', error);
-    throw error;
-  }
+  const response = await api.get<WhiskyDetail>(`/whiskies/${whiskyId}`);
+  return response.data;
 };
 
 // 위스키 리뷰 목록 조회 API
@@ -20,21 +15,16 @@ export const getWhiskyRecords = async (
   page: number = 0,
   size: number = 3,
 ): Promise<RecordListResponse> => {
-  try {
-    const response = await api.get<RecordListResponse>(
-      `/whiskies/${whiskyId}/records`,
-      {
-        params: {
-          page,
-          size,
-        },
+  const response = await api.get<RecordListResponse>(
+    `/whiskies/${whiskyId}/records`,
+    {
+      params: {
+        page,
+        size,
       },
-    );
-    return response.data;
-  } catch (error) {
-    console.error('위스키 리뷰 목록 조회 실패:', error);
-    throw error;
-  }
+    },
+  );
+  return response.data;
 };
 
 // 위스키 좋아요 토글 API
@@ -50,4 +40,8 @@ export const toggleWhiskyLike = async (
     console.error('위스키 좋아요 토글 실패:', error);
     throw error;
   }
+};
+export const getWhiskyTastingProfile = async (whiskyId: number) => {
+  const response = await api.get(`/whiskies/${whiskyId}/score`);
+  return response.data;
 };

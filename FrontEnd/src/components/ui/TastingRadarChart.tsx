@@ -8,9 +8,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
-// import useMemberTastingProfile from '@/hooks/queries/useMemberTastingProfile';
 import useWhiskyTastingProfile from '@/hooks/queries/useWhiskyTastingProfile';
-
+import useMemberStore from '@/store/useMemberStore';
 // 테이스팅 프로필 타입 정의
 export type ProfileType = 'nosing' | 'tasting' | 'finish';
 
@@ -40,36 +39,45 @@ interface TastingRadarChartProps {
 }
 
 // 차트 데이터 포맷 변환 함수
-const formatChartData = (whiskyProfile: TasteScore) => {
+const formatChartData = (
+  whiskyProfile: TasteScore,
+  userProfile?: TasteScore,
+) => {
   return [
     {
       subject: '달콤',
       whisky: whiskyProfile.sweetScore * 20, // 0-5 스케일을 0-100으로 변환
+      user: userProfile ? userProfile.sweetScore * 20 : 0, // 사용자 데이터가 있으면 표시
       fullMark: 100,
     },
     {
       subject: '매움',
       whisky: whiskyProfile.spicyScore * 20,
+      user: userProfile ? userProfile.spicyScore * 20 : 0,
       fullMark: 100,
     },
     {
       subject: '과일',
       whisky: whiskyProfile.fruityScore * 20,
+      user: userProfile ? userProfile.fruityScore * 20 : 0,
       fullMark: 100,
     },
     {
       subject: '오크',
       whisky: whiskyProfile.oakyScore * 20,
+      user: userProfile ? userProfile.oakyScore * 20 : 0,
       fullMark: 100,
     },
     {
       subject: '허브',
       whisky: whiskyProfile.herbalScore * 20,
+      user: userProfile ? userProfile.herbalScore * 20 : 0,
       fullMark: 100,
     },
     {
       subject: '바다',
       whisky: whiskyProfile.brinyScore * 20,
+      user: userProfile ? userProfile.brinyScore * 20 : 0,
       fullMark: 100,
     },
   ];
@@ -88,8 +96,14 @@ export function TastingRadarChart({
   // 커스텀 훅을 사용하여 위스키 테이스팅 프로필 데이터만 가져오기
   const { data: whiskyProfile, isLoading } = useWhiskyTastingProfile(whiskyId);
 
+  // Zustand 스토어에서 사용자 점수 가져오기
+  const userScore = useMemberStore((state) => state.score);
+
   // 사용할 위스키 프로필 결정 (제공된 프로필 > 가져온 프로필 > 기본값)
   const whiskeyData = providedProfile || whiskyProfile;
+
+  // 현재 선택된 프로필에 따른 사용자 점수
+  const currentUserProfile = userScore ? userScore[activeProfile] : undefined;
 
   // whiskeyData가 존재할 때만 차트 데이터 표시
   if (!whiskeyData) {
@@ -103,12 +117,14 @@ export function TastingRadarChart({
   const currentWhiskyProfile = whiskeyData[activeProfile];
 
   // 차트 데이터 준비 (위스키 프로필만 표시)
-  const chartData = formatChartData(currentWhiskyProfile);
+  const chartData = formatChartData(currentWhiskyProfile, currentUserProfile);
 
   // 선택된 프로필 타입 변경
   const handleProfileTypeChange = (type: ProfileType) => {
     setActiveProfile(type);
   };
+  // 사용자 데이터가 있는지 확인
+  const hasUserData = userScore !== null;
 
   return (
     <div className={className} style={{ width, height }}>
@@ -161,10 +177,20 @@ export function TastingRadarChart({
             <Radar
               name="위스키"
               dataKey="whisky"
-              stroke="#F9B233"
-              fill="#F9B233"
+              stroke="#84a59d "
+              fill="#84a59d "
               fillOpacity={0.65}
             />
+            {/* 사용자 프로필 레이더 - 사용자 데이터가 있을 때만 표시 */}
+            {hasUserData && (
+              <Radar
+                name="내 취향"
+                dataKey="user"
+                stroke="#f5cac3"
+                fill="#f5cac3"
+                fillOpacity={0.4}
+              />
+            )}
             <Legend
               iconSize={10}
               wrapperStyle={{ fontSize: '10px', color: '#333333' }}

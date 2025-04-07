@@ -166,7 +166,7 @@ const DetailPage = () => {
         <div className="p-4 border-b border-gray-200">
           <div
             className="p-4 rounded-lg text-white"
-            style={{ backgroundColor: 'var(--color-wood-30)' }}
+            style={{ backgroundColor: 'var(--bg-muted)' }}
           >
             <h2 className="text-m font-medium text-gray-500 mb-2">
               {user ? `${user.nickname}님` : '게스트님'} 취향 분석
@@ -222,19 +222,22 @@ const DetailPage = () => {
               <tr className="border-b border-gray-100">
                 <td className="py-2 font-medium w-16">향</td>
                 <td className="py-2">
-                  {whiskyDetail?.tastingNotes.nosing.join(', ')}
+                  {whiskyDetail?.tastingNotes?.nosing?.join(', ') ||
+                    '정보 없음'}
                 </td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-2 font-medium">맛</td>
                 <td className="py-2">
-                  {whiskyDetail?.tastingNotes.tasting.join(', ')}
+                  {whiskyDetail?.tastingNotes?.tasting?.join(', ') ||
+                    '정보 없음'}
                 </td>
               </tr>
               <tr>
                 <td className="py-2 font-medium">피니시</td>
                 <td className="py-2">
-                  {whiskyDetail?.tastingNotes.finish.join(', ')}
+                  {whiskyDetail?.tastingNotes?.finish?.join(', ') ||
+                    '정보 없음'}
                 </td>
               </tr>
             </tbody>
@@ -248,10 +251,10 @@ const DetailPage = () => {
             <div className="flex items-center text-sm">
               <span className="font-bold mr-1">평점</span>
               <span className="mr-1">
-                {whiskyDetail?.recordInfo.ratingAvg.toFixed(1)}
+                {whiskyDetail?.recordInfo?.ratingAvg?.toFixed(1) || '0.0'}
               </span>
               <span className="text-gray-500">
-                ({whiskyDetail?.recordInfo.recordCnt})
+                ({whiskyDetail?.recordInfo?.recordCnt || 0})
               </span>
             </div>
           </div>

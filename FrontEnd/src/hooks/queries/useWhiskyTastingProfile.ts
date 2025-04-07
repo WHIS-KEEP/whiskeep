@@ -1,21 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
-import API from '@/lib/util/axiosInstance';
+import { getWhiskyTastingProfile } from '@/lib/api/whisky';
 import { TastingProfile } from '@/components/ui/TastingRadarChart';
 
-/**
- * 위스키의 테이스팅 프로필을 불러오는 커스텀 훅
- *
- * @param whiskyId 위스키 ID
- * @returns 테이스팅 프로필 데이터와 로딩 상태
- */
 const useWhiskyTastingProfile = (whiskyId?: number) => {
   return useQuery({
     queryKey: ['whiskyTastingProfile', whiskyId],
     queryFn: async () => {
       if (!whiskyId) return null;
 
-      const response = await API.get(`/whiskies/${whiskyId}/score`);
-      const data = response.data;
+      const data = await getWhiskyTastingProfile(whiskyId);
 
       // API 응답 형식에 맞게 데이터 변환
       return {
