@@ -17,6 +17,7 @@ import {
   DialogClose,
   DialogTrigger,
 } from '@/components/shadcn/dialog';
+import { Switch } from '@/components/shadcn/switch';
 
 const RecordPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -228,24 +229,10 @@ const RecordPage: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-m text-gray-500">공개</span>
-              <div className="relative">
-                <input
-                  type="checkbox"
-                  className="sr-only"
-                  checked={isPublic}
-                  onChange={() => setIsPublic(!isPublic)}
-                  id="public-toggle"
-                />
-                <label
-                  htmlFor="public-toggle"
-                  className={`block w-10 h-6 rounded-full transition-colors ${isPublic ? 'bg-wood' : 'bg-primary-50'}`}
-                >
-                  <span
-                    className={`absolute w-4 h-4 bg-white rounded-full top-1 left-1 transition-transform ${isPublic ? 'transform translate-x-4' : ''}`}
-                  />
-                </label>
-              </div>
+              <span className="text-xs text-gray-500">
+                {isPublic ? '공개' : '비공개'}
+              </span>
+              <Switch checked={isPublic} onCheckedChange={setIsPublic} />
             </div>
           </div>
 
