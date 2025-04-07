@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
+import com.whiskeep.common.cache.WhiskyStatusCache;
+import com.whiskeep.common.enumclass.TastingCategory;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.model.TastingComponent;
 
@@ -26,6 +28,7 @@ public class WhiskyScoreConfig {
 	/* TODO 개발환경에서 한번만 실행시키고 주석처리
 	 *   (DB에 적재후엔 안돌아가도록)	*/
 	private final WhiskyRepository whiskyRepository;
+	private final WhiskyStatusCache whiskyStatusCache;
 	private static final double MAX_SCORE = 5.0;
 	private static final int TOP_N = 3;
 
@@ -110,50 +113,49 @@ public class WhiskyScoreConfig {
 		}
 	}
 
-	//위스키 업데이트하기
+	// 위스키 업데이트하기 - 수정 버전
 	private void updateWhiskyScoreWithNormalizedTopN(Whisky whisky) {
-
 		// Nosing 업데이트
 		if (whisky.getNosing() != null) {
-			normalizedTopNScore(whisky.getNosing().getFruity());
-			normalizedTopNScore(whisky.getNosing().getSweet());
-			normalizedTopNScore(whisky.getNosing().getOaky());
-			normalizedTopNScore(whisky.getNosing().getSpicy());
-			normalizedTopNScore(whisky.getNosing().getBriny());
-			normalizedTopNScore(whisky.getNosing().getHerbal());
+			normalizedTopNScore(whisky.getNosing().getFruity(), TastingCategory.FRUITY);
+			normalizedTopNScore(whisky.getNosing().getSweet(), TastingCategory.SWEET);
+			normalizedTopNScore(whisky.getNosing().getOaky(), TastingCategory.OAKY);
+			normalizedTopNScore(whisky.getNosing().getSpicy(), TastingCategory.SPICY);
+			normalizedTopNScore(whisky.getNosing().getBriny(), TastingCategory.BRINY);
+			normalizedTopNScore(whisky.getNosing().getHerbal(), TastingCategory.HERBAL);
 		}
 
 		// Tasting 업데이트
 		if (whisky.getTasting() != null) {
-			normalizedTopNScore(whisky.getTasting().getFruity());
-			normalizedTopNScore(whisky.getTasting().getSweet());
-			normalizedTopNScore(whisky.getTasting().getOaky());
-			normalizedTopNScore(whisky.getTasting().getSpicy());
-			normalizedTopNScore(whisky.getTasting().getBriny());
-			normalizedTopNScore(whisky.getTasting().getHerbal());
+			normalizedTopNScore(whisky.getTasting().getFruity(), TastingCategory.FRUITY);
+			normalizedTopNScore(whisky.getTasting().getSweet(), TastingCategory.SWEET);
+			normalizedTopNScore(whisky.getTasting().getOaky(), TastingCategory.OAKY);
+			normalizedTopNScore(whisky.getTasting().getSpicy(), TastingCategory.SPICY);
+			normalizedTopNScore(whisky.getTasting().getBriny(), TastingCategory.BRINY);
+			normalizedTopNScore(whisky.getTasting().getHerbal(), TastingCategory.HERBAL);
 		}
 
 		// Finish 업데이트
 		if (whisky.getFinish() != null) {
-			normalizedTopNScore(whisky.getFinish().getFruity());
-			normalizedTopNScore(whisky.getFinish().getSweet());
-			normalizedTopNScore(whisky.getFinish().getOaky());
-			normalizedTopNScore(whisky.getFinish().getSpicy());
-			normalizedTopNScore(whisky.getFinish().getBriny());
-			normalizedTopNScore(whisky.getFinish().getHerbal());
+			normalizedTopNScore(whisky.getFinish().getFruity(), TastingCategory.FRUITY);
+			normalizedTopNScore(whisky.getFinish().getSweet(), TastingCategory.SWEET);
+			normalizedTopNScore(whisky.getFinish().getOaky(), TastingCategory.OAKY);
+			normalizedTopNScore(whisky.getFinish().getSpicy(), TastingCategory.SPICY);
+			normalizedTopNScore(whisky.getFinish().getBriny(), TastingCategory.BRINY);
+			normalizedTopNScore(whisky.getFinish().getHerbal(), TastingCategory.HERBAL);
 		}
 	}
 
-	// 정규화된 상위 N개 평균 계산
-	private void normalizedTopNScore(TastingComponent<Map<String, Double>> category) {
-		if (category == null || category.getData() == null || category.getData().isEmpty()) {
+	// 정규화된 상위 N개 평균 계산 - 카테고리 파라미터 추가
+	private void normalizedTopNScore(TastingComponent<Map<String, Double>> component, TastingCategory category) {
+		if (component == null || component.getData() == null || component.getData().isEmpty()) {
 			// 데이터가 없으면 점수 0 설정
-			category.setScore(0.0);
+			component.setScore(0.0);
 			return;
 		}
 
 		// 상위 N개 평균 계산
-		List<Double> values = new ArrayList<>(category.getData().values());
+		List<Double> values = new ArrayList<>(component.getData().values());
 		values.removeIf(Objects::isNull);
 		Collections.sort(values, Collections.reverseOrder());
 
@@ -164,26 +166,16 @@ public class WhiskyScoreConfig {
 		}
 		double topNAvg = topN > 0 ? topNSum / topN : 0.0;
 
-		// 항목 수와 총합에 따른 가중치 계산
-		int totalItems = category.getData().size();
-		double totalSum = category.getData().values().stream()
-			.filter(Objects::nonNull)
-			.mapToDouble(Double::doubleValue)
-			.sum();
+		// WhiskyStatusCache에서 해당 카테고리의 최대값 가져오기
+		double maxValue = whiskyStatusCache.getCategoryMaxMap().getOrDefault(category, 1.0);
 
-		// 항목 수 가중치 (로그 스케일)
-		double itemCountFactor = Math.log(1 + totalItems) / Math.log(10);
+		// 정규화
+		double normalized = topNAvg / maxValue;
 
-		// 총합 가중치 (로그 스케일)
-		double sumFactor = Math.log1p(totalSum) / Math.log1p(15); // 최대 예상 합계를 15로 가정
+		// MemberScoreCalculator와 동일한 스케일링 적용
+		double score = Math.sqrt(normalized) * 5.0 + 0.5;
+		score = Math.min(score, MAX_SCORE);
 
-		// 복합 가중치 (항목 수 40%, 총합 60% 반영)
-		double combinedFactor = (itemCountFactor * 0.4) + (sumFactor * 0.6);
-
-		// 최종 점수 계산
-		double score = Math.min(MAX_SCORE, topNAvg * combinedFactor);
-
-		category.setScore(score);
+		component.setScore(score);
 	}
-
 }
