@@ -1,7 +1,7 @@
 import { cn } from '@/lib/util/utils';
 import { Heart } from 'lucide-react';
 import { Card, CardContent } from '../shadcn/card';
-import defaultBgImg from '../../assets/issac.webp';
+import defaultBgImg from '../../assets/whisky_background.png';
 import { useState, useRef } from 'react';
 import TastingRadarChart, { TastingProfile } from './Tastingchart';
 
@@ -80,7 +80,7 @@ export function Whiskycard({
           <div className="absolute top-0 left-0 w-full h-full rounded-br-[18px] bg-white"></div>
           {/* 명화 레이어 깎기 (clip-path 적용 - 곡선) */}
           <div
-            className="opacity-50 absolute top-0 left-0 w-full h-full overflow-hidden"
+            className="opacity-70 absolute top-0 left-0 w-full h-full overflow-hidden"
             style={{ clipPath: 'inset(0 0 0 0 round 0 0 50px 0)' }}
           >
             <img
@@ -103,7 +103,7 @@ export function Whiskycard({
         </CardContent>
 
         {/* 중앙에 배치할 이미지 */}
-        <div className="absolute top-9/20 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+        <div className="absolute top-8/20 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
           <img
             src={whiskyImage}
             alt="whisky"
@@ -114,14 +114,14 @@ export function Whiskycard({
         {/* 카드 아랫부분 */}
         <div className="h-[100px] bg-primary-dark rounded-b-[18px] flex items-end justify-between p-2">
           <div className="p-1.5 w-full">
-            <div className="space-y-1.5">
+            <div className="space-y-2 mt-1">
               <p className="text-sm max-w-[150px] font-medium leading-none text-white overflow-hidden whitespace-nowrap text-ellipsis">
                 {koName}
               </p>
               <p className="text-xs max-w-[150px] font-medium leading-none text-white overflow-hidden whitespace-nowrap text-ellipsis">
                 {enName}
               </p>
-              <p className="text-xs max-w-[123px] text-white overflow-hidden whitespace-nowrap text-ellipsis">
+              <p className="text-xs max-w-[150px] text-white overflow-hidden whitespace-nowrap text-ellipsis">
                 <span>{type}</span> | <span>{abv} %</span>
               </p>
             </div>

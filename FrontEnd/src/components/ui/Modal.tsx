@@ -482,9 +482,9 @@ function WishlistDialogContent({
                 <Whiskycard
                   className="w-[162px] h-[234px]"
                   koName={item.koName}
-                  // enName={item.enName}
+                  enName={item.enName}
                   abv={item.abv}
-                  // type={item.type}
+                  type={item.type}
                   showLikeButton={false}
                   showChart={false}
                   whiskyImage={item.imageUrl}

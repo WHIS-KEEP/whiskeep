@@ -5,7 +5,7 @@
   position: relative;
   border: 2px solid #fff;
   box-sizing: border-box;
-  color: var(--primary-dark);
+  color: var(--point-red-40);
   border-radius: 20px 20px 4px 4px;
   background: #fff;
   animation: fill 2s linear infinite alternate;
