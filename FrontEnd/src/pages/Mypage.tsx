@@ -21,7 +21,7 @@ import { useMyPageQuery } from '@/hooks/queries/useMyPageQuery';
 import {
   useCheckNicknameMutation,
   useUpdateUserMutation,
-  useDeleteUserMutation
+  useDeleteUserMutation,
 } from '@/hooks/mutations/useMyPageMutations';
 
 const MyPage = () => {
@@ -138,7 +138,7 @@ const MyPage = () => {
   const handleDeleteUser = () => {
     const confirmed = window.confirm('정말 탈퇴하시겠습니까?');
     if (!confirmed) return;
-  
+
     deleteUser(undefined, {
       onSuccess: () => {
         alert('회원탈퇴가 완료되었습니다.');
