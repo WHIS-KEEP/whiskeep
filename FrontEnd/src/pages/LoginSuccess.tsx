@@ -28,10 +28,10 @@ const LoginSuccess = () => {
 
       try {
         // 백엔드의 access-token 발급 API 호출
-        const response = await api.post(`/members/login/success`, { 
-            provider : provider,
-            code: code,
-          });
+        const response = await api.post(`/members/login/success`, {
+          provider: provider,
+          code: code,
+        });
 
         const { accessToken, member } = response.data;
         login(accessToken, member); // Context에 저장
