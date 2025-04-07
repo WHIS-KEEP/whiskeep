@@ -28,9 +28,9 @@ public class MemberService {
 	private final S3Client s3Client;
 	private final PreferenceService preferenceService;
 
-	@Value("${CLOUD_AWS_REGION_STATIC}")
+	@Value("${cloud.aws.region.static}")
 	private String region;
-	@Value("${CLOUD_AWS_S3_BUCKET}")
+	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 
 	// 사용자 정보 조회
