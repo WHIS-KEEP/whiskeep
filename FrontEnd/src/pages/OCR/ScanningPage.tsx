@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { sendImageToOCR } from '@/lib/api/OCR';
 import { handleOcrError, ErrorState } from '@/lib/util/error';
