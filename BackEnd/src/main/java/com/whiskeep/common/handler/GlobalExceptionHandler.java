@@ -17,6 +17,7 @@ import com.whiskeep.common.exception.BaseException;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.FailResponse;
 import com.whiskeep.common.exception.FieldErrorDetail;
+import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.exception.UnauthorizedException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -90,6 +91,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			.status(HttpStatus.UNAUTHORIZED)
 			.body(FailResponse.fail(
 				HttpStatus.UNAUTHORIZED.value(),
+				ex.getMessage()
+			));
+	}
+
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<FailResponse> handleNotFoundException(NotFoundException ex) {
+		return ResponseEntity
+			.status(HttpStatus.NOT_FOUND)
+			.body(FailResponse.fail(
+				HttpStatus.NOT_FOUND.value(),
 				ex.getMessage()
 			));
 	}

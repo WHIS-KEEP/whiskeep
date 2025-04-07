@@ -80,10 +80,18 @@ public class MemberService {
 		return MemberResponseDto.from(member);
 	}
 
+	// 닉네임 중복 여부 확인
 	public boolean isNicknameAvailable(String nickname) {
 		return !memberRepository.existsByNickname(nickname);
 	}
 
-	// 닉네임 중복 여부 확인
+	// 회원 탈퇴
+	@Transactional
+	public void deleteMember(Long memberId) {
+		if (!memberRepository.existsById(memberId)) {
+			throw new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND);
+		}
 
+		memberRepository.deleteById(memberId);
+	}
 }

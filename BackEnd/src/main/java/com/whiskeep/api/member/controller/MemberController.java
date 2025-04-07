@@ -2,6 +2,7 @@ package com.whiskeep.api.member.controller;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -53,5 +54,12 @@ public class MemberController {
 		boolean isAvailable = memberService.isNicknameAvailable(request.nickname());
 
 		return ResponseEntity.ok().body(isAvailable);
+	}
+
+	// 사용자 탈퇴
+	@DeleteMapping
+	public ResponseEntity<Void> deleteMember(@Auth Long memberId) {
+		memberService.deleteMember(memberId);
+		return ResponseEntity.ok().build();
 	}
 }
