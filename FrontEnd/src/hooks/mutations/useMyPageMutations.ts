@@ -33,3 +33,11 @@ export const useCheckNicknameMutation = () => {
       API.post('/members/check-nickname', { nickname }).then((res) => res.data),
   });
 };
+
+export const useDeleteUserMutation = () =>
+  useMutation({
+    mutationFn: async () => {
+      const res = await API.delete('/members'); // @DeleteMapping
+      return res.data;
+    },
+  });

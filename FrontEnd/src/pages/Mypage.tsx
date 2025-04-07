@@ -21,12 +21,14 @@ import { useMyPageQuery } from '@/hooks/queries/useMyPageQuery';
 import {
   useCheckNicknameMutation,
   useUpdateUserMutation,
+  useDeleteUserMutation
 } from '@/hooks/mutations/useMyPageMutations';
 
 const MyPage = () => {
   const { data: userData, isLoading } = useMyPageQuery();
   const { mutate: checkNickname } = useCheckNicknameMutation();
   const { mutate: updateUser, isPending } = useUpdateUserMutation();
+  const { mutate: deleteUser } = useDeleteUserMutation();
 
   const [nicknameEditable, setNicknameEditable] = useState(false);
   const [nicknameChecked, setNicknameChecked] = useState(false);
@@ -131,6 +133,22 @@ const MyPage = () => {
     setNicknameCheckMessage('');
     setSelectedImage(null);
     setChangesMade(false);
+  };
+
+  const handleDeleteUser = () => {
+    const confirmed = window.confirm('정말 탈퇴하시겠습니까?');
+    if (!confirmed) return;
+  
+    deleteUser(undefined, {
+      onSuccess: () => {
+        alert('회원탈퇴가 완료되었습니다.');
+        sessionStorage.clear();
+        navigate('/login');
+      },
+      onError: () => {
+        alert('회원탈퇴 중 오류가 발생했습니다.');
+      },
+    });
   };
 
   if (isLoading || !userData) return <div>로딩 중...</div>;
@@ -285,16 +303,16 @@ const MyPage = () => {
         <div className="mt-auto flex items-center justify-center gap-3 text-sm text-muted-foreground">
           <button
             onClick={() => console.log('로그아웃 클릭')}
-            className="hover:underline hover:text-foreground"
+            className="hover:underline hover:text-foreground cursor-pointer"
           >
             로그아웃
           </button>
           <span className="text-gray-300 dark:text-gray-600">|</span>
           <button
-            onClick={() => console.log('회원 탈퇴 클릭')}
-            className="hover:underline hover:text-foreground"
+            onClick={handleDeleteUser}
+            className="hover:underline hover:text-foreground cursor-pointer"
           >
-            회원 탈퇴하기
+            회원탈퇴
           </button>
         </div>
       </div>

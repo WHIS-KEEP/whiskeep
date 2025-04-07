@@ -205,4 +205,9 @@ public class PreferenceService {
 				whisky.getWhiskyImg()))
 			.toList();
 	}
+
+	@Transactional
+	public void deletePreferenceByMember(Member member) {
+		memberPreferenceRepository.deleteByMember(member);
+	}
 }

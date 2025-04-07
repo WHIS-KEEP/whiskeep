@@ -12,4 +12,6 @@ public interface MemberPreferenceRepository extends JpaRepository<MemberPreferen
 	Boolean existsByMember(Member member);
 
 	Optional<MemberPreference> findByMember(Member member);
+
+	void deleteByMember(Member member);
 }

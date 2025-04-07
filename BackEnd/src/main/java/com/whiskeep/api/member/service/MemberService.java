@@ -26,6 +26,7 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final RecordService recordService;
 	private final S3Client s3Client;
+	private final PreferenceService preferenceService;
 
 	@Value("${CLOUD_AWS_REGION_STATIC}")
 	private String region;
@@ -88,10 +89,12 @@ public class MemberService {
 	// 회원 탈퇴
 	@Transactional
 	public void deleteMember(Long memberId) {
-		if (!memberRepository.existsById(memberId)) {
+		Member member = getCurrentMember(memberId);
+		if (member == null) {
 			throw new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND);
 		}
 
+		preferenceService.deletePreferenceByMember(member);
 		memberRepository.deleteById(memberId);
 	}
 }
