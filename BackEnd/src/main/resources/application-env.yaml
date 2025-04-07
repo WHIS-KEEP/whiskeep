@@ -64,8 +64,8 @@ decorator:
     p6spy:
       enable-logging: ${DECORATOR_DATASOURCE_P6SPY_ENABLE_LOGGING}
 
-
-
+ocr:
+  api-url: ${FAST_API_URL}
 
 ##AWS
 #cloud:
