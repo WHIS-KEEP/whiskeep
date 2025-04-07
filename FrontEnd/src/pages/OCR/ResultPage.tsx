@@ -1,4 +1,3 @@
-import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { JSX } from 'react';
 import { X } from 'lucide-react'; // Assuming you want a close button

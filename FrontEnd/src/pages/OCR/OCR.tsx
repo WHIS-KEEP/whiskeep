@@ -1,4 +1,4 @@
-import React, {
+import {
   useRef,
   useState,
   useEffect,
@@ -98,69 +98,78 @@ function OCRPage(): JSX.Element {
   }, [getUserVideo]);
 
   const handleSendImage = useCallback(
-    (imageDataURL: string) => {
-      if (!imageDataURL) {
+    (file: File) => {
+      if (!file) {
         setError(getImageCaptureErrorMessage('no_image'));
         return;
       }
+
       console.log('OCRPage: Image prepared, navigating to scanning page...');
       setError(null);
-      navigate('/scanning', { state: { imageDataURL } });
+      navigate('/scanning', { state: { imageFile: file } });
     },
     [navigate],
   );
 
-  const captureFrameAndSend = useCallback(() => {
-    if (!isCameraReady || !videoRef.current || !canvasRef.current) {
-      console.warn('캡처 버튼 클릭: 카메라 미준비 또는 ref 없음.');
-      if (!isCameraReady)
-        setError(getImageCaptureErrorMessage('no_camera_ready'));
+// 생략된 import 및 상단 선언 부분은 그대로 유지
+
+const captureFrameAndSend = useCallback(() => {
+  if (!isCameraReady || !videoRef.current || !canvasRef.current) {
+    console.warn('캡처 버튼 클릭: 카메라 미준비 또는 ref 없음.');
+    if (!isCameraReady)
+      setError(getImageCaptureErrorMessage('no_camera_ready'));
+    return;
+  }
+
+  const videoElement = videoRef.current;
+  const canvasElement = canvasRef.current;
+
+  if (
+    videoElement.readyState >= 2 &&
+    videoElement.videoWidth > 0 &&
+    videoElement.videoHeight > 0
+  ) {
+    const context = canvasElement.getContext('2d');
+    if (!context) {
+      setError(getImageCaptureErrorMessage('canvas_context'));
       return;
     }
 
-    const videoElement = videoRef.current;
-    const canvasElement = canvasRef.current;
+    canvasElement.width = videoElement.videoWidth;
+    canvasElement.height = videoElement.videoHeight;
+    context.drawImage(
+      videoElement,
+      0,
+      0,
+      canvasElement.width,
+      canvasElement.height
+    );
 
-    if (
-      videoElement.readyState >= 2 &&
-      videoElement.videoWidth > 0 &&
-      videoElement.videoHeight > 0
-    ) {
-      const context = canvasElement.getContext('2d');
-      if (!context) {
-        setError(getImageCaptureErrorMessage('canvas_context'));
-        return;
-      }
-      canvasElement.width = videoElement.videoWidth;
-      canvasElement.height = videoElement.videoHeight;
-      context.drawImage(
-        videoElement,
-        0,
-        0,
-        canvasElement.width,
-        canvasElement.height,
-      );
-      const imageDataURL: string = canvasElement.toDataURL('image/png');
-      if (imageDataURL.length < 100) {
+    canvasElement.toBlob((blob) => {
+      if (!blob) {
         setError(getImageCaptureErrorMessage('empty_image'));
         return;
       }
-      handleSendImage(imageDataURL);
-    } else {
-      setError(
-        getImageCaptureErrorMessage(
-          'video_state',
-          videoElement.readyState.toString(),
-        ),
-      );
-      console.warn('캡처 실패. 비디오 상태:', {
-        readyState: videoElement.readyState,
-        videoWidth: videoElement.videoWidth,
-        videoHeight: videoElement.videoHeight,
-        error: videoElement.error,
-      });
-    }
-  }, [isCameraReady, handleSendImage]);
+
+      const file = new File([blob], 'captured.png', { type: 'image/png' });
+      handleSendImage(file);
+    }, 'image/png');
+  } else {
+    setError(
+      getImageCaptureErrorMessage(
+        'video_state',
+        videoElement.readyState.toString()
+      )
+    );
+    console.warn('캡처 실패. 비디오 상태:', {
+      readyState: videoElement.readyState,
+      videoWidth: videoElement.videoWidth,
+      videoHeight: videoElement.videoHeight,
+      error: videoElement.error,
+    });
+  }
+}, [isCameraReady, handleSendImage]);
+
 
   const handleFileButtonClick = () => {
     setError(null);
@@ -172,29 +181,23 @@ function OCRPage(): JSX.Element {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = files[0];
+  
       if (!file.type.startsWith('image/')) {
         setError(getImageCaptureErrorMessage('file_format'));
         if (fileInputRef.current) fileInputRef.current.value = '';
         return;
       }
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        if (e.target && typeof e.target.result === 'string') {
-          handleSendImage(e.target.result);
-        } else {
-          setError(getImageCaptureErrorMessage('file_read'));
-        }
-        if (fileInputRef.current) fileInputRef.current.value = '';
-      };
-      reader.onerror = () => {
-        setError(getImageCaptureErrorMessage('file_read'));
-        if (fileInputRef.current) fileInputRef.current.value = '';
-      };
-      reader.readAsDataURL(file);
+  
+      // ✅ 더 이상 FileReader 사용 안 함
+      handleSendImage(file);
+  
+      // 입력 초기화 (같은 이미지 다시 선택 가능하게 하기 위함)
+      if (fileInputRef.current) fileInputRef.current.value = '';
     } else {
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
+  
 
   return (
     <div className="relative w-full h-screen max-w-md mx-auto overflow-hidden bg-black">
