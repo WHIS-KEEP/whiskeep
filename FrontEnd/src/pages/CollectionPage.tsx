@@ -11,6 +11,9 @@ import {
   fetchWhiskyCollection,
   COLLECTION_QUERY_KEY,
 } from '../lib/api/collection';
+import { useNavigate } from 'react-router-dom';
+import whiskyShelf from '../assets/shelf.svg';
+import { FaSquarePlus } from 'react-icons/fa6';
 
 // --- 상수 정의 ---
 const BOTTLES_PER_SHELF = 4; // 선반당 병 개수
@@ -31,6 +34,8 @@ const Collection = () => {
     () => Math.ceil(items.length / BOTTLES_PER_PAGE) || 1,
     [items.length],
   );
+
+  const navigate = useNavigate();
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -146,10 +151,10 @@ const Collection = () => {
               <p className="mt-3 text-gray-700">데이터를 불러오는 중...</p>
             </div>
           ) : (
-            <div className="w-full max-w-5xl lg:max-w-6xl relative px-2">
+            <div className="w-[var(--mobile-width)] relative px-2 pb-30">
               {/* 이미지 슬라이더 영역 */}
               <div
-                className="overflow-hidden w-full relative"
+                className="overflow-hidden relative w-[var(--mobile-width)]"
                 ref={sliderRef}
                 onTouchStart={dragStart}
                 onTouchMove={dragMove}
@@ -188,7 +193,7 @@ const Collection = () => {
                         role="tabpanel"
                         // hidden 속성 제거: translateX로 시각적 제어
                       >
-                        <div className="flex flex-col items-center gap-y-15 px-2 ">
+                        <div className="flex flex-col items-center px-2 ">
                           {/* === 선반 렌더링 === */}
                           {Array.from({ length: SHELVES_PER_PAGE }).map(
                             (_, shelfIndex) => {
@@ -205,23 +210,12 @@ const Collection = () => {
                                 );
 
                               return (
-                                // 선반 컨테이너 (배경 이미지)
                                 <div
                                   key={`shelf-${pageIndex}-${shelfIndex}`}
-                                  className="relative w-full max-w-4xl h-[20vh] bg-contain bg-no-repeat bg-center"
-                                  style={{
-                                    backgroundImage:
-                                      "url('./src/assets/woodshelf.png')",
-                                    backgroundSize: '110% 30%',
-                                  }}
+                                  className="flex flex-col items-center h-[25vh] w-full max-w-[var(--mobile-width)] -mt-4"
                                 >
-                                  {/* === 병 그리드 컨테이너 === */}
-                                  <div
-                                    className={`
-                                      absolute left-0 right-0 grid grid-cols-4 px-2 h-full 
-                                      bottom-15`}
-                                  >
-                                    {/* 선반당 슬롯 개수만큼 반복 */}
+                                  {/* 병 영역 */}
+                                  <div className="grid grid-cols-4 w-full h-[70%] px-2">
                                     {Array.from({
                                       length: BOTTLES_PER_SHELF,
                                     }).map((_, slotIndex) => {
@@ -230,23 +224,36 @@ const Collection = () => {
                                       return (
                                         <div
                                           key={`slot-${pageIndex}-${shelfIndex}-${slotIndex}`}
-                                          className="flex justify-center items-center h-full" // 중앙 정렬
+                                          className="flex justify-center items-end h-full"
                                         >
                                           {bottle ? (
                                             <img
                                               src={bottle.image}
                                               alt={`병 ${bottle.id}`}
-                                              // max-h 값 조절로 선반 내 병 크기 제어
-                                              className="max-h-[80%] object-contain select-none"
+                                              className="w-auto max-w-[80%] max-h-52 object- select-none -mb-8"
                                               draggable="false"
+                                              onClick={() =>
+                                                navigate(
+                                                  `/records/${bottle.id}`,
+                                                )
+                                              }
                                             />
                                           ) : (
-                                            <div className="w-0 h-0"></div> // 빈 슬롯
+                                            <div className="w-0 h-0" />
                                           )}
                                         </div>
                                       );
                                     })}
                                   </div>
+
+                                  {/* 선반 이미지 */}
+                                  <div
+                                    className="w-full h-[30%] bg-no-repeat bg-contain bg-bottom pointer-events-none"
+                                    style={{
+                                      backgroundImage: `url(${whiskyShelf})`,
+                                      backgroundSize: '100% 100%',
+                                    }}
+                                  />
                                 </div>
                               );
                             },
@@ -261,19 +268,20 @@ const Collection = () => {
               {/* === 페이지네이션 표시기 (점) === */}
               {totalPages > 1 && (
                 <div
-                  className="absolute -bottom-10 left-0 right-0 flex justify-center gap-2"
+                  className="absolute bottom-20 left-0 right-0 flex justify-center gap-2 z-10"
                   role="tablist"
                   aria-label="컬렉션 페이지네이션"
                 >
-                  {[...Array(totalPages)].map((_, i) => (
+                  {Array.from({ length: totalPages }).map((_, i) => (
                     <button
                       key={i}
                       onClick={() => goToPage(i)}
-                      className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-colors duration-200 ${
-                        i === currentPage
-                          ? 'bg-black scale-110'
-                          : 'bg-gray-400 hover:bg-gray-500'
-                      }`}
+                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300
+          ${
+            i === currentPage
+              ? 'bg-[#3C3C3C] scale-125' // 현재 페이지는 진한 색 + 크기 증가
+              : 'bg-[#BDBDBD] opacity-70'
+          }`}
                       aria-label={`${i + 1}페이지로 이동`}
                       aria-selected={i === currentPage}
                       role="tab"
@@ -297,6 +305,12 @@ const Collection = () => {
               )}
             </div>
           )}
+          {/* 기록 추가하기 버튼 */}
+          <div className="fixed bottom-24 left-0 right-8 flex justify-end">
+            <button onClick={() => navigate('/records/create')}>
+              <FaSquarePlus size={40} className="text-wood bg-bg" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
