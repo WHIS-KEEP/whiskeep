@@ -100,9 +100,7 @@ const OCR_ENDPOINT = '/ocr';
  * @returns Promise<OcrResponse> - OCR 처리 결과
  * @throws {ApiError} - API 요청 실패 시
  */
-export const sendImageToOCR = async (
-  image: File,
-): Promise<OcrResponse> => {
+export const sendImageToOCR = async (image: File): Promise<OcrResponse> => {
   const formData = new FormData();
   formData.append('image', image);
 

@@ -1,10 +1,4 @@
-import {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-  ChangeEvent,
-} from 'react';
+import { useRef, useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { JSX } from 'react';
 import { X, Image as ImageIcon } from 'lucide-react';
@@ -85,10 +79,11 @@ function OCRPage(): JSX.Element {
   useEffect(() => {
     getUserVideo();
 
+    const videoElement = videoRef.current;
+
     // 컴포넌트가 언마운트될 때 비디오 스트림 정리
     return () => {
       // 참조값을 변수에 저장하여 effect 클린업 함수 내에서 사용
-      const videoElement = videoRef.current;
       if (videoElement && videoElement.srcObject) {
         const stream = videoElement.srcObject as MediaStream;
         stream.getTracks().forEach((track) => track.stop());
@@ -111,65 +106,64 @@ function OCRPage(): JSX.Element {
     [navigate],
   );
 
-// 생략된 import 및 상단 선언 부분은 그대로 유지
+  // 생략된 import 및 상단 선언 부분은 그대로 유지
 
-const captureFrameAndSend = useCallback(() => {
-  if (!isCameraReady || !videoRef.current || !canvasRef.current) {
-    console.warn('캡처 버튼 클릭: 카메라 미준비 또는 ref 없음.');
-    if (!isCameraReady)
-      setError(getImageCaptureErrorMessage('no_camera_ready'));
-    return;
-  }
-
-  const videoElement = videoRef.current;
-  const canvasElement = canvasRef.current;
-
-  if (
-    videoElement.readyState >= 2 &&
-    videoElement.videoWidth > 0 &&
-    videoElement.videoHeight > 0
-  ) {
-    const context = canvasElement.getContext('2d');
-    if (!context) {
-      setError(getImageCaptureErrorMessage('canvas_context'));
+  const captureFrameAndSend = useCallback(() => {
+    if (!isCameraReady || !videoRef.current || !canvasRef.current) {
+      console.warn('캡처 버튼 클릭: 카메라 미준비 또는 ref 없음.');
+      if (!isCameraReady)
+        setError(getImageCaptureErrorMessage('no_camera_ready'));
       return;
     }
 
-    canvasElement.width = videoElement.videoWidth;
-    canvasElement.height = videoElement.videoHeight;
-    context.drawImage(
-      videoElement,
-      0,
-      0,
-      canvasElement.width,
-      canvasElement.height
-    );
+    const videoElement = videoRef.current;
+    const canvasElement = canvasRef.current;
 
-    canvasElement.toBlob((blob) => {
-      if (!blob) {
-        setError(getImageCaptureErrorMessage('empty_image'));
+    if (
+      videoElement.readyState >= 2 &&
+      videoElement.videoWidth > 0 &&
+      videoElement.videoHeight > 0
+    ) {
+      const context = canvasElement.getContext('2d');
+      if (!context) {
+        setError(getImageCaptureErrorMessage('canvas_context'));
         return;
       }
 
-      const file = new File([blob], 'captured.png', { type: 'image/png' });
-      handleSendImage(file);
-    }, 'image/png');
-  } else {
-    setError(
-      getImageCaptureErrorMessage(
-        'video_state',
-        videoElement.readyState.toString()
-      )
-    );
-    console.warn('캡처 실패. 비디오 상태:', {
-      readyState: videoElement.readyState,
-      videoWidth: videoElement.videoWidth,
-      videoHeight: videoElement.videoHeight,
-      error: videoElement.error,
-    });
-  }
-}, [isCameraReady, handleSendImage]);
+      canvasElement.width = videoElement.videoWidth;
+      canvasElement.height = videoElement.videoHeight;
+      context.drawImage(
+        videoElement,
+        0,
+        0,
+        canvasElement.width,
+        canvasElement.height,
+      );
 
+      canvasElement.toBlob((blob) => {
+        if (!blob) {
+          setError(getImageCaptureErrorMessage('empty_image'));
+          return;
+        }
+
+        const file = new File([blob], 'captured.png', { type: 'image/png' });
+        handleSendImage(file);
+      }, 'image/png');
+    } else {
+      setError(
+        getImageCaptureErrorMessage(
+          'video_state',
+          videoElement.readyState.toString(),
+        ),
+      );
+      console.warn('캡처 실패. 비디오 상태:', {
+        readyState: videoElement.readyState,
+        videoWidth: videoElement.videoWidth,
+        videoHeight: videoElement.videoHeight,
+        error: videoElement.error,
+      });
+    }
+  }, [isCameraReady, handleSendImage]);
 
   const handleFileButtonClick = () => {
     setError(null);
@@ -181,23 +175,22 @@ const captureFrameAndSend = useCallback(() => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = files[0];
-  
+
       if (!file.type.startsWith('image/')) {
         setError(getImageCaptureErrorMessage('file_format'));
         if (fileInputRef.current) fileInputRef.current.value = '';
         return;
       }
-  
+
       // ✅ 더 이상 FileReader 사용 안 함
       handleSendImage(file);
-  
+
       // 입력 초기화 (같은 이미지 다시 선택 가능하게 하기 위함)
       if (fileInputRef.current) fileInputRef.current.value = '';
     } else {
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
-  
 
   return (
     <div className="relative w-full h-screen max-w-md mx-auto overflow-hidden bg-black">

@@ -75,7 +75,7 @@ function ScanningPage(): JSX.Element {
         console.log('ScanningPage: Entering catch block. Error:', err);
 
         await new Promise<void>((resolve) =>
-          setTimeout(resolve, MIN_DISPLAY_TIME_MS)
+          setTimeout(resolve, MIN_DISPLAY_TIME_MS),
         );
 
         console.log('ScanningPage: Minimum display time passed.');
