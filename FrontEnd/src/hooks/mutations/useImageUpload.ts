@@ -1,6 +1,5 @@
-// useImageUpload.ts
 import { useState } from 'react';
-import API from '@/lib/util/axiosInstance'; // 실제 경로로 수정
+import API from '@/lib/util/axiosInstance';
 
 const useImageUpload = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
@@ -38,7 +37,13 @@ const useImageUpload = () => {
     }
   };
 
-  return { uploadedImageUrl, isUploading, uploadError, uploadImage };
+  return {
+    uploadedImageUrl,
+    setUploadedImageUrl, // setUploadedImageUrl 추가
+    isUploading,
+    uploadError,
+    uploadImage,
+  };
 };
 
 export default useImageUpload;

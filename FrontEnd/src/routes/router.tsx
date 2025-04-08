@@ -24,6 +24,8 @@ import ScanningPage from '@/pages/OCR/ScanningPage';
 import ResultPage from '@/pages/OCR/ResultPage';
 
 import useMemberStore from '@/store/useMemberStore';
+import RecordDetailPage from '@/pages/RecordDetailPage';
+import RecordEditPage from '@/pages/RecordEditPage';
 
 // 보호된 페이지 (로그인한 사용자만 접근 가능)
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
@@ -134,6 +136,14 @@ const Router = () => {
           <Route path="/ocr" element={<OCR />} />
           <Route path="/result" element={<ResultPage />} />
           <Route path="/scanning" element={<ScanningPage />} />
+          <Route
+            path="/records/:whiskyId/:recordId"
+            element={<RecordDetailPage />}
+          />
+          <Route
+            path="/records/:whiskyId/:recordId/edit"
+            element={<RecordEditPage />}
+          />
         </Route>
       </Route>
 

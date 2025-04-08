@@ -1,88 +1,256 @@
-// src/components/pages/RecordDetailPage.jsx (예시 경로)
-import { Card, CardContent } from '@/components/shadcn/card'; // shadcn/ui 카드 컴포넌트
-import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'; // ScrollArea, ScrollBar 임포트 추가
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { ChevronLeft, Star } from 'lucide-react';
+import {
+  useRecordDetail,
+  useDeleteRecord,
+} from '@/hooks/queries/useRecordQuery';
+import { RecordRouteParams } from '@/types/record';
+import Navbar from '@/components/layout/Navbar';
 
-// 이 컴포넌트는 사용자의 특정 기록(사진 + 텍스트)을 보여주는 페이지입니다.
-// 상위 레이아웃에 의해 하단 네비게이션 바 위의 공간을 채우도록 배치됩니다.
+// 날짜 포맷 함수
+const formatDate = (dateString: string): string => {
+  // 함수 내용 유지
+  if (!dateString) return '';
+
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+
+    return new Intl.DateTimeFormat('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(date);
+  } catch (error) {
+    console.error('날짜 포맷 에러:', error);
+    return dateString;
+  }
+};
+
+const StarRating = ({
+  rating = 0,
+  onChange,
+}: {
+  rating: number;
+  onChange?: (rating: number) => void;
+}) => {
+  return (
+    <div className="flex">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <Star
+          key={star}
+          className={`h-5 w-5 ${
+            star <= rating
+              ? 'fill-[#4f5039] text-[#4f5039]'
+              : 'fill-gray-200 text-gray-200'
+          } ${onChange ? 'cursor-pointer' : ''}`}
+          onClick={() => onChange && onChange(star)}
+        />
+      ))}
+    </div>
+  );
+};
 
 const RecordDetailPage = () => {
-  // --- Placeholder Data ---
-  // 실제 애플리케이션에서는 props나 API 호출을 통해 데이터를 받아옵니다.
-  const record = {
-    imageUrl: '/images/sashimi-uni-suntory.jpg', // 실제 이미지 경로로 변경 필요
-    altText: '회, 우니, 산토리 하이볼 조합 사진',
-    notes: [
-      '회 와 우니 와 산토리 의 조합! 같이 마시니까 너무 잘 어울린다..... 다음에 는 모모 랑 먹어야지! 크크',
-      '오늘 끝',
-    ],
+  // 상태 및 훅 유지
+  const { whiskyId, recordId } = useParams<RecordRouteParams>();
+  const navigate = useNavigate();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const {
+    data: recordDetail,
+    isLoading,
+    isError,
+    error,
+  } = useRecordDetail(whiskyId, recordId);
+
+  const { mutate: deleteRecordMutation, isPending: isDeleting } =
+    useDeleteRecord();
+
+  // 핸들러 함수들 유지
+  const handleGoBack = () => {
+    navigate(-1);
   };
-  // --- End Placeholder Data ---
+
+  const handleEdit = () => {
+    navigate(`/records/${whiskyId}/${recordId}/edit`);
+  };
+
+  const handleDeleteConfirm = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirm(false);
+  };
+
+  const handleDeleteRecord = () => {
+    if (!whiskyId || !recordId) return;
+
+    deleteRecordMutation(
+      { whiskyId, recordId },
+      {
+        onSuccess: () => {
+          navigate(`/records/${whiskyId}`);
+          window.location.reload();
+        },
+        onError: (error) => {
+          console.error('삭제 오류:', error);
+          alert('삭제에 실패했습니다.');
+          setShowDeleteConfirm(false);
+        },
+      },
+    );
+  };
+
+  // 로딩 및 에러 상태 유지
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-white">
+        <p>기록을 불러오는 중...</p>
+      </div>
+    );
+  }
+
+  if (isError || !recordDetail) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-white">
+        <p>기록을 불러오는데 실패했습니다.</p>
+        {error instanceof Error && (
+          <p className="text-sm text-red-500">{error.message}</p>
+        )}
+      </div>
+    );
+  }
 
   return (
-    // ScrollArea 컴포넌트로 교체
-    <ScrollArea className="flex-1 bg-background">
-      {/* 1. 기록 사진 */}
-      {/* 이미지가 화면 너비에 맞게 표시되고 높이는 비율에 맞게 자동 조절 */}
-      <div>
-        <img
-          src={record.imageUrl}
-          alt={record.altText}
-          className="w-full h-auto" // 너비 100%, 높이 자동
-        />
+    <div className="bg-white w-full max-w-[412px] mx-auto h-screen flex flex-col">
+      <div className="flex-1 overflow-auto">
+        <div className="flex flex-col pb-16">
+          {/* 헤더 */}
+          <div className="flex items-center justify-between p-4 border-b sticky top-0 bg-white z-10">
+            <button
+              className="text-gray-700"
+              onClick={handleGoBack}
+              aria-label="뒤로가기"
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <div className="text-center flex-1">
+              {
+                <div className="flex justify-end mr-0">
+                  <button
+                    onClick={handleEdit}
+                    className="font-medium text-gray-500"
+                  >
+                    수정
+                  </button>
+                  <span className="mx-2">|</span>
+                  <button
+                    onClick={handleDeleteConfirm}
+                    className="font-medium text-gray-500"
+                  >
+                    삭제
+                  </button>
+                </div>
+              }
+            </div>
+            <div className="w-0" />
+          </div>
+
+          {/* 삭제 확인 모달 */}
+          {showDeleteConfirm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 w-80 max-w-full">
+                <h3 className="text-lg font-medium mb-3">기록 삭제</h3>
+                <p className="mb-4">이 기록을 정말 삭제하시겠습니까?</p>
+                <div className="flex justify-end gap-3">
+                  <button
+                    onClick={handleDeleteCancel}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700"
+                    disabled={isDeleting}
+                  >
+                    취소
+                  </button>
+                  <button
+                    onClick={handleDeleteRecord}
+                    className="px-4 py-2 bg-[#900000] text-white rounded-md"
+                    disabled={isDeleting}
+                  >
+                    {isDeleting ? '삭제 중...' : '삭제'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 메인 컨텐츠 */}
+          <div className="flex-1">
+            {/* 이미지 섹션 */}
+            <div className="w-full">
+              {recordDetail.recordImg ? (
+                <img
+                  src={recordDetail.recordImg}
+                  alt="기록 이미지"
+                  className="w-full h-[500px] object-cover"
+                />
+              ) : (
+                <div className="w-full h-[300px] bg-gray-200 flex items-center justify-center">
+                  <p className="text-gray-500">이미지가 없습니다</p>
+                </div>
+              )}
+            </div>
+
+            {/* 평점 섹션 */}
+            <div className="p-4 flex items-center justify-between border-b">
+              <div className="flex items-center">
+                <span className="text-gray-700 mr-2">나의 점수</span>
+                <StarRating rating={recordDetail.rating} />
+              </div>
+              <span className="text-gray-500 text-sm">
+                {formatDate(recordDetail.createdAt)}
+              </span>
+            </div>
+
+            {/* 내용 섹션 */}
+            <div className="p-4">
+              <p className="text-lg text-[#2f2f2f]">
+                {recordDetail.content || '내용이 없습니다.'}
+              </p>
+            </div>
+
+            {/* 태그 섹션 */}
+            {recordDetail.tags && (
+              <div className="p-4">
+                <h2 className="text-lg font-medium mb-2">태그</h2>
+                <div className="flex flex-wrap gap-2">
+                  {recordDetail.tags.length > 0 ? (
+                    recordDetail.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="bg-gray-100 px-3 py-1 rounded-full text-sm"
+                      >
+                        #{tag}
+                      </span>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-sm">태그가 없습니다</p>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* 2. 기록 텍스트 */}
-      {/* 사진과 텍스트 카드 사이에 공간을 주기 위해 padding 또는 margin 사용 */}
-      {/* 여기서는 카드 자체에 약간의 상단 마진을 줄 수 있지만, p-4로 감싸서 전체적인 여백 확보 */}
-      <div className="p-4">
-        <Card className="shadow-sm">
-          {' '}
-          {/* 카드 컴포넌트 사용, 약간의 그림자 */}
-          {/* CardContent는 내부에 기본 패딩(보통 p-6)을 가짐, 필요시 p-4 등으로 조정 */}
-          <CardContent className="p-4 space-y-2">
-            {record.notes.map((note, index) => (
-              <p
-                key={index}
-                className="text-sm text-foreground leading-relaxed"
-              >
-                {/* leading-relaxed: 줄 간격 약간 넓게 */}
-                {note}
-              </p>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-      <ScrollBar orientation="vertical" />
-    </ScrollArea> // End of main container
+      {/* 하단 네비게이션 바 */}
+      <Navbar />
+    </div>
   );
 };
 
 export default RecordDetailPage;
-
-// --- 중요: 상위 레이아웃 구조 예시 ---
-// 이 RecordDetailPage 컴포넌트를 사용하는 부모 컴포넌트(예: AppLayout)는
-// 다음과 같은 구조를 가져야 하단바 위에 내용이 올바르게 배치됩니다.
-
-/*
-import BottomNavigationBar from '@/components/layout/BottomNavigationBar'; // 실제 경로로 수정
-import RecordDetailPage from '@/components/pages/RecordDetailPage'; // 실제 경로로 수정
-
-function AppLayout() {
-  return (
-    // 전체 화면 높이를 차지하고, flex-col로 자식 요소(main, nav)를 세로 배치
-    <div className="flex flex-col h-screen">
-
-      // 메인 콘텐츠 영역: flex-1으로 남은 공간을 모두 차지하고,
-      // 내부 콘텐츠가 넘칠 수 있으므로 overflow-y-hidden 또는 내용 컴포넌트에서 스크롤 처리
-      <main className="flex-1 overflow-y-hidden">
-         // RecordDetailPage가 ScrollArea로 대체되었으므로 여기서 스크롤 처리
-         <RecordDetailPage />
-      </main>
-
-      // 하단 네비게이션 바: 고정된 높이를 가짐
-      <BottomNavigationBar />
-
-    </div>
-  );
-}
-*/
