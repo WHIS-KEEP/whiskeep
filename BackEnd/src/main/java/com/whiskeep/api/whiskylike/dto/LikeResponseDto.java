@@ -5,6 +5,8 @@ import com.whiskeep.api.whisky.domain.Whisky;
 public record LikeResponseDto(
 	Long whiskyId,
 	String koName,
+	String enName,
+	String type,
 	String whiskyImg,
 	Double abv
 ) {
@@ -12,6 +14,8 @@ public record LikeResponseDto(
 		return new LikeResponseDto(
 			whisky.getWhiskyId(),
 			whisky.getKoName(),
+			whisky.getEnName(),
+			whisky.getType(),
 			whisky.getWhiskyImg(),
 			whisky.getAbv()
 		);
