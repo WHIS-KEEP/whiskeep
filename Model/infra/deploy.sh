@@ -1,2 +1,2 @@
 cd "$(dirname "$0")"
-docker compose up -d
+docker compose up -d --build

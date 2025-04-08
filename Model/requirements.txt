@@ -2,6 +2,7 @@
 # pip install -r requirements.txt
 fastapi
 uvicorn
+python-multipart
 easyocr
 numpy
 opencv-python
