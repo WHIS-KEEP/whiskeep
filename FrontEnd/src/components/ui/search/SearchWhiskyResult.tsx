@@ -59,7 +59,7 @@ export default function WhiskyListResult({
       observer.unobserve(target);
       observer.disconnect();
     };
-  }, [items.length, hasNext, shouldScrollToTops]);
+  }, [items.length, hasNext, shouldScrollToTops, onLoadMore]);
 
   return (
     <ScrollArea

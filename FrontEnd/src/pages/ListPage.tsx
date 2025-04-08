@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Whisky } from '@/types/search';
 import SearchWhisky from '@/components/ui/search/SearchWhisky';
@@ -32,46 +32,49 @@ const ListPage = () => {
 
   const { mutate } = useSearchMutation();
 
-  const fetchWhiskies = (isLoadMore = false) => {
-    if (isLoadMore && isLoadingMore) {
-      return;
-    }
+  const fetchWhiskies = useCallback(
+    (isLoadMore = false) => {
+      if (isLoadMore && isLoadingMore) {
+        return;
+      }
 
-    if (isLoadMore) setIsLoadingMore(true);
+      if (isLoadMore) setIsLoadingMore(true);
 
-    const payload = {
-      keyword: filters.keyword,
-      pageSize: 10,
-      searchAfter: isLoadMore ? searchAfter : ([] as []),
-      sortField: filters.sortField,
-      desc: filters.desc,
-      age: filters.age,
-      type: filters.type,
-    };
+      const payload = {
+        keyword: filters.keyword,
+        pageSize: 10,
+        searchAfter: isLoadMore ? searchAfter : ([] as []),
+        sortField: filters.sortField,
+        desc: filters.desc,
+        age: filters.age,
+        type: filters.type,
+      };
 
-    mutate(payload, {
-      onSuccess: (res) => {
-        if (isLoadMore) {
-          setWhiskies((prev) => [...prev, ...res.whiskies]);
-        } else {
-          setWhiskies(res.whiskies);
-        }
+      mutate(payload, {
+        onSuccess: (res) => {
+          if (isLoadMore) {
+            setWhiskies((prev) => [...prev, ...res.whiskies]);
+          } else {
+            setWhiskies(res.whiskies);
+          }
 
-        setSearchAfter(res.nextSearchAfter);
-        setHasNext(res.hasNext);
+          setSearchAfter(res.nextSearchAfter);
+          setHasNext(res.hasNext);
 
-        if (isLoadMore) setIsLoadingMore(false);
-      },
-      onError: () => {
-        if (isLoadMore) setIsLoadingMore(false);
-      },
-    });
-  };
+          if (isLoadMore) setIsLoadingMore(false);
+        },
+        onError: () => {
+          if (isLoadMore) setIsLoadingMore(false);
+        },
+      });
+    },
+    [filters, searchAfter, isLoadingMore, mutate],
+  );
 
   useEffect(() => {
     fetchWhiskies(false);
     setShouldScrollToTop(true);
-  }, [filters]);
+  }, [filters, fetchWhiskies]);
 
   const handleSelect = (id: number) => {
     setSelectedId(id);
