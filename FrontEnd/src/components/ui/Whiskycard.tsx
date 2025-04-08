@@ -1,9 +1,13 @@
 import { cn } from '@/lib/util/utils';
-import { Heart } from 'lucide-react';
+// import { Heart } from 'lucide-react'; // 제거
 import { Card, CardContent } from '../shadcn/card';
-import defaultBgImg from '../../assets/whisky_background.png';
-import { useState, useRef } from 'react';
+import defaultBgImg from '../../assets/issac.webp';
+import defaultWhiskyImg from '../../assets/sample.png';
+// import { useState, useRef, useEffect } from 'react'; // 제거 (또는 다른 곳에서 사용하지 않으면)
 import TastingRadarChart, { TastingProfile } from './Tastingchart';
+// import { useCheckLikeStatus } from '@/hooks/mutations/useCheckLikeMutation'; // 제거
+// import { useToggleLikeMutation } from '@/hooks/mutations/useToggleLikeMutation'; // 제거
+import LikeButton from './Heart'; // 새로 만든 컴포넌트 임포트
 
 // Props 인터페이스 정의
 interface WhiskycardProps extends React.ComponentProps<typeof Card> {
@@ -33,36 +37,16 @@ export function Whiskycard({
   tastingProfile,
   ...props
 }: WhiskycardProps) {
-  const [isLiked, setIsLiked] = useState(false); // 찜 상태를 관리하는 state
-  const heartRef = useRef<SVGSVGElement>(null); // Heart 컴포넌트에 대한 ref
-
-  const handleLikeClick = () => {
-    if (heartRef.current) {
-      if (!isLiked) {
-        heartRef.current.classList.add('animate-like-in');
-        heartRef.current.classList.remove('animate-like-out');
-      } else {
-        heartRef.current.classList.add('animate-like-out');
-        heartRef.current.classList.remove('animate-like-in');
-      }
-      setTimeout(() => {
-        if (heartRef.current) {
-          heartRef.current.classList.remove('animate-like-in');
-          heartRef.current.classList.remove('animate-like-out');
-        }
-        setIsLiked(!isLiked); // 찜 상태를 토글 (애니메이션 후)
-      }, 150); // 애니메이션 지속 시간과 동일하게 설정
-    } else {
-      setIsLiked(!isLiked); // ref가 없을 경우 즉시 상태 토글
-    }
-  };
-
-  const heartClasses = cn(
-    'size-3 text-red-500 transition-all duration-150', // Transition for color change
-  );
-
-  const buttonClasses =
-    'absolute bottom-2 right-2 object-cover object-top w-[24px] h-[24px] rounded-full flex justify-center items-center bg-white shadow-lg border-none outline-none cursor-pointer';
+  // --- 기존 하트 관련 로직 제거 ---
+  // const { isLiked, isLoading } = useCheckLikeStatus(whiskyId);
+  // const toggleLikeMutation = useToggleLikeMutation();
+  // const [localLiked, setLocalLiked] = useState(false);
+  // const heartRef = useRef<SVGSVGElement>(null);
+  // useEffect(() => { ... }, [isLiked, isLoading]);
+  // const handleLikeClick = (e: React.MouseEvent) => { ... };
+  // const heartClasses = cn(...);
+  // const buttonClasses = ...;
+  // --- 제거 완료 ---
 
   return (
     <div className="relative">
@@ -137,9 +121,8 @@ export function Whiskycard({
               {/* 찜 상태에 따라 fill 색상 변경 */}
             </button>
           )}
-        </div>
-      </Card>
-    </div>
+      </div>
+    </Card>
   );
 }
 
