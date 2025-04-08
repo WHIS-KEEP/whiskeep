@@ -9,6 +9,7 @@ export interface LikedWhisky {
   koName: string;
   whiskyImg: string;
   abv: number;
+  type: string;
 }
 
 // GET /likes 요청의 응답 타입
@@ -22,19 +23,16 @@ export const LIKES_QUERY_KEY = 'likes';
 // 찜한 위스키 목록 전체 가져오기
 export const fetchLikedWhiskies = async (): Promise<LikedWhisky[]> => {
   try {
-    // 실제 응답 구조인 LikesApiResponse 타입으로 응답을 기대
     const response = await API.get<LikesApiResponse>('/likes');
-    // 실제 응답 구조에 맞게 'whiskies' 배열을 직접 반환
-    // response.data 와 response.data.whiskies 가 존재하는지 확인 (안전성)
+
     if (response.data && Array.isArray(response.data.whiskies)) {
       return response.data.whiskies;
     } else {
-      // 예상치 못한 구조일 경우 경고 로그 및 빈 배열 반환
       return [];
     }
   } catch (error: unknown) {
     handleError(error);
-    return []; // 에러 발생 시 빈 배열 반환
+    return [];
   }
 };
 

@@ -95,10 +95,12 @@ export function LikePage() {
                   onClick={() => handleSelectItem(item.whiskyId)}
                   koName={item.koName}
                   abv={item.abv}
+                  type={item.type}
                   whiskyImage={item.whiskyImg ? item.whiskyImg : undefined}
                   whiskyId={item.whiskyId}
                   showLikeButton={true}
                   showChart={false}
+                  forceLikedState={true}
                 />
               ))}
             </div>
