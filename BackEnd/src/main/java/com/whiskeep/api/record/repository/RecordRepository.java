@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -33,7 +34,7 @@ public interface RecordRepository extends JpaRepository<Record, Long>, RecordCus
 
 	List<Record> findAllByMember(Member member);
 
-	List<MyRecordResponseDto.RecordSummaryDto> findAllByMemberAndWhisky(Member member, Whisky whisky);
+	List<MyRecordResponseDto.RecordSummaryDto> findAllByMemberAndWhisky(Member member, Whisky whisky, Sort sort);
 
 	@Query("SELECT DISTINCT r. whisky.whiskyId FROM Record r WHERE r.member = :member")
 	Set<Long> findDistinctWhiskyIdsByMember(@Param("member") Member member);
