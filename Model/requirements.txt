@@ -1,12 +1,10 @@
 # 터미널에서 아래 명령어 실행하여 한 번에 설치
 # pip install -r requirements.txt
-
 fastapi
 uvicorn
 easyocr
 numpy
 opencv-python
-pillow
-matplotlib
 fuzzywuzzy
-python-multipart
+scikit-learn
+python-Levenshtein
