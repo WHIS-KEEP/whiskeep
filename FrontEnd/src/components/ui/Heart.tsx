@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Heart } from 'lucide-react';
 import { cn } from '@/lib/util/utils';
-import { useCheckLikeStatus } from '@/hooks/mutations/useCheckLikeMutation';
+import { useCheckLikeStatus } from '@/hooks/queries/useGetLikeQueries';
 import { useToggleLikeMutation } from '@/hooks/mutations/useToggleLikeMutation';
 
 interface HeartButtonProps {
