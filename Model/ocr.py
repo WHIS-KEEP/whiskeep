@@ -101,8 +101,6 @@ def correct_ocr_results(ocr_results, whisky_results, threshold=80):
         else:
             corrected_results.append(word)
 
-        print(word, best_match, score)
-
     return corrected_results
 
 
@@ -136,7 +134,7 @@ async def perform_ocr(file: UploadFile = File(...)):
 
         # 4. OCR 결과가 정상적으로 추출되었는지 확인
         if not filtered_texts:
-            return JSONResponse(content={"error": "OCR 결과가 없습니다."}, status_code=400)
+            return JSONResponse(content={"error": "이미지를 읽는 데 실패했습니다."}, status_code=406)
 
         """OCR 결과 리스트 전처리"""
         # 공백을 기준으로 단어 분리
