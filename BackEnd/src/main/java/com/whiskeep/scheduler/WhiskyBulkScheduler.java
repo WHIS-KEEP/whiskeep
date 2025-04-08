@@ -61,6 +61,7 @@ public class WhiskyBulkScheduler {
 					.enName(w.getEnName())
 					.koName(w.getKoName())
 					.type(w.getType())
+					.abv(w.getAbv())
 					.age(w.getAge())
 					.avgRating(stats.avgRating())
 					.recordCounts(stats.count())

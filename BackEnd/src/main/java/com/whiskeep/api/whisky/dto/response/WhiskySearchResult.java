@@ -6,6 +6,7 @@ public record WhiskySearchResult(
 	String enName,
 	String koName,
 	String type,
+	Double abv,
 	Integer age,
 	Double avgRating,
 	Integer recordCounts,

@@ -30,6 +30,7 @@ import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import co.elastic.clients.elasticsearch.core.search.SourceConfig;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -113,9 +114,8 @@ public class WhiskyService {
 				return b;
 			}))
 			.sort(s -> s.field(f -> f.field(sortField).order(sortOrder)))
-			.sort(s -> s.field(f -> f.field("whiskyId"))) // tie breaker
-			.source(src -> src.filter(f -> f
-				.includes("whiskyId", "enName", "koName", "type", "age", "avgRating", "recordCounts", "whiskyImg")));
+			.sort(s -> s.field(f -> f.field("whiskyId")))
+			.source(new SourceConfig.Builder().fetch(true).build());
 
 		// searchAfter 값이 있을 경우 FieldValue 리스트로 변환하여 설정
 		if (request.searchAfter() != null && !request.searchAfter().isEmpty()) {
@@ -135,8 +135,8 @@ public class WhiskyService {
 				doc.getWhiskyId(),
 				doc.getEnName(),
 				doc.getKoName(),
-				// enum 변환 후 enum 이름(SINGLE_MALT 등)으로 반환
-				WhiskyType.fromDbValue(doc.getType()).name(),
+				doc.getType(),
+				doc.getAbv(),
 				doc.getAge(),
 				doc.getAvgRating(),
 				doc.getRecordCounts(),

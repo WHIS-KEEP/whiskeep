@@ -21,6 +21,7 @@ public class WhiskyDocument {
 	private String enName;
 	private String koName;
 	private String type;
+	private Double abv;
 	private Integer age;
 	private Double avgRating;
 	private Integer recordCounts;
