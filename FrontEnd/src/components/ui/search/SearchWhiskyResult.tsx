@@ -63,7 +63,7 @@ export default function WhiskyListResult({
 
   return (
     <ScrollArea
-      className="w-full max-w-[ var(--mobile-width)] overflow-y-auto pb-10"
+      className="w-full max-w-[var(--mobile-width)] overflow-y-auto pb-10"
       style={{ height: '100%' }}
       viewportRef={viewportRef}
     >
@@ -74,13 +74,14 @@ export default function WhiskyListResult({
               key={item.whiskyId}
               variant="outline"
               className={cn(
-                'w-full h-auto justify-start rounded-[14px] p-3 text-left flex items-center gap-4 overflow-hidden', // 👈 여기 w-full, overflow-hidden
+                'w-full max-w-full h-auto p-3 text-left flex items-center gap-4 rounded-[14px] overflow-hidden',
                 selectedId === item.whiskyId
                   ? 'border-2 border-primary ring-1 ring-primary bg-accent'
                   : 'border hover:bg-accent/50',
               )}
               onClick={() => onSelect(item.whiskyId)}
             >
+              {/* 이미지 영역 */}
               <div className="w-14 h-18 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-lg overflow-hidden">
                 <img
                   src={item.whiskyImg || exampleImage}
@@ -90,8 +91,7 @@ export default function WhiskyListResult({
               </div>
 
               {/* 텍스트 영역 */}
-              <div className="flex-grow flex flex-col justify-center gap-1 min-w-0">
-                {' '}
+              <div className="flex-grow flex flex-col justify-center gap-1 min-w-0 overflow-hidden">
                 <p className="font-semibold text-base leading-normal truncate">
                   {item.koName}
                 </p>
