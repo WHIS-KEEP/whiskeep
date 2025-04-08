@@ -259,70 +259,72 @@ const DetailPage = () => {
             </div>
           </div>
 
-{/* 리뷰 목록 */}
-<div className="space-y-8 pb-14">
-  {isRecordsLoading ? (
-    <p className="text-center py-4">리뷰를 불러오는 중...</p>
-  ) : recordsData?.records && recordsData.records.length > 0 ? (
-    recordsData.records.map((record) => (
-      <div
-        key={record.recordId}
-        className="border-b border-gray-200 pb-6"
-      >
-        <div className="flex justify-between">
-          {/* 왼쪽: 프로필, 이름, 내용, 별점 */}
-          <div className="flex-1 pr-3">
-            {/* 프로필 및 이름 */}
-            <div className="flex items-center mb-3">
-              <div className="w-10 h-10 bg-rose-200 rounded-full flex items-center justify-center text-white text-sm mr-3">
-                {record.profileImage ? (
-                  <img
-                    src={record.profileImage}
-                    alt={record.nickname}
-                    className="w-full h-full rounded-full object-cover"
-                  />
-                ) : (
-                  record.nickname.charAt(0)
-                )}
-              </div>
-              <div>
-                <div className="text-medium font-medium">
-                  {record.nickname}
-                </div>
-                <div className="text-sm text-gray-500">
-                  {formatDateTime(record.createdAt)}
-                </div>
-              </div>
-            </div>
+          {/* 리뷰 목록 */}
+          <div className="space-y-8 pb-14">
+            {isRecordsLoading ? (
+              <p className="text-center py-4">리뷰를 불러오는 중...</p>
+            ) : recordsData?.records && recordsData.records.length > 0 ? (
+              recordsData.records.map((record) => (
+                <div
+                  key={record.recordId}
+                  className="border-b border-gray-200 pb-6"
+                >
+                  <div className="flex justify-between">
+                    {/* 왼쪽: 프로필, 이름, 내용, 별점 */}
+                    <div className="flex-1 pr-3">
+                      {/* 프로필 및 이름 */}
+                      <div className="flex items-center mb-3">
+                        <div className="w-10 h-10 bg-rose-200 rounded-full flex items-center justify-center text-white text-sm mr-3">
+                          {record.profileImage ? (
+                            <img
+                              src={record.profileImage}
+                              alt={record.nickname}
+                              className="w-full h-full rounded-full object-cover"
+                            />
+                          ) : (
+                            record.nickname.charAt(0)
+                          )}
+                        </div>
+                        <div>
+                          <div className="text-medium font-medium">
+                            {record.nickname}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {formatDateTime(record.createdAt)}
+                          </div>
+                        </div>
+                      </div>
 
-            {/* 내용 */}
-            <p className="text-base mb-3 text-left">
-              {record.content}
-            </p>
+                      {/* 내용 */}
+                      <p className="text-base mb-3 text-left">
+                        {record.content}
+                      </p>
 
-            {/* 별점을 내용 아래, 왼쪽으로 배치 */}
-            <div>
-              <StarRating rating={record.rating} />
-            </div>
+                      {/* 별점을 내용 아래, 왼쪽으로 배치 */}
+                      <div>
+                        <StarRating rating={record.rating} />
+                      </div>
+                    </div>
+
+                    {/* 오른쪽: 이미지*/}
+                    {record.recordImg && (
+                      <div className="ml-3">
+                        <img
+                          src={record.recordImg}
+                          alt="리뷰 이미지"
+                          className="w-28 h-28 object-cover rounded-md"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center py-8 mt-10 text-gray-500">
+                공개된 기록이 없습니다
+              </p>
+            )}
           </div>
-
-          {/* 오른쪽: 이미지*/}
-          {record.recordImg && (
-            <div className="ml-3">
-              <img
-                src={record.recordImg}
-                alt="리뷰 이미지"
-                className="w-28 h-28 object-cover rounded-md"
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    ))
-  ) : (
-    <p className="text-center py-8 mt-10 text-gray-500">공개된 기록이 없습니다</p>
-  )}
-</div>
 
           {/* 페이지네이션 */}
           {recordsData?.pageInfo && recordsData.pageInfo.totalPages > 0 && (
