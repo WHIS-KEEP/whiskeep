@@ -30,13 +30,7 @@ def clean_whisky_keywords(words):
     # 길이가 1 또는 2인 단어 제거
     filtered_words = [word for word in filtering_num if len(word) > 2]
 
-    # 빈 문자열 제거
-    # filtered_words = [word for word in filtering_num if word]
-
-    # 중복 제거 후 정렬
-    unique_keywords = sorted(set(filtered_words))
-
-    return unique_keywords
+    return filtered_words
 
 # 위스키 브랜드 키워드 리스트 만들기 (OCR 결과와 유사도 비교 후 대체용)
 keyword_list = []
@@ -50,10 +44,11 @@ with open("cleaned_whisky_keywords.txt", "r", encoding="utf-8") as file:
         for word in words:
             keyword_list.append(word)
 keyword_list = clean_whisky_keywords(keyword_list)
+keyword_list = sorted(set(keyword_list))
 
 # cleaned_whisy_keywords.txt에 있는 위스키 리스트
 whisky_list = []
-with open("cleaned_whisky_keywords.txt", 'r', encoding='utf-8') as f:
+with open("unique_whisky_name_list.txt", 'r', encoding='utf-8') as f:
     for line in f:
         line = line.strip()  # 앞뒤 공백 제거
         if line:  # 빈 줄 무시

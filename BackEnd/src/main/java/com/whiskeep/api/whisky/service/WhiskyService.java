@@ -203,4 +203,10 @@ public class WhiskyService {
 			whisky.getFinish()
 		);
 	}
+
+	// 위스키명으로 위스키 조회하기
+	@Transactional(readOnly = true)
+	public List<Whisky> getWhiskiesByEnName(String enName) {
+		return whiskyRepository.findAllByEnName(enName);
+	}
 }

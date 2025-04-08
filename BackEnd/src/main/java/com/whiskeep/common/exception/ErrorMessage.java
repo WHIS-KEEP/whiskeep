@@ -42,11 +42,15 @@ public enum ErrorMessage {
 	PREFERENCE_NOT_FOUND("요청한 설문조사 정보를 찾을 수 없습니다"),
 	PROFILE_NOT_FOUND("요청한 위스키 맛 정보를 찾을 수 없습니다."),
 
+	// 406 Not Acceptable 관련 오류
+	OCR_RESULT_NOT_FOUND("OCR 결과 텍스트를 찾을 수 없습니다."),
+
 	// 500 Internal Server Error 관련 오류
 	INTERNAL_SERVER_ERROR("서버 내부 오류가 발생했습니다"),
 	DATABASE_ERROR("데이터베이스 오류가 발생했습니다"),
 	UNEXPECTED_ERROR("예상치 못한 오류가 발생했습니다"),
-	NICKNAME_GENERATION_FAILED("고유한 닉네임을 생성하지 못했습니다");
+	NICKNAME_GENERATION_FAILED("고유한 닉네임을 생성하지 못했습니다"),
+	OCR_FAILED_ERROR("OCR 처리 중 오류가 발생했습니다.");
 
 	private final String message;
 }
