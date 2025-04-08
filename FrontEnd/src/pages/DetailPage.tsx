@@ -38,13 +38,10 @@ const DetailPage = () => {
     page,
   );
 
-
   // 뒤로가기 핸들러
   const handleGoBack = () => {
     window.history.back();
   };
-
-
 
   // 페이지 변경
   const handlePageChange = (newPage: number) => {
@@ -137,19 +134,19 @@ const DetailPage = () => {
         </div>
 
         <div className="p-4">
-        <div className="flex justify-between items-start">
-  <h1 className="text-xl font-bold">{whiskyDetail?.koName}</h1>
-  <div className="mr-3 mt-1">
-    <HeartButton
-      whiskyId={whiskyIdNumber}
-      forceLikedState={whiskyDetail?.isLiked}
-      className="static" // absolute 대신 static 사용
-      buttonClassName="bg-transparent shadow-none border-none"
-      heartIconClassName="size-5"
-    />
-  </div>
-</div>
-            <p className="text-gray-600 text-sm">{whiskyDetail?.enName}</p>
+          <div className="flex justify-between items-start">
+            <h1 className="text-xl font-bold">{whiskyDetail?.koName}</h1>
+            <div className="mr-3 mt-1">
+              <HeartButton
+                whiskyId={whiskyIdNumber}
+                forceLikedState={whiskyDetail?.isLiked}
+                className="static" // absolute 대신 static 사용
+                buttonClassName="bg-transparent shadow-none border-none"
+                heartIconClassName="size-5"
+              />
+            </div>
+          </div>
+          <p className="text-gray-600 text-sm">{whiskyDetail?.enName}</p>
         </div>
         {/* 테이스팅 프로필 섹션 */}
         <div className="p-4 border-b border-gray-200">

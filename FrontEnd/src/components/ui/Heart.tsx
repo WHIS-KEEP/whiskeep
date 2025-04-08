@@ -31,8 +31,6 @@ export function HeartButton({
     e.stopPropagation();
     if (!whiskyId || toggleLikeMutation.isPending || isLoading) return;
 
-
-  
     toggleLikeMutation.mutate({
       whiskyId,
       isCurrentlyLiked: isLiked,
@@ -40,8 +38,8 @@ export function HeartButton({
   };
 
   const defaultButtonClasses =
-  'static object-cover object-top w-[24px] h-[24px] flex justify-center items-center bg-transparent shadow-none border-none outline-none cursor-pointer';
-const defaultHeartIconClasses = 'size-5 transition-all duration-150';
+    'static object-cover object-top w-[24px] h-[24px] flex justify-center items-center bg-transparent shadow-none border-none outline-none cursor-pointer';
+  const defaultHeartIconClasses = 'size-5 transition-all duration-150';
 
   return (
     <button
