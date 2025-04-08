@@ -10,7 +10,7 @@ function Navbar() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className="w-full bg-white border-t border-primary-30 shadow-lg z-50">
+    <div className="fixed bottom-0 left-0 right-0 w-full bg-white border-t border-primary-30 shadow-lg z-50">
       <div
         className="flex items-center justify-between px-6"
         style={{ paddingTop: '0.6rem', paddingBottom: '0.6rem' }}

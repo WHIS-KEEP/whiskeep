@@ -57,15 +57,15 @@ export default function WhiskyRecommendationSection() {
   };
 
   return (
-    <div className="flex flex-col gap-3 items-center">
-      <h2 className="font-semibold text-lg mb-2 px-4 self-start">
+    <div className="flex flex-col gap-4 items-center w-full px-4 md:px-6">
+      <h2 className="font-semibold text-lg md:text-xl lg:text-2xl mb-2 self-start">
         <span>{user?.nickname}</span> 님을 위한 위스키 추천
       </h2>
 
-      <div className="relative w-full flex justify-center items-center overflow-hidden h-[300px]">
+      <div className="relative w-full flex justify-center items-center overflow-hidden h-[350px] md:h-[400px] lg:h-[450px]">
         {/* 왼쪽 버튼 */}
         <button
-          className="absolute left-1 z-10 p-2 bg-white rounded-full shadow-2xl"
+          className="absolute left-2 md:left-4 z-10 p-2 md:p-3 bg-white rounded-full shadow-2xl"
           onClick={handlePrev}
         >
           ◀
@@ -112,7 +112,7 @@ export default function WhiskyRecommendationSection() {
                   abv={whisky.abv}
                   showLikeButton={false}
                   showChart={false}
-                  className="w-[200px]"
+                  className="w-[240px] sm:w-[280px] md:w-[320px]"
                 />
               </div>
             );
@@ -121,7 +121,7 @@ export default function WhiskyRecommendationSection() {
 
         {/* 오른쪽 버튼 */}
         <button
-          className="absolute right-1 z-10 p-2 bg-white rounded-full shadow-2xl"
+          className="absolute right-2 md:right-4 z-10 p-2 md:p-3 bg-white rounded-full shadow-2xl"
           onClick={handleNext}
         >
           ▶

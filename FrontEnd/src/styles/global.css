@@ -71,8 +71,10 @@
     'Pretendard Variable', Inter, system-ui, Avenir, Helvetica, Arial,
     sans-serif;
   --app-background-color: var(--bg-muted);
-  --mobile-width: 412px;
-  --mobile-height: 915px;
+  
+  /* 반응형으로 수정된 변수 */
+  --mobile-max-width: 768px; /* 최대 너비 (태블릿) */
+  --mobile-min-width: 320px; /* 최소 너비 (작은 모바일) */
 }
 
 @theme inline {
@@ -139,8 +141,8 @@
   --color-background-color: var(--background-color);
   --color-font-family: var(--font-family);
   --color-app-background-color: var(--app-background-color);
-  --color-mobile-width: var(--mobile-width);
-  --color-mobile-height: var(--mobile-height);
+  --color-mobile-max-width: var(--mobile-max-width);
+  --color-mobile-min-width: var(--mobile-min-width);
 }
 
 /* 프리텐다드 폰트 */
@@ -211,18 +213,21 @@ body {
   align-items: flex-start;
 }
 
+/* 반응형으로 수정된 mobile-container */
 .mobile-container {
-  width: var(--mobile-width);
-  height: var(--mobile-height);
-  max-width: var(--mobile-width);
+  width: 100%;
+  max-width: var(--mobile-max-width);
+  min-width: var(--mobile-min-width);
+  height: auto; /* 높이를 자동으로 설정 */
   background-color: var(--bg-muted);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden; /* 모든 방향의 오버플로우를 숨김 */
+  overflow: hidden;
   position: relative;
   margin: 0 auto;
-  display: flex; /* 플렉스박스 유지 */
-  flex-direction: column; /* 수직 방향 유지 */
+  display: flex;
+  flex-direction: column;
 }
+
 /* 링크 스타일 */
 a {
   font-weight: 500;
@@ -235,8 +240,21 @@ a:hover {
 
 /* 반응형 기본 설정 */
 @media (max-width: 768px) {
+  .mobile-container {
+    width: 100%;
+    max-width: 100%;
+    box-shadow: none; /* 모바일에서는 그림자 제거 */
+  }
+  
   html {
     font-size: 14px;
+  }
+}
+
+/* 추가 미디어 쿼리 */
+@media (max-width: 480px) {
+  html {
+    font-size: 13px; /* 더 작은 화면에서 폰트 크기 추가 조정 */
   }
 }
 

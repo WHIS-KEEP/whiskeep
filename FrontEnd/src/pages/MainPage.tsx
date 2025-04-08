@@ -3,7 +3,7 @@ import WhiskyRecommendationSection from '@/components/ui/main/WhiskyRecommendati
 
 const MainPage = () => {
   return (
-    <div className="flex flex-col gap-10 bg-white w-[412px] mx-auto rounded-t-[18px]  py-8">
+    <div className="flex flex-col gap-10 bg-white w-full max-w-2xl mx-auto rounded-t-[18px] py-8 px-4 mb-16">
       <QuickRecordSection />
       <WhiskyRecommendationSection />
     </div>
