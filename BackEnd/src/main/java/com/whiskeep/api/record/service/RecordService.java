@@ -203,13 +203,27 @@ public class RecordService {
 			throw new BadRequestException(ErrorMessage.FILE_NOT_INCLUDED);
 		}
 
+		// 파일 타입 검증 추가
+		String contentType = multipartFile.getContentType();
+		if (contentType == null || !contentType.startsWith("image/")) {
+			// HEIC 파일 특별 처리
+			String originalFileName = multipartFile.getOriginalFilename();
+			if (originalFileName != null
+				&& (originalFileName.toLowerCase().endsWith(".heic") || originalFileName.toLowerCase().endsWith(
+				".heif"))) {
+				contentType = "image/heic";  // HEIC 파일은 그대로 업로드
+			} else {
+				throw new BadRequestException(ErrorMessage.INVALID_FILE_FORMAT);
+			}
+		}
+
 		String fileName = createFileName(multipartFile.getOriginalFilename(), dirName);
 
 		try {
 			PutObjectRequest putObjectRequest = PutObjectRequest.builder()
 				.bucket(bucket)
 				.key(fileName)
-				.contentType(multipartFile.getContentType())
+				.contentType(contentType)
 				.build();
 
 			s3Client.putObject(putObjectRequest,
@@ -219,6 +233,7 @@ public class RecordService {
 
 			return new RecordImageResponseDto(fileUrl);
 		} catch (Exception e) {
+			log.error("파일 업로드 실패: ", e);  // 로그 추가
 			throw new BadRequestException(ErrorMessage.FILE_UPLOAD_FAIL);
 		}
 	}

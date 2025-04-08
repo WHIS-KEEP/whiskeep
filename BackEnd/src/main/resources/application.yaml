@@ -25,3 +25,16 @@ spring:
   # Object Mapper 타임존 설정
   jackson:
     time-zone: Asia/Seoul
+
+# 커스텀 파일 설정 - 이미지 파일만 허용
+custom:
+  file:
+    allowed-mime-types:
+      - image/jpeg
+      - image/png
+      - image/gif
+      - image/bmp
+      - image/webp
+      - image/svg+xml
+      - image/heic
+      - image/heif

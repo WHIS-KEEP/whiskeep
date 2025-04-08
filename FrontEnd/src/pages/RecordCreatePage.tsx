@@ -84,38 +84,38 @@ const RecordPage: React.FC = () => {
 
   // 기록 등록 처리
   // 기록 등록 처리
-const handleSubmit = async () => {
-  // 별점 검증 추가
-  if (rating === 0) {
-    alert('별점을 선택해주세요.');
-    return;
-  }
+  const handleSubmit = async () => {
+    // 별점 검증 추가
+    if (rating === 0) {
+      alert('별점을 선택해주세요.');
+      return;
+    }
 
-  if (!content.trim()) {
-    alert('기록 내용을 입력해주세요.');
-    return;
-  }
+    if (!content.trim()) {
+      alert('기록 내용을 입력해주세요.');
+      return;
+    }
 
-  if (!selectedWhisky) {
-    alert('위스키를 선택해주세요.');
-    return;
-  }
+    if (!selectedWhisky) {
+      alert('위스키를 선택해주세요.');
+      return;
+    }
 
-  const success = await submitRecord({
-    whiskyId: selectedWhisky.id,
-    rating,
-    content,
-    isPublic,
-    recordImg: uploadedImageUrl, // imagePath 대신 recordImg로 변경
-  });
+    const success = await submitRecord({
+      whiskyId: selectedWhisky.id,
+      rating,
+      content,
+      isPublic,
+      recordImg: uploadedImageUrl, // imagePath 대신 recordImg로 변경
+    });
 
-  if (success) {
-    alert('기록이 성공적으로 등록되었습니다.');
-    window.location.href = '/collection';
-  } else if (submitError) {
-    alert(submitError.message || '기록 등록에 실패했습니다.');
-  }
-};
+    if (success) {
+      alert('기록이 성공적으로 등록되었습니다.');
+      window.location.href = '/collection';
+    } else if (submitError) {
+      alert(submitError.message || '기록 등록에 실패했습니다.');
+    }
+  };
 
   // 로딩 상태 통합
   const isLoading = isUploading || isSubmitting;

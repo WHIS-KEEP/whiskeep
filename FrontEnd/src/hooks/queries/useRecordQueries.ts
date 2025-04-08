@@ -13,7 +13,6 @@ export const useWhiskyRecord = (whiskyId: number) => {
   });
 };
 
-
 export const useWhiskyRecordString = (whiskyId: string | undefined) => {
   return useQuery<MyRecordResponse, Error>({
     queryKey: ['whiskyRecord', whiskyId],
@@ -24,4 +23,3 @@ export const useWhiskyRecordString = (whiskyId: string | undefined) => {
     enabled: !!whiskyId, // whiskyId가 존재할 때만 쿼리 실행
   });
 };
-

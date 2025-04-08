@@ -1,29 +1,30 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Star } from 'lucide-react';
-import { useRecordDetail, useDeleteRecord } from '@/hooks/queries/useRecordQuery';
+import {
+  useRecordDetail,
+  useDeleteRecord,
+} from '@/hooks/queries/useRecordQuery';
 import { RecordRouteParams } from '@/types/record';
 import { useWhiskyRecordString } from '@/hooks/queries/useRecordQueries';
 import Navbar from '@/components/layout/Navbar';
-
-
 
 // 날짜 포맷 함수
 const formatDate = (dateString: string): string => {
   // 함수 내용 유지
   if (!dateString) return '';
-  
+
   try {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString;
-    
+
     return new Intl.DateTimeFormat('ko-KR', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: false,
     }).format(date);
   } catch (error) {
     console.error('날짜 포맷 에러:', error);
@@ -31,9 +32,9 @@ const formatDate = (dateString: string): string => {
   }
 };
 
-const StarRating = ({ 
+const StarRating = ({
   rating = 0,
-  onChange
+  onChange,
 }: {
   rating: number;
   onChange?: (rating: number) => void;
@@ -61,18 +62,16 @@ const RecordDetailPage = () => {
   const navigate = useNavigate();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const { data: whiskyRecordData } = useWhiskyRecordString(whiskyId);
-  
-  const { 
-    data: recordDetail, 
-    isLoading, 
-    isError, 
-    error 
+
+  const {
+    data: recordDetail,
+    isLoading,
+    isError,
+    error,
   } = useRecordDetail(whiskyId, recordId);
-  
-  const { 
-    mutate: deleteRecordMutation, 
-    isPending: isDeleting 
-  } = useDeleteRecord();
+
+  const { mutate: deleteRecordMutation, isPending: isDeleting } =
+    useDeleteRecord();
 
   // 핸들러 함수들 유지
   const handleGoBack = () => {
@@ -82,34 +81,41 @@ const RecordDetailPage = () => {
   const handleEdit = () => {
     navigate(`/records/${whiskyId}/${recordId}/edit`);
   };
-  
+
   const handleDeleteConfirm = () => {
     setShowDeleteConfirm(true);
   };
-  
+
   const handleDeleteCancel = () => {
     setShowDeleteConfirm(false);
   };
-  
+
   const handleDeleteRecord = async () => {
     if (!whiskyId || !recordId) return;
-    
-    deleteRecordMutation({ whiskyId, recordId }, {
-      onSuccess: async () => {
-        // data의 recordList가 null이거나 길이가 1(지금 삭제한 항목)이면 collection으로 이동
-        if (!whiskyRecordData || !whiskyRecordData.recordList || whiskyRecordData.recordList.length <= 1) {
-          navigate('/collection');
-        } else {
-          navigate(`/records/${whiskyId}`);
-          window.location.reload();
-        }
+
+    deleteRecordMutation(
+      { whiskyId, recordId },
+      {
+        onSuccess: async () => {
+          // data의 recordList가 null이거나 길이가 1(지금 삭제한 항목)이면 collection으로 이동
+          if (
+            !whiskyRecordData ||
+            !whiskyRecordData.recordList ||
+            whiskyRecordData.recordList.length <= 1
+          ) {
+            navigate('/collection');
+          } else {
+            navigate(`/records/${whiskyId}`);
+            window.location.reload();
+          }
+        },
+        onError: (error) => {
+          console.error('삭제 오류:', error);
+          alert('삭제에 실패했습니다.');
+          setShowDeleteConfirm(false);
+        },
       },
-      onError: (error) => {
-        console.error('삭제 오류:', error);
-        alert('삭제에 실패했습니다.');
-        setShowDeleteConfirm(false);
-      }
-    });
+    );
   };
 
   // 로딩 및 에러 상태 유지
@@ -125,14 +131,15 @@ const RecordDetailPage = () => {
     return (
       <div className="flex justify-center items-center h-screen bg-white">
         <p>기록을 불러오는데 실패했습니다.</p>
-        {error instanceof Error && <p className="text-sm text-red-500">{error.message}</p>}
+        {error instanceof Error && (
+          <p className="text-sm text-red-500">{error.message}</p>
+        )}
       </div>
     );
   }
 
   return (
     <div className="bg-white w-full max-w-[412px] mx-auto h-screen flex flex-col">
-     
       <div className="flex-1 overflow-auto">
         <div className="flex flex-col pb-16">
           {/* 헤더 */}
@@ -145,17 +152,23 @@ const RecordDetailPage = () => {
               <ChevronLeft size={24} />
             </button>
             <div className="text-center flex-1">
-            { (
-            <div className="flex justify-end mr-0">
-              <button onClick={handleEdit} className="font-medium text-gray-500">
-                수정
-              </button>
-              <span className="mx-2">|</span>
-              <button onClick={handleDeleteConfirm} className="font-medium text-gray-500">
-                삭제
-              </button>
-            </div>
-          )}
+              {
+                <div className="flex justify-end mr-0">
+                  <button
+                    onClick={handleEdit}
+                    className="font-medium text-gray-500"
+                  >
+                    수정
+                  </button>
+                  <span className="mx-2">|</span>
+                  <button
+                    onClick={handleDeleteConfirm}
+                    className="font-medium text-gray-500"
+                  >
+                    삭제
+                  </button>
+                </div>
+              }
             </div>
             <div className="w-0" />
           </div>
@@ -167,14 +180,14 @@ const RecordDetailPage = () => {
                 <h3 className="text-lg font-medium mb-3">기록 삭제</h3>
                 <p className="mb-4">이 기록을 정말 삭제하시겠습니까?</p>
                 <div className="flex justify-end gap-3">
-                  <button 
+                  <button
                     onClick={handleDeleteCancel}
                     className="px-4 py-2 border border-gray-300 rounded-md text-gray-700"
                     disabled={isDeleting}
                   >
                     취소
                   </button>
-                  <button 
+                  <button
                     onClick={handleDeleteRecord}
                     className="px-4 py-2 bg-[#900000] text-white rounded-md"
                     disabled={isDeleting}
@@ -228,7 +241,10 @@ const RecordDetailPage = () => {
                 <div className="flex flex-wrap gap-2">
                   {recordDetail.tags.length > 0 ? (
                     recordDetail.tags.map((tag, index) => (
-                      <span key={index} className="bg-gray-100 px-3 py-1 rounded-full text-sm">
+                      <span
+                        key={index}
+                        className="bg-gray-100 px-3 py-1 rounded-full text-sm"
+                      >
                         #{tag}
                       </span>
                     ))
