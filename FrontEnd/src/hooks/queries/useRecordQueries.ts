@@ -12,3 +12,16 @@ export const useWhiskyRecord = (whiskyId: number) => {
     retry: 1, // 실패 시 1회 재시도
   });
 };
+
+
+export const useWhiskyRecordString = (whiskyId: string | undefined) => {
+  return useQuery<MyRecordResponse, Error>({
+    queryKey: ['whiskyRecord', whiskyId],
+    queryFn: () => {
+      if (!whiskyId) throw new Error('whiskyId is required');
+      return getWhiskyRecord(whiskyId);
+    },
+    enabled: !!whiskyId, // whiskyId가 존재할 때만 쿼리 실행
+  });
+};
+
