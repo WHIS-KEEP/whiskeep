@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  fastapi-ocr:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    container_name: fastapi-ocr
+    ports:
+      - "8000:8000"
+    restart: always
+    networks:
+      - whiskeep-net
+
+networks:
+  whiskeep-net:
+    external: true
