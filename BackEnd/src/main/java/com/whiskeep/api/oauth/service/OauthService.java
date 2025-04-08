@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.dto.MemberResponseDto;
 import com.whiskeep.api.member.repository.MemberRepository;
-import com.whiskeep.api.member.service.MemberService;
 import com.whiskeep.api.oauth.dto.LoginRequestDto;
 import com.whiskeep.api.oauth.dto.OAuthProviderInfo;
 import com.whiskeep.api.oauth.dto.OAuthProviderTokenConfig;
@@ -36,7 +35,6 @@ public class OauthService {
 	private final MemberRepository memberRepository;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final NicknameGenerator nicknameGenerator;
-	private final MemberService memberService;
 	private final RedisUtil redisUtil;
 
 	private static final String RESPONSE_TYPE = "code";
@@ -190,7 +188,7 @@ public class OauthService {
 		do {
 			nickname = nicknameGenerator.generateNickname();
 			attempt++;
-		} while (!memberService.isNicknameAvailable(nickname) && attempt < maxAttempts);
+		} while (memberRepository.existsByNickname(nickname) && attempt < maxAttempts);
 
 		if (attempt == maxAttempts) {
 			throw new InternalServerException(ErrorMessage.NICKNAME_GENERATION_FAILED);
