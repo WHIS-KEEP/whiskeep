@@ -66,7 +66,7 @@ export default function WhiskyRecommendationSection() {
         {/* 왼쪽 버튼 */}
         <button
           className="absolute left-1 z-10 p-2 bg-white rounded-full shadow-2xl"
-          onClick={handleNext}
+          onClick={handlePrev}
         >
           ◀
         </button>
@@ -122,7 +122,7 @@ export default function WhiskyRecommendationSection() {
         {/* 오른쪽 버튼 */}
         <button
           className="absolute right-1 z-10 p-2 bg-white rounded-full shadow-2xl"
-          onClick={handlePrev}
+          onClick={handleNext}
         >
           ▶
         </button>

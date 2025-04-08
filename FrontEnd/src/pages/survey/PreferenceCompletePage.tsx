@@ -34,9 +34,7 @@ const PreferenceCompletePage = () => {
         setUserScore(score);
 
         // 추천 리스트 refetch (데이터 자체는 사용하지 않고 성공 여부만 확인)
-        const { data, isSuccess } = await refetchRecommend();
-        console.log('data', data);
-        console.log('추천 결과:', isSuccess);
+        const { isSuccess } = await refetchRecommend();
 
         // 추천 성공이면 main 페이지로 이동
         if (isSuccess) {

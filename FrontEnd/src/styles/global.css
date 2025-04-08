@@ -265,10 +265,12 @@ a:hover {
 }
 
 /* scrollbar 숨기기 */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-.scrollbar-hide {
-  -ms-overflow-style: none; /* IE/Edge */
+* {
+  /* 모든 요소에 대해 스크롤바 숨김 */
   scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }

@@ -11,7 +11,6 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from '@/components/shadcn/toggle/toggle-group';
-import { Whisky } from '@/types/search';
 import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
@@ -24,15 +23,19 @@ const sortOptions: { value: SortCriteria; label: string }[] = [
 ];
 
 interface Props {
-  data: Whisky[];
   onSelect?: (id: number) => void;
-  onFilteredChange?: (items: Whisky[]) => void;
+  onFilteredChange?: (filters: {
+    keyword?: string;
+    age?: number;
+    type?: string;
+    sortField: string;
+    desc: boolean;
+  }) => void;
   height?: string;
   hideTitle?: boolean;
 }
 
 export default function SearchWhiskyContent({
-  data,
   onFilteredChange,
   hideTitle = false,
 }: Props) {
@@ -53,57 +56,28 @@ export default function SearchWhiskyContent({
     { value: 'OTHER', label: '기타' },
   ];
 
-  const processedResults = data
-    .filter((item) => {
-      const term = searchTerm.toLowerCase();
-
-      const nameMatch =
-        item.koName.toLowerCase().includes(term) ||
-        (item.enName?.toLowerCase().includes(term) ?? false);
-
-      const ageMatch =
-        !selectedAgeRange ||
-        (() => {
-          const age = item.age ?? 0;
-          const selectedAgeRangeNum = Number(selectedAgeRange);
-
-          switch (selectedAgeRangeNum) {
-            case 10:
-              return age <= 10;
-            case 12:
-              return age > 10 && age <= 12;
-            case 15:
-              return age > 12 && age <= 15;
-            case 18:
-              return age > 15 && age <= 18;
-            case 19:
-              return age > 18;
-            default:
-              return true;
-          }
-        })();
-
-      const typeMatch = !selectedType || item.type === selectedType;
-
-      return nameMatch && ageMatch && typeMatch;
-    })
-    .sort((a, b) => {
-      switch (sortCriteria) {
-        case 'rating_desc':
-          return b.avgRating - a.avgRating;
-        case 'rating_asc':
-          return a.avgRating - b.avgRating;
-        case 'records_desc':
-          return b.recordCounts - a.recordCounts;
-        default:
-          return 0;
-      }
-    });
-
   useEffect(() => {
-    // processedResults가 실제로 바뀐 경우에만
     if (onFilteredChange) {
-      onFilteredChange(processedResults);
+      const [sortField, desc] = (() => {
+        switch (sortCriteria) {
+          case 'rating_desc':
+            return ['avgRating', true];
+          case 'rating_asc':
+            return ['avgRating', false];
+          case 'records_desc':
+            return ['recordCounts', true];
+          default:
+            return ['avgRating', true];
+        }
+      })();
+
+      onFilteredChange({
+        keyword: searchTerm,
+        age: selectedAgeRange ? Number(selectedAgeRange) : undefined,
+        type: selectedType ?? undefined,
+        sortField,
+        desc,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, selectedAgeRange, selectedType, sortCriteria]);
@@ -150,7 +124,7 @@ export default function SearchWhiskyContent({
               <ToggleGroupItem
                 key={age}
                 value={age}
-                className="rounded-[20px] h-8 px-5 text-base data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border"
+                className="rounded-[20px] h-8 px-5 text-base data-[state=on]:bg-point-red-40 data-[state=on]:text-primary-foreground border"
               >
                 {age === '10'
                   ? '10년산 이하'
@@ -195,7 +169,7 @@ export default function SearchWhiskyContent({
               <ToggleGroupItem
                 key={value}
                 value={value}
-                className="rounded-[20px] h-8 px-5 text-base data-[state=on]:bg-primary-50 data-[state=on]:text-primary-foreground border"
+                className="rounded-[20px] h-8 px-5 text-base data-[state=on]:bg-point-red-40 data-[state=on]:text-primary-foreground border"
               >
                 {label}
               </ToggleGroupItem>
@@ -211,7 +185,7 @@ export default function SearchWhiskyContent({
           value={sortCriteria}
           onValueChange={(v) => setSortCriteria(v as SortCriteria)}
         >
-          <SelectTrigger className="w-auto h-5 text-sm px-1 border-none focus:ring-0 bg-transparent text-muted-foreground hover:text-foreground">
+          <SelectTrigger className="w-auto h-5 text-sm px-1 border-none shadow-none text-muted-foreground ">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
