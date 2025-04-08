@@ -1,22 +1,22 @@
 // src/pages/LikePage.tsx
 // Renders at /like (라우터 설정 필요)
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { cn } from '@/lib/util/utils';
 import { Button } from '@/components/shadcn/Button';
-import Whiskycard from '@/components/ui/Whiskycard';
-import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 import {
   fetchLikedWhiskies,
   LIKES_QUERY_KEY,
   LikedWhisky,
 } from '@/lib/api/like';
+import LikedWhiskyList from '@/components/ui/LikedWhiskyList';
 
 export function LikePage() {
   const navigate = useNavigate();
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [selectedItemIdForNav, setSelectedItemIdForNav] = useState<
+    number | null
+  >(null);
 
   // React Query를 사용하여 찜 목록 데이터 가져오기
   const { data, isLoading, isError } = useQuery({
@@ -32,16 +32,17 @@ export function LikePage() {
   // data가 undefined, null이거나 배열이 아닐 경우 빈 배열로 처리
   const likedItems: LikedWhisky[] = Array.isArray(data) ? data : [];
 
-  const handleSelectItem = (whiskyId: number) => {
-    setSelectedItemId((prevId) => {
-      // 이미 선택된 아이템을 다시 클릭하면 상세 기록 페이지로 이동
-      if (prevId === whiskyId) {
-        navigate(`/records/${whiskyId}`);
-        return null; // 선택 해제
-      }
-      // 새로운 아이템 선택
-      return whiskyId;
-    });
+  // LikedWhiskyList 클릭 콜백 핸들러 (LikePage의 동작 구현)
+  const handlePageItemClick = (item: LikedWhisky) => {
+    // 이전에 선택된 아이템과 같은 아이템을 클릭했는지 확인
+    if (selectedItemIdForNav === item.whiskyId) {
+      // 재클릭 시 상세 페이지로 이동
+      navigate(`/records/${item.whiskyId}`);
+      setSelectedItemIdForNav(null); // 이동 후 선택 상태 해제
+    } else {
+      // 처음 클릭 시 선택 상태 업데이트
+      setSelectedItemIdForNav(item.whiskyId);
+    }
   };
 
   // 로딩 상태 처리
@@ -73,41 +74,10 @@ export function LikePage() {
       <h1 className="mb-4 text-xl pl-1 font-semibold pb-2 flex-shrink-0">
         나의 찜 리스트
       </h1>
-      <ScrollArea className="w-full flex-grow rounded-md">
-        {likedItems.length === 0 ? (
-          <div className="flex items-center justify-center h-full pb-10 text-gray-500">
-            찜한 위스키가 없습니다.
-          </div>
-        ) : (
-          <div className="flex justify-center">
-            <div className="grid grid-cols-2 gap-x-4 gap-y-6 w-full pt-2 px-2 pb-10">
-              {likedItems.map((item) => (
-                <Whiskycard
-                  key={item.whiskyId}
-                  className={cn(
-                    'cursor-pointer',
-                    'h-auto w-[180px] rounded-[18px] border p-0', // 기본 레이아웃 및 테두리
-                    'transition-transform duration-200 ease-in-out', // transform(scale)에 대한 transition 추가
-                    selectedItemId === item.whiskyId
-                      ? 'scale-105 shadow-lg' // 선택 시 확대 및 그림자 효과
-                      : 'scale-100 border-gray-200 hover:shadow-md', // 기본 상태 및 호버 시 약간의 그림자
-                  )}
-                  onClick={() => handleSelectItem(item.whiskyId)}
-                  koName={item.koName}
-                  abv={item.abv}
-                  type={item.type}
-                  whiskyImage={item.whiskyImg ? item.whiskyImg : undefined}
-                  whiskyId={item.whiskyId}
-                  showLikeButton={true}
-                  showChart={false}
-                  forceLikedState={true}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-        <ScrollBar orientation="vertical" />
-      </ScrollArea>
+      <LikedWhiskyList
+        likedItems={likedItems}
+        onItemClick={handlePageItemClick} // 페이지 동작을 정의한 핸들러 전달
+      />
     </div>
   );
 }

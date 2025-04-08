@@ -14,10 +14,11 @@ import exampleImage from '@/assets/example.png';
 import { cn } from '@/lib/util/utils';
 import useRecordSubmit from '@/hooks/mutations/useRecordSubmit';
 
+// 백엔드 API 응답 타입에 맞게 인터페이스 수정
 interface WhiskyData {
-  id: number;
+  whiskyId: number;
   koName: string;
-  imageUrl?: string;
+  whiskyImg?: string;
 }
 
 const StarRating = ({
@@ -57,9 +58,26 @@ export default function QuickRecordSection() {
 
   const handleCloseDialog = () => dialogCloseRef.current?.click();
 
+  // 백엔드 API 응답 형식 조정 -> 수정된 Dialog prop 타입에 맞게 수정
+  const handleWhiskySelect = (whisky: {
+    id: number;
+    koName: string;
+    imageUrl: string | undefined;
+  }) => {
+    // 내부 상태 업데이트 시 필요한 데이터 형식으로 변환 (기존 WhiskyData 사용)
+    const whiskyData: WhiskyData = {
+      whiskyId: whisky.id, // 'id' -> 'whiskyId'
+      koName: whisky.koName,
+      whiskyImg: whisky.imageUrl, // 'imageUrl' -> 'whiskyImg'
+    };
+    setSelectedWhisky(whiskyData);
+    // 선택 후 다이얼로그 자동 닫기
+    handleCloseDialog();
+  };
+
   const handleSubmitRecord = async () => {
     const isSuccess = await submitRecord({
-      whiskyId: selectedWhisky?.id,
+      whiskyId: selectedWhisky?.whiskyId,
       rating: userRating,
       content: comment,
       isPublic,
@@ -91,9 +109,9 @@ export default function QuickRecordSection() {
         <div className="flex items-center gap-3 border border-transparent hover:border-gray-200 p-2 rounded-lg transition-colors">
           <DialogTrigger asChild>
             <div className="flex items-center justify-center h-16 w-12 bg-gray-300 text-white rounded-lg shrink-0 overflow-hidden cursor-pointer">
-              {selectedWhisky?.imageUrl ? (
+              {selectedWhisky?.whiskyImg ? (
                 <img
-                  src={selectedWhisky.imageUrl}
+                  src={selectedWhisky.whiskyImg}
                   alt="whisky"
                   className="w-full h-full object-contain"
                   onError={(e) => (e.currentTarget.src = exampleImage)}
@@ -142,7 +160,7 @@ export default function QuickRecordSection() {
               <Plus size={32} />
             </div>
           }
-          onWhiskySelect={setSelectedWhisky}
+          onWhiskySelect={handleWhiskySelect}
           onClose={handleCloseDialog}
         />
         <DialogClose asChild>

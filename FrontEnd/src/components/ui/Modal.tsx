@@ -13,7 +13,6 @@ import {
 // --- Shadcn UI Components ---
 import Btn from '@/components/ui/Btn';
 import { Button } from '@/components/shadcn/Button';
-import Whiskycard from '@/components/ui/Whiskycard';
 import { Input } from '@/components/shadcn/input';
 import {
   Select,
@@ -29,23 +28,32 @@ import {
 } from '@/components/shadcn/toggle/toggle-group';
 import { Star } from 'lucide-react';
 import { Search } from 'lucide-react';
+import LikedWhiskyList from '@/components/ui/LikedWhiskyList';
+import { useQuery } from '@tanstack/react-query';
+import {
+  fetchLikedWhiskies,
+  LIKES_QUERY_KEY,
+  LikedWhisky,
+} from '@/lib/api/like';
+import { useSearchWhiskies } from '@/hooks/queries/useWhiskyQueries';
+import { WhiskySearchResult as ApiWhiskySearchResult } from '@/lib/api/whisky';
 
 // 이미지 임포트 추가
 import exampleImage from '../../assets/example.png';
 
 // --- TypeScript Interface ---
-interface WhiskySearchResult {
-  id: number;
-  koName: string;
-  enName?: string;
-  type: string;
-  country: string;
-  avgRating: number;
-  recordCounts: number;
-  popularity?: number;
-  imageUrl?: string;
-  abv?: number;
-}
+// interface WhiskySearchResult {
+//   id: number;
+//   koName: string;
+//   enName?: string;
+//   type: string;
+//   country: string;
+//   avgRating: number;
+//   recordCounts: number;
+//   popularity?: number;
+//   imageUrl?: string;
+//   abv?: number;
+// }
 
 // --- Types, Interfaces, Titles ---
 type PromptVariant = 'regist' | 'edit';
@@ -58,115 +66,6 @@ const variantTitles: Record<PromptVariant, string> = {
   regist: '오늘의 한 잔 위스키가\n등록되지 않았습니다.\n위스키를 등록해주세요.',
   edit: '위스키를 변경해주세요.',
 };
-
-// --- Dummy Data ---
-const dummySearchResults: WhiskySearchResult[] = [
-  // ... (Keep dummy data as is) ...
-  {
-    id: 1257,
-    koName: '아드베그 5년산',
-    enName: 'Ardbeg 5 Years',
-    type: 'Single Malt Whisky',
-    country: 'Scotland',
-    avgRating: 4.7,
-    recordCounts: 1250,
-    popularity: 300,
-    imageUrl:
-      'https://whiskeep-bucket.s3.amazonaws.com/whisky/images/Ardbeg_5_Years.png',
-    abv: 47,
-  },
-  {
-    id: 2,
-    koName: '발렌타인 40년산',
-    enName: "Ballantine's 40 Years Old",
-    type: '블렌디드',
-    country: '스코틀랜드',
-    avgRating: 4.9,
-    recordCounts: 850,
-    popularity: 500,
-    imageUrl: exampleImage,
-    abv: 70,
-  },
-  {
-    id: 3,
-    koName: '버팔로 트레이스',
-    enName: 'Buffalo Trace',
-    type: '버번',
-    country: '미국',
-    avgRating: 4.2,
-    recordCounts: 55,
-    popularity: 120,
-    imageUrl: exampleImage,
-    abv: 45,
-  },
-  {
-    id: 4,
-    koName: '글렌피딕 15년',
-    enName: 'Glenfiddich 15 Year Old',
-    type: '싱글 몰트',
-    country: '스코틀랜드',
-    avgRating: 4.6,
-    recordCounts: 90,
-    popularity: 250,
-    imageUrl: exampleImage,
-    abv: 40,
-  },
-  {
-    id: 5,
-    koName: '레드브레스트 12년 CS',
-    enName: 'Redbreast 12 Year Old Cask Strength',
-    type: '싱글 팟 스틸',
-    country: '아일랜드',
-    avgRating: 4.8,
-    recordCounts: 70,
-    popularity: 180,
-    imageUrl: exampleImage,
-    abv: 58.6,
-  },
-  ...Array.from({ length: 15 }, (_, i) => ({
-    id: i + 6,
-    koName: `더미 위스키 ${i + 6}`,
-    enName: `Dummy Whisky ${i + 6}`,
-    type: i % 3 === 0 ? '싱글 몰트' : i % 3 === 1 ? '버번' : '블렌디드',
-    country:
-      i % 4 === 0
-        ? '스코틀랜드'
-        : i % 4 === 1
-          ? '미국'
-          : i % 4 === 2
-            ? '아일랜드'
-            : '캐나다',
-    avgRating: Math.round((3.0 + Math.random() * 1.9) * 10) / 10,
-    recordCounts: Math.floor(Math.random() * 1500),
-    popularity: Math.floor(Math.random() * 500),
-    imageUrl: exampleImage,
-    abv: Math.floor(40 + Math.random() * 10),
-  })),
-];
-
-interface WishlistItem {
-  id: number;
-  koName: string;
-  enName: string;
-  type: string;
-  abv: number;
-  // rating: number;
-  imageUrl: string;
-}
-
-const dummyWishlistItems: WishlistItem[] = Array.from(
-  { length: 15 },
-  (_, i) => ({
-    id: i + 1,
-    koName: 'dummy whisky',
-    enName: 'dummy whisky',
-    type: 'single malt',
-    abv: 40,
-    // rating: Math.round((4 + Math.random()) * 10) / 10,
-    imageUrl: exampleImage,
-  }),
-);
-// --- End Data & Types ---
 
 // --- Sorting Criteria Definition ---
 type SortCriteria =
@@ -197,8 +96,20 @@ function SearchWhiskyDialogContent({
   const [sortCriteria, setSortCriteria] =
     useState<SortCriteria>('popularity_desc');
 
+  // API 호출로 대체
+  const {
+    data: searchResponse,
+    isLoading,
+    isError,
+  } = useSearchWhiskies({
+    keyword: searchTerm,
+    sortField: sortCriteria.split('_')[0],
+    desc: sortCriteria.endsWith('desc'),
+    type: selectedType?.toUpperCase(),
+  });
+
   const countries = ['미국', '아일랜드', '캐나다', '스코틀랜드'];
-  const types = ['버번', '싱글 몰트', '그레인', '블랜디드 몰트'];
+  const types = ['버번', '싱글 몰트', '그레인', '블렌디드 몰트'];
 
   const handleSelectItem = (id: number) =>
     setSelectedItemId((prev) => (prev === id ? null : id));
@@ -222,37 +133,34 @@ function SearchWhiskyDialogContent({
     setSelectedCountry(value || null);
   const handleTypeChange = (value: string) => setSelectedType(value || null);
 
-  const processedResults = dummySearchResults
-    .filter((item) => {
-      /* ... filtering logic ... */
-      const searchTermMatch =
-        !searchTerm ||
-        item.koName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.enName &&
-          item.enName.toLowerCase().includes(searchTerm.toLowerCase()));
-      const countryMatch = !selectedCountry || item.country === selectedCountry;
-      const typeMatch = !selectedType || item.type === selectedType;
-      return searchTermMatch && countryMatch && typeMatch;
-    })
-    .sort((a, b) => {
-      /* ... sorting logic ... */
-      switch (sortCriteria) {
-        case 'rating_desc':
-          return b.avgRating - a.avgRating;
-        case 'rating_asc':
-          return a.avgRating - b.avgRating;
-        case 'records_desc':
-          return b.recordCounts - a.recordCounts;
-        case 'popularity_desc':
-          return (b.popularity ?? 0) - (a.popularity ?? 0);
-        default:
-          return 0;
-      }
-    });
+  // API 응답 데이터 처리
+  const processedResults = searchResponse?.whiskies || [];
 
   const formatCount = (count: number): string => {
     return count > 999 ? '(999+)' : `(${count})`;
   };
+
+  // 로딩 상태 처리
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-2"></div>
+        <p className="text-sm text-muted-foreground ml-2">검색 중...</p>
+      </div>
+    );
+  }
+
+  // 에러 상태 처리
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center">
+        <p className="text-red-500 font-semibold mb-1">오류 발생</p>
+        <p className="text-sm text-muted-foreground">
+          검색 결과를 불러오는데 실패했습니다.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -359,19 +267,19 @@ function SearchWhiskyDialogContent({
           <div className="flex flex-col gap-1 p-1">
             {processedResults.map((item) => (
               <Button
-                key={item.id}
+                key={item.whiskyId}
                 variant="outline"
                 className={cn(
                   'h-auto w-full justify-start rounded-[10px] p-1.5 text-left flex items-center gap-2',
-                  selectedItemId === item.id
+                  selectedItemId === item.whiskyId
                     ? 'border-2 border-primary ring-1 ring-primary bg-accent'
                     : 'border hover:bg-accent/50',
                 )}
-                onClick={() => handleSelectItem(item.id)}
+                onClick={() => handleSelectItem(item.whiskyId)}
               >
                 <div className="w-10 h-14 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded overflow-hidden">
                   <img
-                    src={item.imageUrl || exampleImage}
+                    src={item.whiskyImg || exampleImage}
                     alt={item.koName}
                     className="w-full h-full object-contain"
                     onError={(e) => (e.currentTarget.src = exampleImage)}
@@ -441,84 +349,77 @@ function WishlistDialogContent({
   closeParentDialog?: () => void;
 }) {
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
-  const handleSelectItem = (id: number) =>
-    setSelectedItemId((prev) => (prev === id ? null : id));
+
+  // --- 실제 찜 목록 데이터 가져오기 ---
+  const {
+    data: likedItemsData, // 이름 변경 (likedItems 사용 중복 방지)
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: [LIKES_QUERY_KEY],
+    queryFn: fetchLikedWhiskies,
+  });
+
+  // 실제 사용할 데이터 (로딩/에러 처리 후)
+  const actualLikedItems: LikedWhisky[] = Array.isArray(likedItemsData)
+    ? likedItemsData
+    : [];
+  // --- 데이터 가져오기 끝 ---
+
+  // 타입 수정: WishlistItem -> LikedWhisky
+  const handleGridItemClick = (item: LikedWhisky) => {
+    setSelectedItemId(item.whiskyId); // LikedWhisky의 속성 사용
+  };
+
   const handleConfirm = () => {
     if (selectedItemId) {
       onSelect(selectedItemId);
-
-      // 부모 다이얼로그도 닫기
       if (closeParentDialog) {
-        setTimeout(() => {
-          closeParentDialog();
-        }, 100);
+        setTimeout(() => closeParentDialog(), 100);
       }
     } else {
       console.log('찜 목록 항목이 선택되지 않았습니다.');
     }
   };
 
+  // --- 로딩 및 에러 상태 처리 ---
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full">
+        {/* 간단한 로딩 스피너 또는 메시지 */}
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-2"></div>
+        <p className="text-sm text-muted-foreground">찜 목록 로딩 중...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center">
+        <p className="text-red-500 font-semibold mb-1">오류 발생</p>
+        <p className="text-sm text-muted-foreground">
+          찜 목록을 불러오는데 실패했습니다.
+        </p>
+      </div>
+    );
+  }
+  // --- 로딩/에러 처리 끝 ---
+
   return (
-    <>
-      <DialogHeader className="mb-2">
+    <div className="flex flex-col h-full">
+      <DialogHeader className="mb-2 flex-shrink-0">
         <DialogTitle>나의 찜 리스트</DialogTitle>
       </DialogHeader>
-      <ScrollArea className="w-full flex-grow rounded-[10px] h-[360px]">
-        {' '}
-        {/* Wishlist 높이는 유지하거나 필요시 조정 */}
-        {dummyWishlistItems.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 p-2 w-full justify-items-center">
-            {dummyWishlistItems.map((item) => (
-              <div
-                key={item.id}
-                className={cn(
-                  'cursor-pointer transition-all duration-150 ease-in-out w-full relative rounded-[18px] overflow-hidden',
-                  selectedItemId === item.id
-                    ? 'ring-1 ring-primary ring-offset-2'
-                    : 'hover:opacity-90',
-                )}
-                onClick={() => handleSelectItem(item.id)}
-              >
-                <Whiskycard
-                  className="w-[162px] h-[234px]"
-                  koName={item.koName}
-                  enName={item.enName}
-                  abv={item.abv}
-                  type={item.type}
-                  showLikeButton={false}
-                  showChart={false}
-                  whiskyImage={item.imageUrl}
-                />
-                {selectedItemId === item.id && (
-                  <div className="absolute top-1.5 left-1.5 h-5 w-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center border border-background">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-sm text-muted-foreground">
-              찜 목록이 비어있습니다.
-            </p>
-          </div>
-        )}
-        <ScrollBar orientation="vertical" />
-      </ScrollArea>
-      <DialogFooter className="mt-3 w-full flex flex-row justify-center items-center gap-2">
+
+      <div className="flex-grow overflow-auto">
+        <LikedWhiskyList
+          likedItems={actualLikedItems}
+          onItemClick={handleGridItemClick}
+          cardWidthClass="w-[155px]"
+        />
+      </div>
+
+      <DialogFooter className="mt-3 w-full flex flex-row justify-center items-center gap-2 flex-shrink-0">
         <DialogClose asChild>
           <Btn
             size="m"
@@ -533,7 +434,7 @@ function WishlistDialogContent({
           <Btn size="m" color="color-text-muted-40" text="취소" />
         </DialogClose>
       </DialogFooter>
-    </>
+    </div>
   );
 }
 
@@ -542,22 +443,43 @@ export function WhiskySelectionDialog({
   variant,
   title: propTitle,
   boxContent,
-  onWhiskySelect, // 추가: 선택된 위스키 정보를 상위 컴포넌트로 전달하는 콜백
-  onClose, // 추가: 모달을 닫는 콜백 함수
+  onWhiskySelect,
+  onClose,
 }: WhiskySelectionDialogProps & {
-  onWhiskySelect?: (whisky: WhiskySearchResult | WishlistItem) => void;
-  onClose?: () => void; // 추가: 모달 닫기 콜백 타입 정의
+  onWhiskySelect?: (whisky: {
+    id: number;
+    koName: string;
+    imageUrl: string | undefined;
+  }) => void;
+  onClose?: () => void;
 }) {
   const displayTitle = propTitle || variantTitles[variant];
 
   // 선택된 위스키 정보를 저장할 상태 추가
   const [selectedWhisky, setSelectedWhisky] = useState<
-    WhiskySearchResult | WishlistItem | null
+    ApiWhiskySearchResult | LikedWhisky | null
   >(null);
 
   // 내부 Dialog의 열림/닫힘 상태를 Dialog 별로 따로 관리
   const [searchDialogOpen, setSearchDialogOpen] = useState(false);
   const [wishlistDialogOpen, setWishlistDialogOpen] = useState(false);
+
+  // 찜 목록 데이터 가져오기
+  const { data: likedItemsData } = useQuery({
+    queryKey: [LIKES_QUERY_KEY],
+    queryFn: fetchLikedWhiskies,
+  });
+  const likedItems: LikedWhisky[] = Array.isArray(likedItemsData)
+    ? likedItemsData
+    : [];
+
+  // 검색 결과 데이터 가져오기 (기본 인기순으로)
+  const { data: searchResponse } = useSearchWhiskies({
+    sortField: 'popularity',
+    desc: true,
+    pageSize: 5,
+  });
+  const searchItems: ApiWhiskySearchResult[] = searchResponse?.whiskies || [];
 
   // 부모 Dialog 닫기 함수
   const closeParentDialog = () => {
@@ -566,14 +488,14 @@ export function WhiskySelectionDialog({
     }
   };
 
-  // 위스키 검색 결과에서 ID로 위스키 찾기 함수
+  // 위스키 ID로 검색 결과 또는 찜 목록에서 위스키 찾기 함수
   const findWhiskyById = (id: number) => {
     // 위스키 검색 결과에서 찾기
-    const fromSearch = dummySearchResults.find((item) => item.id === id);
+    const fromSearch = searchItems.find((item) => item.whiskyId === id);
     if (fromSearch) return fromSearch;
 
     // 찜 목록에서 찾기
-    const fromWishlist = dummyWishlistItems.find((item) => item.id === id);
+    const fromWishlist = likedItems.find((item) => item.whiskyId === id);
     if (fromWishlist) return fromWishlist;
 
     return null;
@@ -586,9 +508,14 @@ export function WhiskySelectionDialog({
       console.log(`Whisky ${id} selected:`, whisky);
       setSelectedWhisky(whisky);
 
-      // 상위 컴포넌트로 선택된 위스키 정보 전달
+      // 상위 컴포넌트로 선택된 위스키 정보 전달 (형식 맞추기)
       if (onWhiskySelect) {
-        onWhiskySelect(whisky);
+        const selectedData = {
+          id: whisky.whiskyId, // 공통 ID 필드
+          koName: whisky.koName, // 공통 이름 필드
+          imageUrl: 'whiskyImg' in whisky ? whisky.whiskyImg : undefined, // ApiWhiskySearchResult 타입에만 존재
+        };
+        onWhiskySelect(selectedData);
       }
 
       // 내부 Dialog 닫기
@@ -612,14 +539,13 @@ export function WhiskySelectionDialog({
     // 선택된 위스키가 있는 경우 이미지 표시
     if (selectedWhisky) {
       const imageUrl =
-        'imageUrl' in selectedWhisky ? selectedWhisky.imageUrl : exampleImage;
+        'whiskyImg' in selectedWhisky ? selectedWhisky.whiskyImg : exampleImage;
+
       return (
         <div className="w-full h-full flex items-center justify-center overflow-hidden">
           <img
-            src={imageUrl}
-            alt={
-              'name' in selectedWhisky ? selectedWhisky.koName : '선택된 위스키'
-            }
+            src={imageUrl || exampleImage}
+            alt={selectedWhisky.koName || '선택된 위스키'}
             className="w-full h-full object-contain"
             onError={(e) => (e.currentTarget.src = exampleImage)}
           />

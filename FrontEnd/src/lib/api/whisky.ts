@@ -12,17 +12,11 @@ export const getWhiskyDetail = async (
 // 위스키 리뷰 목록 조회 API
 export const getWhiskyRecords = async (
   whiskyId: number,
-  page: number = 0,
-  size: number = 3,
+  page = 0,
+  size = 3,
 ): Promise<RecordListResponse> => {
   const response = await api.get<RecordListResponse>(
-    `/whiskies/${whiskyId}/records`,
-    {
-      params: {
-        page,
-        size,
-      },
-    },
+    `/whiskies/${whiskyId}/records?page=${page}&size=${size}`,
   );
   return response.data;
 };
@@ -41,7 +35,52 @@ export const toggleWhiskyLike = async (
     throw error;
   }
 };
+
 export const getWhiskyTastingProfile = async (whiskyId: number) => {
   const response = await api.get(`/whiskies/${whiskyId}/score`);
+  return response.data;
+};
+
+// 위스키 검색 API
+export interface WhiskySearchParams {
+  keyword?: string;
+  pageSize?: number;
+  searchAfter?: unknown[];
+  sortField?: string;
+  desc?: boolean;
+  age?: number;
+  type?: string;
+}
+
+export interface WhiskySearchResult {
+  whiskyId: number;
+  koName: string;
+  enName?: string;
+  type: string;
+  abv?: number;
+  age?: number;
+  avgRating: number;
+  recordCounts: number;
+  whiskyImg?: string;
+}
+
+export interface WhiskySearchResponse {
+  whiskies: WhiskySearchResult[];
+  nextSearchAfter: unknown[];
+  hasNext: boolean;
+}
+
+export const searchWhiskies = async (
+  params: WhiskySearchParams,
+): Promise<WhiskySearchResponse> => {
+  const response = await api.post('/whiskies/search', {
+    keyword: params.keyword || '',
+    pageSize: params.pageSize || 20,
+    searchAfter: params.searchAfter || [],
+    sortField: params.sortField || 'recordCounts',
+    desc: params.desc !== undefined ? params.desc : true,
+    age: params.age,
+    type: params.type,
+  });
   return response.data;
 };
