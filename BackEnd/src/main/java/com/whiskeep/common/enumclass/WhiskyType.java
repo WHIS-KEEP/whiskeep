@@ -1,13 +1,13 @@
 package com.whiskeep.common.enumclass;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum WhiskyType {
 
 	SINGLE_MALT(Arrays.asList("Single Malt Whisky", "Single Malt Whiskey")),
@@ -22,25 +22,14 @@ public enum WhiskyType {
 
 	private final List<String> dbValues;
 
-	private static final Map<String, WhiskyType> LOOKUP_MAP = new HashMap<>();
-
-	static {
-		for (WhiskyType type : values()) {
-			for (String val : type.dbValues) {
-				LOOKUP_MAP.put(val.trim().toLowerCase(), type);
-			}
-		}
-	}
-
-	WhiskyType(List<String> dbValues) {
-		this.dbValues = dbValues;
-	}
-
-	// DB 문자열을 받아 소문자와 trim 적용 후 매핑된 enum 반환, 없으면 OTHER
-	public static WhiskyType fromDbValue(String dbValue) {
-		if (dbValue == null) {
+	public static WhiskyType fromName(String name) {
+		if (name == null) {
 			return OTHER;
 		}
-		return LOOKUP_MAP.getOrDefault(dbValue.trim().toLowerCase(), OTHER);
+		try {
+			return WhiskyType.valueOf(name.trim().toUpperCase());
+		} catch (IllegalArgumentException e) {
+			return OTHER;
+		}
 	}
 }

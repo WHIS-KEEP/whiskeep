@@ -49,7 +49,7 @@ public class WhiskyController {
 	@PostMapping("/search")
 	public ResponseEntity<WhiskySearchResponseDto> search(
 		@RequestBody WhiskySearchRequestDto request) throws IOException {
-		WhiskySearchResponseDto response = whiskyService.searchWithFuzziness(request);
+		WhiskySearchResponseDto response = whiskyService.searchWhiskies(request);
 		return ResponseEntity.ok(response);
 	}
 
