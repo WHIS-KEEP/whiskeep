@@ -16,7 +16,7 @@ interface WhiskycardProps extends React.ComponentProps<typeof Card> {
   type?: string; // 위스키 타입 (선택적)
   abv: number; // 알콜 도수
   bgImage?: string; // 배경 이미지 URL (선택적)
-  whiskyImage: string; // 위스키 이미지 URL (선택적)
+  whiskyImage?: string; // 위스키 이미지 URL (선택적)
   showLikeButton?: boolean; // 하트 버튼 표시 여부 (선택적)
   showChart?: boolean; // 차트 표시 여부 (선택적)
   whiskyId?: number; // 위스키 ID (차트 데이터를 가져오기 위함)

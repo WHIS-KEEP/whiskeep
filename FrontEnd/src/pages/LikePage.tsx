@@ -93,8 +93,8 @@ export function LikePage() {
                       : 'scale-100 border-gray-200 hover:shadow-md', // 기본 상태 및 호버 시 약간의 그림자
                   )}
                   onClick={() => handleSelectItem(item.whiskyId)}
-                  title={item.koName}
-                  description={`${item.abv}%`}
+                  koName={item.koName}
+                  abv={item.abv}
                   whiskyImage={item.whiskyImg ? item.whiskyImg : undefined}
                   whiskyId={item.whiskyId}
                   showLikeButton={true}
