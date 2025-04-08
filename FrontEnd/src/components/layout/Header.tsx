@@ -1,9 +1,23 @@
 import logo from '../../assets/logo.svg';
 import { Heart } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { fetchLikedWhiskies, LIKES_QUERY_KEY } from '@/lib/api/like';
 
 function Header() {
   const location = useLocation();
+
+  // 찜 목록 데이터 가져오기
+  const { data: likedWhiskies } = useQuery({
+    queryKey: [LIKES_QUERY_KEY],
+    queryFn: fetchLikedWhiskies,
+  });
+
+  // 찜 개수 계산 (배열이 없으면 0으로 처리)
+  const likeCount = Array.isArray(likedWhiskies) ? likedWhiskies.length : 0;
+
+  // 10개 이상이면 '9+'로 표시
+  const displayCount = likeCount >= 10 ? '9+' : likeCount.toString();
 
   // 현재 경로에 따른 배경색 매핑
   const getBackgroundColor = () => {
@@ -28,14 +42,18 @@ function Header() {
       </Link>
 
       <div className="relative inline-flex">
-        <Heart size={24} />
-        {/* 숫자 뱃지 - 나중에 동적으로 변경될 카운트, 나중에 기능 수정 */}
-        <span
-          className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full text-xs text-white"
-          style={{ backgroundColor: '#D42B2B' }}
-        >
-          1
-        </span>
+        <Link to="/like">
+          <Heart size={30} className="text-primary" />
+          {/* 찜 개수 표시 뱃지 */}
+          {likeCount > 0 && (
+            <span
+              className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full text-xs text-white"
+              style={{ backgroundColor: '#AE4D4D' }}
+            >
+              {displayCount}
+            </span>
+          )}
+        </Link>
       </div>
     </div>
   );
