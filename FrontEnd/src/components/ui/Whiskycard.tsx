@@ -101,6 +101,7 @@ export function Whiskycard({
         {/* HeartButton 사용 및 forceLikedState 전달 */}
         {showLikeButton && whiskyId && (
           <HeartButton
+            className="mb-8 absolute right-2 top-2 "
             whiskyId={whiskyId}
             forceLikedState={forceLikedState} // 전달
           />

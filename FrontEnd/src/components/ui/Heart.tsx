@@ -31,34 +31,17 @@ export function HeartButton({
     e.stopPropagation();
     if (!whiskyId || toggleLikeMutation.isPending || isLoading) return;
 
-    if (heartRef.current) {
-      if (!isLiked) {
-        heartRef.current.classList.add('animate-like-in');
-        heartRef.current.classList.remove('animate-like-out');
-      } else {
-        heartRef.current.classList.add('animate-like-out');
-        heartRef.current.classList.remove('animate-like-in');
-      }
 
-      setTimeout(() => {
-        if (heartRef.current) {
-          heartRef.current.classList.remove(
-            'animate-like-in',
-            'animate-like-out',
-          );
-        }
-
-        toggleLikeMutation.mutate({
-          whiskyId,
-          isCurrentlyLiked: isLiked,
-        });
-      }, 150);
-    }
+  
+    toggleLikeMutation.mutate({
+      whiskyId,
+      isCurrentlyLiked: isLiked,
+    });
   };
 
   const defaultButtonClasses =
-    'absolute bottom-2 right-2 object-cover object-top w-[24px] h-[24px] rounded-full flex justify-center items-center bg-white shadow-lg border-none outline-none cursor-pointer';
-  const defaultHeartIconClasses = 'size-4 transition-all duration-150';
+  'static object-cover object-top w-[24px] h-[24px] flex justify-center items-center bg-transparent shadow-none border-none outline-none cursor-pointer';
+const defaultHeartIconClasses = 'size-5 transition-all duration-150';
 
   return (
     <button
@@ -71,7 +54,7 @@ export function HeartButton({
         ref={heartRef}
         className={cn(
           defaultHeartIconClasses,
-          isLiked ? 'text-red-500' : 'text-point-red',
+          isLiked ? 'text-red-500' : 'text-black',
           heartIconClassName,
         )}
         fill={isLiked ? 'currentColor' : 'white'}

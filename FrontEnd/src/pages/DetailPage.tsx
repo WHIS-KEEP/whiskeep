@@ -1,22 +1,19 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
-import { Heart, ChevronLeft, Star } from 'lucide-react';
-import { Button } from '@/components/shadcn/Button';
+import { ChevronLeft, Star } from 'lucide-react';
 import PaginationBtn from '@/components/ui/PagenationBtn';
 import useAuth from '@/store/useContext';
 import TastingRadarChart from '@/components/ui/TastingRadarChart';
-
 import { cn } from '@/lib/util/utils';
 import { formatDateTime } from '@/lib/util/formatDate';
+import HeartButton from '@/components/ui/Heart';
 
 // React Query 훅 임포트
 import {
   useWhiskyDetail,
   useWhiskyRecords,
 } from '@/hooks/queries/useWhiskyQueries';
-import { useToggleWhiskyLike } from '@/hooks/mutations/useWhiskyMutations';
-
 // 샘플 이미지 (실제 구현 시 경로 수정 필요)
 import backgroundImage from '@/assets/whisky_background.png';
 
@@ -24,6 +21,7 @@ const DetailPage = () => {
   const { whiskyId } = useParams<{ whiskyId: string }>();
   const whiskyIdNumber = whiskyId ? parseInt(whiskyId, 10) : 0;
 
+  // 컴포넌트 내부
   const [page, setPage] = useState(1);
 
   const { user } = useAuth();
@@ -40,17 +38,13 @@ const DetailPage = () => {
     page,
   );
 
-  const { mutate: toggleLike } = useToggleWhiskyLike(whiskyIdNumber);
 
   // 뒤로가기 핸들러
   const handleGoBack = () => {
     window.history.back();
   };
 
-  // 좋아요 토글
-  const handleLikeToggle = () => {
-    toggleLike();
-  };
+
 
   // 페이지 변경
   const handlePageChange = (newPage: number) => {
@@ -143,24 +137,19 @@ const DetailPage = () => {
         </div>
 
         <div className="p-4">
-          <div className="mb-2">
-            <div className="flex justify-between items-start">
-              <h1 className="text-xl font-bold">{whiskyDetail?.koName}</h1>
-              <Button
-                onClick={handleLikeToggle}
-                variant="ghost"
-                size="icon"
-                className="rounded-full h-10 w-10 -mt-1"
-              >
-                <Heart
-                  size={24}
-                  fill={whiskyDetail?.isLiked ? '#D42B2B' : 'none'}
-                  color={whiskyDetail?.isLiked ? '#D42B2B' : '#000'}
-                />
-              </Button>
-            </div>
+        <div className="flex justify-between items-start">
+  <h1 className="text-xl font-bold">{whiskyDetail?.koName}</h1>
+  <div className="mr-3 mt-1">
+    <HeartButton
+      whiskyId={whiskyIdNumber}
+      forceLikedState={whiskyDetail?.isLiked}
+      className="static" // absolute 대신 static 사용
+      buttonClassName="bg-transparent shadow-none border-none"
+      heartIconClassName="size-5"
+    />
+  </div>
+</div>
             <p className="text-gray-600 text-sm">{whiskyDetail?.enName}</p>
-          </div>
         </div>
         {/* 테이스팅 프로필 섹션 */}
         <div className="p-4 border-b border-gray-200">
