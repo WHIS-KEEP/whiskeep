@@ -5,6 +5,8 @@ import { ChevronLeft } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 import { AspectRatio } from '@/components/shadcn/aspect-ratio';
 
+import defaultRecordImage from '@/assets/no-image.png';
+
 const WhiskyRecordPage: React.FC = () => {
   const { whiskyId } = useParams<{ whiskyId: string }>();
   const id = whiskyId ? parseInt(whiskyId) : 0;
@@ -64,10 +66,21 @@ const WhiskyRecordPage: React.FC = () => {
       </div>
     );
   }
+    // 기록 수에 따라 동적으로 최소 높이 설정
+    const getMinHeight = () => {
+      if (!data.recordList || data.recordList.length === 0) {
+        return 'min-h-[300px]';
+      }
+      const rowCount = Math.ceil(data.recordList.length / 3);
+      if (rowCount <= 1) {
+        return 'min-h-[300px]';
+      }
+      return '';
+    };
 
   return (
     <ScrollArea className="flex-1 bg-background">
-      <div style={{ paddingBottom: '150px' }}>
+       <div className="pb-20"> 
         {/* 뒤로가기 버튼 */}
         <div className="flex items-center p-4">
           <button
@@ -131,7 +144,7 @@ const WhiskyRecordPage: React.FC = () => {
             {/* 기록 이미지 그리드 */}
             <div className="mt-4">
               {data.recordList && data.recordList.length > 0 ? (
-                <div className="grid grid-cols-3 gap-1">
+                <div className="grid grid-cols-3 gap-1 mb-12">
                   {data.recordList.map((record) => (
                     <AspectRatio
                       key={record.recordId}
@@ -139,7 +152,7 @@ const WhiskyRecordPage: React.FC = () => {
                       className="bg-primary-30 rounded-sm overflow-hidden"
                     >
                       <img
-                        src={record.recordImg}
+                        src={record.recordImg || defaultRecordImage}
                         alt={`Record ${record.recordId}`}
                         className="object-cover w-full h-full transition-transform hover:scale-105"
                         onClick={() => handleImageClick(record.recordId)}
@@ -148,7 +161,7 @@ const WhiskyRecordPage: React.FC = () => {
                   ))}
                 </div>
               ) : (
-                <div className="flex items-center justify-center min-h-[300px] rounded-md">
+                <div className={`flex items-center justify-center ${getMinHeight()} rounded-md`}>
                   <p className="text-center py-8 text-primary-50">
                     아직 기록이 없습니다.
                   </p>
@@ -156,8 +169,8 @@ const WhiskyRecordPage: React.FC = () => {
               )}
             </div>
           </div>
+          </div>
         </div>
-      </div>
       <ScrollBar orientation="vertical" />
     </ScrollArea>
   );
