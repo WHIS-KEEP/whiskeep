@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import com.whiskeep.api.member.domain.Member;
 import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.api.member.service.PreferenceService;
@@ -39,12 +38,14 @@ import com.whiskeep.common.exception.BadRequestException;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.ForbiddenException;
 import com.whiskeep.common.exception.NotFoundException;
+
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
