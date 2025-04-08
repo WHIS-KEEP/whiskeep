@@ -10,7 +10,7 @@ import com.whiskeep.common.exception.UnauthorizedException;
 public class AuthUtil {
 
 	public static Long getCurrentMemberId() {
-		if (isAuthenticated()) {
+		if (!isAuthenticated()) {
 			throw new UnauthorizedException(ErrorMessage.UNAUTHORIZED);
 		}
 
@@ -23,7 +23,7 @@ public class AuthUtil {
 	}
 
 	public static String getCurrentAccessToken() {
-		if (isAuthenticated()) {
+		if (!isAuthenticated()) {
 			throw new UnauthorizedException(ErrorMessage.UNAUTHORIZED);
 		}
 
@@ -41,7 +41,8 @@ public class AuthUtil {
 
 	public static boolean isAuthenticated() {
 		Authentication authentication = getAuthentication();
-		return authentication == null
-			|| !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken;
+		return authentication != null
+			&& authentication.isAuthenticated()
+			&& !(authentication instanceof AnonymousAuthenticationToken);
 	}
 }
