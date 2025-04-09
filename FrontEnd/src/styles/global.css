@@ -73,7 +73,7 @@
   --app-background-color: var(--bg-muted);
 
   /* 반응형으로 수정된 변수 */
-  --mobile-max-width: 768px; /* 최대 너비 (태블릿) */
+  --mobile-max-width: 460px; /* 최대 너비 (태블릿) */
   --mobile-min-width: 320px; /* 최소 너비 (작은 모바일) */
 }
 
