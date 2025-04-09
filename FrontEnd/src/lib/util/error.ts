@@ -139,17 +139,17 @@ export const handleOcrError = (err: unknown): ErrorState => {
     switch (apiError.status) {
       case 406:
         errorMessage =
-          '텍스트를 인식할 수 없습니다.\n개선된 환경에서 다시 촬영해주세요.';
+          '텍스트를 인식할 수 없습니다.\n위스키를 가까이에서 다시 촬영해주세요.';
         // 406 오류 시 이미지 경로 설정
         errorImage = 'ocr406.png'; // 이미지 파일명만 반환
         break;
       case 500:
-        errorMessage = 'OCR이 작동하지 않습니다.\n운영팀에 문의해주세요.';
+        errorMessage = '이미지를 인식할 수 없습니다.\n검색을 이용해주세요.';
         errorImage = 'ocr500.png'; // 이미지 파일명만 반환
         break;
       case 404:
         errorMessage =
-          '동일 또는 유사한 위스키가 DB에 존재하지 않습니다.\n검색을 이용해주세요.';
+          '동일한 위스키를 찾을 수 없습니다.\n검색을 이용해주세요.';
         errorImage = 'ocr404.png'; // 이미지 파일명만 반환
         break;
       default:

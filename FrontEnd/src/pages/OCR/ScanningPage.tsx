@@ -17,13 +17,13 @@ interface ResultNavigationState {
 }
 
 const MIN_DISPLAY_TIME_MS = 1000;
-const API_TIMEOUT_MS = 30000;
+const API_TIMEOUT_MS = 600000;
 
 function ScanningPage(): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState | null;
-  const [message, setMessage] = useState<string>('스캔 중... (최대 30초)');
+  const [message, setMessage] = useState<string>('위스키를 찾는 중입니다...');
   const isMounted = useRef<boolean>(true);
 
   useEffect(() => {
@@ -36,8 +36,8 @@ function ScanningPage(): JSX.Element {
     if (!state?.imageFile) {
       console.error('ScanningPage: No image file received.');
       if (isMounted.current) {
-        setMessage('오류: 이미지 파일이 없습니다. 이전 페이지로 돌아갑니다.');
-        setTimeout(() => navigate(-1), 2000);
+        setMessage('이미지를 인식할 수 없습니다. 메인 페이지로 돌아갑니다.');
+        setTimeout(() => navigate('/main'), 2000);
       }
       return;
     }
@@ -102,11 +102,15 @@ function ScanningPage(): JSX.Element {
   }, [state, navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen max-w-md mx-auto bg-black text-white">
-      <div className="animate-pulse text-xl font-semibold whitespace-pre-line text-center">
-        {message}
+    // <div className="flex flex-col items-center justify-center w-full h-screen max-w-md mx-auto bg-black text-white">
+    //   <div className="animate-pulse text-xl font-semibold whitespace-pre-line text-center">
+    //     {message}
+    //   </div>
+    // </div>
+    <div className="fixed inset-0 flex flex-col justify-center items-center z-50 gap-6">
+        <span className="loader" />
+        <p>{message}</p>
       </div>
-    </div>
   );
 }
 
