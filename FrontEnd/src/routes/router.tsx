@@ -36,7 +36,6 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 // 설문조사를 하기 전 사용자
 const PreferenceProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const score = useMemberStore((state) => state.score);
-
   return score ? children : <Navigate to="/preference" replace />;
 };
 

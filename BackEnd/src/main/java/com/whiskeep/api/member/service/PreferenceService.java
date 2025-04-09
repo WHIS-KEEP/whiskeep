@@ -196,8 +196,8 @@ public class PreferenceService {
 	public List<PopularWhiskyResponseDto> getPopularWhiskyList() {
 
 		// 인기 있는 위스키 TOP 9
-		List<Long> popularWhiskyIds = List.of(1L, 2L, 3L, 4L, 5L, 6L,
-			7L, 8L, 9L);
+		List<Long> popularWhiskyIds = List.of(2544L, 402L, 1470L, 1L, 2542L, 2184L,
+			3L, 4L, 2505L);
 
 		return whiskyRepository.findAllById(popularWhiskyIds)
 			.stream()

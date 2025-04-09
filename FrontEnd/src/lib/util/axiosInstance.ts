@@ -21,7 +21,7 @@ API.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response && error.response.status === 401) {
-      alert('다시 로그인해주세요.');
+      // alert('다시 로그인해주세요.');
       sessionStorage.removeItem('accessToken');
       window.location.href = '/login';
     }

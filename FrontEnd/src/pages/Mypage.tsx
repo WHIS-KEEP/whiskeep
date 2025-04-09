@@ -23,12 +23,16 @@ import {
   useUpdateUserMutation,
   useDeleteUserMutation,
 } from '@/hooks/mutations/useMyPageMutations';
+import { useLogout } from '@/hooks/mutations/useLogout';
+import useAuth from '@/store/useContext';
 
 const MyPage = () => {
   const { data: userData, isLoading } = useMyPageQuery();
   const { mutate: checkNickname } = useCheckNicknameMutation();
   const { mutate: updateUser, isPending } = useUpdateUserMutation();
   const { mutate: deleteUser } = useDeleteUserMutation();
+  const { mutate: logoutMutation } = useLogout();
+  const { logout } = useAuth();
 
   const [nicknameEditable, setNicknameEditable] = useState(false);
   const [nicknameChecked, setNicknameChecked] = useState(false);
@@ -147,6 +151,22 @@ const MyPage = () => {
       },
       onError: () => {
         alert('회원탈퇴 중 오류가 발생했습니다.');
+      },
+    });
+  };
+
+  // 로그아웃
+  const handleLogout = () => {
+    const confirm = window.confirm('로그아웃 하시겠습니까?');
+    if (!confirm) return;
+
+    logoutMutation(undefined, {
+      onSuccess: () => {
+        logout();
+        navigate('/login');
+      },
+      onError: (error) => {
+        console.error(error.message);
       },
     });
   };
@@ -302,7 +322,7 @@ const MyPage = () => {
 
         <div className="mt-auto flex items-center justify-center gap-3 text-sm text-muted-foreground">
           <button
-            onClick={() => console.log('로그아웃 클릭')}
+            onClick={handleLogout}
             className="hover:underline hover:text-foreground cursor-pointer"
           >
             로그아웃
