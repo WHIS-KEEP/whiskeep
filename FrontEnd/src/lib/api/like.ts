@@ -6,6 +6,7 @@ import { handleError } from '@/lib/util/error';
  */
 export interface LikedWhisky {
   whiskyId: number;
+  enName: string;
   koName: string;
   whiskyImg: string;
   abv: number;

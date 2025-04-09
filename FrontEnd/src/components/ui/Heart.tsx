@@ -52,7 +52,7 @@ export function HeartButton({
         ref={heartRef}
         className={cn(
           defaultHeartIconClasses,
-          isLiked ? 'text-red-400' : 'text-black',
+          isLiked ? 'text-[var(--point-red)]' : 'text-black',
           heartIconClassName,
         )}
         fill={isLiked ? 'currentColor' : 'white'}
