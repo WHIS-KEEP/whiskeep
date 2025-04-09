@@ -23,7 +23,8 @@ function Header() {
   const getBackgroundColor = () => {
     if (
       location.pathname.startsWith('/detail/') ||
-      (location.pathname.startsWith('/records/') && !location.pathname.includes('/create'))
+      (location.pathname.startsWith('/records/') &&
+        !location.pathname.includes('/create'))
     ) {
       return 'bg-white'; // 디테일 페이지와 records 페이지는 흰색 배경
     }
