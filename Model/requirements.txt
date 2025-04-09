@@ -6,6 +6,5 @@ python-multipart
 easyocr
 numpy
 opencv-python
-fuzzywuzzy
+rapidfuzz
 scikit-learn
-python-Levenshtein
