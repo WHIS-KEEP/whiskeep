@@ -16,13 +16,13 @@ ocr = easyocr.Reader(['en'])
 def clean_whisky_keywords(words):
     """
     - 특수문자 제거
-    - 대문자로 변환
+    - 소문자로 변환
     - 숫자로 시작하는 단어 제거
     - 빈 문자열 제거
     - 중복 제거 후 정렬
     """
-    # 모든 특수문자 제거 + 대문자로 변환 (알파벳과 숫자만 남기기)
-    filtering_emo = [re.sub(r"[^a-zA-Z0-9]", "", word).upper() for word in words]
+    # 모든 특수문자 제거 + 소문자로 변환 (알파벳과 숫자만 남기기)
+    filtering_emo = [re.sub(r"[^a-zA-Z0-9]", "", word).lower() for word in words]
 
     # 숫자로 시작하는 단어 제거 (ex: '12', '15Years', '1770')
     filtering_num = [word for word in filtering_emo if not re.search(r"\d", word)]
@@ -46,7 +46,7 @@ with open("cleaned_whisky_keywords.txt", "r", encoding="utf-8") as file:
 keyword_list = clean_whisky_keywords(keyword_list)
 keyword_list = sorted(set(keyword_list))
 
-# cleaned_whisy_keywords.txt에 있는 위스키 리스트
+# unique_whisky_name_list.txt에 있는 위스키 리스트
 whisky_list = []
 with open("unique_whisky_name_list.txt", 'r', encoding='utf-8') as f:
     for line in f:
@@ -129,7 +129,7 @@ async def perform_ocr(file: UploadFile = File(...)):
 
         # 4. OCR 결과가 정상적으로 추출되었는지 확인
         if not filtered_texts:
-            return JSONResponse(content={"error": "이미지를 읽는 데 실패했습니다."}, status_code=406)
+            return JSONResponse(content={"error": "OCR 결과가 없습니다."}, status_code=406)
 
         """OCR 결과 리스트 전처리"""
         # 공백을 기준으로 단어 분리
@@ -150,7 +150,11 @@ async def perform_ocr(file: UploadFile = File(...)):
         corpus = [ocr_query] + whisky_list
 
         # TF-IDF 벡터화
-        vectorizer = TfidfVectorizer()
+        vectorizer = TfidfVectorizer(
+            lowercase=True, # 모든 텍스트를 소문자로 변환해서 처리함
+            stop_words="english", # 영어 불용어(stopwords) 자동 제거
+            max_features=3000 #너무 드물게 등장하는 단어는 무시해서 노이즈 제거 + 속도 향상
+        )
         tfidf_matrix = vectorizer.fit_transform(corpus)
 
         # 코사인 유사도 계산 (첫 번째는 OCR 쿼리)
@@ -162,9 +166,8 @@ async def perform_ocr(file: UploadFile = File(...)):
         most_similar_whisky = whisky_list[most_similar_idx]
 
         return JSONResponse(content={
-            "extracted_texts": corrected,
-            "best_match": most_similar_whisky,
-            "similarity_score": most_similar_score
+            "bestMatch": most_similar_whisky,
+            "similarityScore": most_similar_score
         }, status_code=200)
 
     except Exception as e:
