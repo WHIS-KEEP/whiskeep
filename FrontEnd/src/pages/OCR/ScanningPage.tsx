@@ -14,6 +14,7 @@ interface ResultNavigationState {
   result?: OcrResponse;
   error?: string;
   timedOut?: boolean;
+  origin?: 'modal-camera' | 'main-camera';
 }
 
 const MIN_DISPLAY_TIME_MS = 1000;
@@ -67,8 +68,23 @@ function ScanningPage(): JSX.Element {
 
         console.log('ScanningPage: OCR Success:', ocrResult);
 
+        const origin = location.state?.origin;
+
+        if (origin === 'modal-camera') {
+          navigate('/main', {
+            state: {
+              ocrResult: ocrResult,
+              backToModal: true,
+            },
+          });
+          return;
+        }
+
         navigate('/result', {
-          state: { result: ocrResult } as ResultNavigationState,
+          state: {
+            result: ocrResult,
+            origin: 'main-camera',
+           } as ResultNavigationState,
         });
       } catch (err: unknown) {
         console.error('ScanningPage: OCR failed:', err);

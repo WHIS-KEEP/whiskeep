@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useState, useRef } from 'react';
 import {
   Dialog,
@@ -14,12 +15,19 @@ import exampleImage from '@/assets/example.png';
 import { cn } from '@/lib/util/utils';
 import useRecordSubmit from '@/hooks/mutations/useRecordSubmit';
 import whiskyGlass from '@/assets/whiskyGlass.svg';
+import { OcrResponse } from '@/lib/api/OCR';
+import OcrWhiskyContent from '@/pages/OCR/OcrWhiskyContent';
 
 // 백엔드 API 응답 타입에 맞게 인터페이스 수정
 interface WhiskyData {
   whiskyId: number;
   koName: string;
   whiskyImg?: string;
+}
+
+interface QuickRecordSectionProps {
+  autoOpen?: boolean;
+  ocrResult?: OcrResponse;
 }
 
 const StarRating = ({
@@ -47,18 +55,32 @@ const StarRating = ({
   </div>
 );
 
-export default function QuickRecordSection() {
+export default function QuickRecordSection({
+  autoOpen = false,
+  ocrResult,
+}: QuickRecordSectionProps) {
+
+  
   const [comment, setComment] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isFirstOcrView, setIsFirstOcrView] = useState(true);
   const dialogCloseRef = useRef<HTMLButtonElement>(null);
   const [selectedWhisky, setSelectedWhisky] = useState<WhiskyData>();
   const [userRating, setUserRating] = useState(0);
+  
+  // ✅ OCR 결과로 위스키 자동 선택 및 모달 열기
+  useEffect(() => {
+    if (autoOpen && ocrResult) {
+      setIsDialogOpen(true);
+      setIsFirstOcrView(true);
+    }
+  }, [autoOpen, ocrResult]);
 
   const { submitRecord } = useRecordSubmit();
-
+  
   const handleCloseDialog = () => dialogCloseRef.current?.click();
-
+  
   const handleWhiskySelect = (whisky: {
     id: number;
     koName: string;
@@ -90,8 +112,13 @@ export default function QuickRecordSection() {
     }
   };
 
+  const handleDialogChange = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (!open) setIsFirstOcrView(false);
+  };
+
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
       <div className="bg-white rounded-xl shadow p-4 flex flex-col gap-4">
         {/* 헤더 부분 */}
         <div className="flex items-center justify-between mb-1">
@@ -189,16 +216,25 @@ export default function QuickRecordSection() {
       </div>
 
       <DialogContent className="w-[370px] max-h-[600px] overflow-hidden border-none rounded-[18px]">
-        <WhiskySelectionDialog
-          variant="regist"
-          boxContent={
-            <div className="w-full h-full flex items-center justify-center overflow-hidden">
-              <Plus size={32} />
-            </div>
-          }
-          onWhiskySelect={handleWhiskySelect}
-          onClose={handleCloseDialog}
-        />
+        {ocrResult && isFirstOcrView ? (
+          <OcrWhiskyContent
+            ocrResult={ocrResult}
+            onSelect={handleWhiskySelect}
+            closeDialog={handleCloseDialog}
+          />
+        ) : (
+          <WhiskySelectionDialog
+            variant="regist"
+            boxContent={
+              <div className="w-full h-full flex items-center justify-center overflow-hidden">
+                <Plus size={32} />
+              </div>
+            }
+            onWhiskySelect={handleWhiskySelect}
+            onClose={handleCloseDialog}
+          />
+        )}
+
         <DialogClose asChild>
           <button className="hidden" ref={dialogCloseRef}>
             닫기

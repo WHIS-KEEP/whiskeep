@@ -301,7 +301,11 @@ export function WhiskySelectionDialog({
             color="color-wood-70"
             text="카메라로 검색"
             textColor="text-white"
-            onClick={() => navigate('/ocr')}
+            onClick={() =>
+              navigate('/ocr', {
+                state: { origin: 'modal-camera' },
+              })
+            }
             className="w-full"
           />
           {/* 전체 위스키 목록 검색 */}

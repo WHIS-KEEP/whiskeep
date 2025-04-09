@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback, ChangeEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { JSX } from 'react';
 import { X, Image as ImageIcon } from 'lucide-react';
 import {
@@ -12,6 +12,8 @@ function OCRPage(): JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
 
   const [videoActive] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,6 +53,7 @@ function OCRPage(): JSX.Element {
             });
           };
           videoRef.current.onplaying = () => {
+            console.log(location.state)
             console.log('카메라 재생 시작됨');
             setIsCameraReady(true);
             setError(null);
@@ -101,7 +104,13 @@ function OCRPage(): JSX.Element {
 
       console.log('OCRPage: Image prepared, navigating to scanning page...');
       setError(null);
-      navigate('/scanning', { state: { imageFile: file } });
+      console.log(location.state);
+      navigate('/scanning',{
+        state: { 
+          imageFile: file,
+          origin: location.state?.origin || 'main-camera',
+        },
+      });
     },
     [navigate],
   );
