@@ -231,7 +231,7 @@ const Collection = () => {
                                               <img
                                                 src={bottle.image}
                                                 alt={`병 ${bottle.id}`}
-                                                className="w-auto max-w-[80%] max-h-52 object- select-none -mb-8"
+                                                className="w-auto max-w-[80%] max-h-52 select-none -mb-8"
                                                 draggable="false"
                                                 onClick={() =>
                                                   navigate(
