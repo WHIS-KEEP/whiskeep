@@ -16,16 +16,18 @@ import com.whiskeep.api.member.dto.PopularWhiskyResponseDto;
 import com.whiskeep.api.member.repository.FamiliarWhiskyPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberRepository;
-import com.whiskeep.api.member.util.MemberScoreCalculator;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
 import com.whiskeep.api.whisky.repository.WhiskyRepository;
+import com.whiskeep.api.whiskylike.repository.WhiskyLikeRepository;
 import com.whiskeep.common.enumclass.TastingCategory;
 import com.whiskeep.common.exception.BadRequestException;
 import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
+import com.whiskeep.common.util.MemberScoreCalculator;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -39,11 +41,12 @@ public class PreferenceService {
 	private final WhiskyRepository whiskyRepository;
 	private final MemberScoreCalculator memberScoreCalculator;
 	private final RecordRepository recordRepository;
+	private final WhiskyLikeRepository whiskyLikeRepository;
 
 	@Transactional
 	public void createBeginnerPreferenceScore(BeginnerPreferenceRequestDto preferenceRequestDto, Long memberId) {
-		Member member =
-			memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		// 이미 초기 설문조사를 완료한 경우
 		if (memberPreferenceRepository.existsByMember(member)) {
@@ -82,8 +85,7 @@ public class PreferenceService {
 	}
 
 	private TastingComponent<Double> toComponent(Double score) {
-		return TastingComponent.<Double>builder()
-			.score(score) // 그냥 Double로 변환
+		return TastingComponent.<Double>builder().score(score) // 그냥 Double로 변환
 			.data(null) // 추후 분석 데이터 필요 시 사용
 			.build();
 	}
@@ -91,8 +93,8 @@ public class PreferenceService {
 	// 숙련자 선택한 위스키 기반 점수 계산
 	@Transactional
 	public void createFamiliarPreferenceScore(FamiliarPreferenceRequestDto preferenceRequestDto, Long memberId) {
-		Member member =
-			memberRepository.findById(memberId).orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+		Member member = memberRepository.findById(memberId)
+			.orElseThrow(() -> new NotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
 		// 이미 초기 설문조사를 완료한 경우,
 		if (familiarWhiskyPreferenceRepository.existsByMember(member)) {
@@ -112,10 +114,9 @@ public class PreferenceService {
 		List<Whisky> whiskyList = whiskyRepository.findAllById(preferenceRequestDto.likedWhiskies());
 
 		// 위스키 평점 리스트 조회하기
-		List<Double> ratingList =
-			whiskyList.stream()
-				.map(w -> recordRepository.findAverageRatingByWhiskyId(w.getWhiskyId()).orElse(5.0))
-				.toList();
+		List<Double> ratingList = whiskyList.stream()
+			.map(w -> recordRepository.findAverageRatingByWhiskyId(w.getWhiskyId()).orElse(5.0))
+			.toList();
 
 		// 3. 사용자 점수 계산하기
 		MemberPreference memberPreference = createPreferenceScore(member, whiskyList, ratingList, false);
@@ -161,13 +162,12 @@ public class PreferenceService {
 		boolean isUpdate) {
 
 		// 1. 사용자 점수 계산
-		Map<TastingCategory, Double> nosingScores = memberScoreCalculator.calculateProfileScore(whiskyList,
-			ratingList, "nosing");
-		Map<TastingCategory, Double> tastingScores = memberScoreCalculator.calculateProfileScore(whiskyList,
-			ratingList,
+		Map<TastingCategory, Double> nosingScores = memberScoreCalculator.calculateProfileScore(whiskyList, ratingList,
+			"nosing");
+		Map<TastingCategory, Double> tastingScores = memberScoreCalculator.calculateProfileScore(whiskyList, ratingList,
 			"tasting");
-		Map<TastingCategory, Double> finishScores = memberScoreCalculator.calculateProfileScore(whiskyList,
-			ratingList, "finish");
+		Map<TastingCategory, Double> finishScores = memberScoreCalculator.calculateProfileScore(whiskyList, ratingList,
+			"finish");
 
 		// 2. 맛 프로필 별로 score 값 세팅
 		TastingProfile<Double> nosing = createProfileFromMap(nosingScores);
@@ -176,12 +176,7 @@ public class PreferenceService {
 
 		// 3. 계산된 score 값으로 MemberPreference 객체 생성
 		MemberPreference memberPreference = memberPreferenceRepository.findByMember(member)
-			.orElse(MemberPreference.builder()
-				.member(member)
-				.nosing(nosing)
-				.tasting(tasting)
-				.finish(finish)
-				.build());
+			.orElse(MemberPreference.builder().member(member).nosing(nosing).tasting(tasting).finish(finish).build());
 
 		// 4. 업데이트가 필요할 경우, update
 		if (isUpdate) {
@@ -196,8 +191,7 @@ public class PreferenceService {
 	public List<PopularWhiskyResponseDto> getPopularWhiskyList() {
 
 		// 인기 있는 위스키 TOP 9
-		List<Long> popularWhiskyIds = List.of(2544L, 402L, 1470L, 1L, 2542L, 2184L,
-			3L, 4L, 2505L);
+		List<Long> popularWhiskyIds = List.of(2544L, 402L, 1470L, 1L, 2542L, 2184L, 3L, 4L, 2505L);
 
 		return whiskyRepository.findAllById(popularWhiskyIds)
 			.stream()
@@ -210,5 +204,7 @@ public class PreferenceService {
 	public void deletePreferenceByMember(Member member) {
 		memberPreferenceRepository.deleteByMember(member);
 		familiarWhiskyPreferenceRepository.deleteByMember(member);
+		recordRepository.deleteByMember(member);
+		whiskyLikeRepository.deleteByMember(member);
 	}
 }

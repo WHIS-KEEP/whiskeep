@@ -25,8 +25,6 @@ public interface RecordRepository extends JpaRepository<Record, Long>, RecordCus
 	@Query("SELECT AVG(r.rating) FROM Record r WHERE r.whisky.whiskyId = :whiskyId")
 	Optional<Double> findAverageRatingByWhiskyId(@Param("whiskyId") Long whiskyId);
 
-	Integer countRecordsByWhisky_WhiskyId(Long whiskyId);
-
 	@EntityGraph(attributePaths = {"member"})
 	Page<Record> findByWhiskyWhiskyIdAndIsPublicTrueOrderByCreatedAtDesc(Long whiskyId, Pageable pageable);
 
@@ -38,4 +36,6 @@ public interface RecordRepository extends JpaRepository<Record, Long>, RecordCus
 
 	@Query("SELECT DISTINCT r. whisky.whiskyId FROM Record r WHERE r.member = :member")
 	Set<Long> findDistinctWhiskyIdsByMember(@Param("member") Member member);
+
+	void deleteByMember(Member member);
 }

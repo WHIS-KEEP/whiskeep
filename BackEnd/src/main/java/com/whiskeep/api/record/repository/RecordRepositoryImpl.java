@@ -49,7 +49,7 @@ public class RecordRepositoryImpl implements RecordCustomRepository {
 	public Optional<RecordStats> findStatsByWhiskyId(Long whiskyId) {
 		QRecord qr = QRecord.record;
 
-		var avgExpr = qr.rating.avg();
+		var avgExpr = qr.rating.avg().coalesce(0.0);
 		var cntExpr = qr.count();
 
 		var tuple = jpaQueryFactory
@@ -58,8 +58,9 @@ public class RecordRepositoryImpl implements RecordCustomRepository {
 			.where(qr.whisky.whiskyId.eq(whiskyId))
 			.fetchOne();
 
-		if (tuple == null || tuple.get(cntExpr) == null) {
-			return Optional.empty();
+		if (tuple == null) {
+			// 해당 whiskyId를 가진 record 자체가 없을 때
+			return Optional.of(new RecordStats(0.0, 0));
 		}
 
 		return Optional.of(new RecordStats(

@@ -13,4 +13,6 @@ public interface WhiskyLikeRepository extends JpaRepository<WhiskyLike, Long> {
 	Optional<WhiskyLike> findByMemberAndWhisky(Member member, Whisky whisky);
 
 	List<WhiskyLike> findAllByMemberOrderByCreatedAtDesc(Member member);
+
+	void deleteByMember(Member member);
 }

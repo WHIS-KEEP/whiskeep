@@ -253,7 +253,7 @@ public class RecordService {
 
 	private void updateWhiskyStats(Long whiskyId) {
 		RecordStats newStats = recordRepository.findStatsByWhiskyId(whiskyId)
-			.orElseThrow(() -> new NotFoundException(ErrorMessage.RECORD_NOT_FOUND));
+			.orElse(new RecordStats(0.0, 0));
 		try {
 			elasticsearchClient.update(u -> u.index("whisky")
 					.id(whiskyId.toString())
