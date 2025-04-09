@@ -136,41 +136,41 @@ export function TastingRadarChart({
     <div className={className} style={{ width, height }}>
       {/* 프로필 타입 선택 탭 - 검정색 텍스트로 변경 */}
       {showTabs && (
-        <div className="flex justify-between items-center text-xs text-gray-600 mb-2 border-b border-gray-300 pb-1">
-          <button
-            className={`px-2 py-1 ${activeProfile === 'nosing' ? 'text-primary-dark font-bold' : ''}`}
-            onClick={() => handleProfileTypeChange('nosing')}
-          >
-            Nosing
-          </button>
-          <span className="text-gray-400">|</span>
-          <button
-            className={`px-2 py-1 ${activeProfile === 'tasting' ? 'text-primary-dark font-bold' : ''}`}
-            onClick={() => handleProfileTypeChange('tasting')}
-          >
-            Tasting
-          </button>
-          <span className="text-gray-400">|</span>
-          <button
-            className={`px-2 py-1 ${activeProfile === 'finish' ? 'text-primary-dark font-bold' : ''}`}
-            onClick={() => handleProfileTypeChange('finish')}
-          >
-            Finish
-          </button>
-        </div>
-      )}
+  <div className="flex items-center justify-end text-xs text-gray-600 pb-0 -mt-6">
+    <button
+      className={`px-2 py-1 ${activeProfile === 'nosing' ? 'text-primary-dark font-bold' : ''}`}
+      onClick={() => handleProfileTypeChange('nosing')}
+    >
+      Nosing
+    </button>
+    <span className="mx-1 text-gray-400">|</span>
+    <button
+      className={`px-2 py-1 ${activeProfile === 'tasting' ? 'text-primary-dark font-bold' : ''}`}
+      onClick={() => handleProfileTypeChange('tasting')}
+    >
+      Tasting
+    </button>
+    <span className="mx-1 text-gray-400">|</span>
+    <button
+      className={`px-2 py-1 ${activeProfile === 'finish' ? 'text-primary-dark font-bold' : ''}`}
+      onClick={() => handleProfileTypeChange('finish')}
+    >
+      Finish
+    </button>
+  </div>
+)}
       {/* 차트 컨테이너 */}
       {isLoading ? (
         <div className="flex items-center justify-center w-full h-full">
           <p className="text-sm text-gray-600">차트 로딩 중...</p>
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height="100%">
-          <RadarChart cx="50%" cy="50%" outerRadius="70%" data={chartData}>
+        <ResponsiveContainer width="100%" height="100%"  className="mt-6">
+          <RadarChart cx="50%" cy="40%" outerRadius="75%" data={chartData}>
             <PolarGrid stroke="rgba(255, 255, 255, 0.3)" />
             <PolarAngleAxis
               dataKey="subject"
-              tick={showLabels ? { fontSize: 10, fill: '#333333' } : false} // 글씨만 검정색으로
+              tick={showLabels ? { fontSize: 10, fill: '#333333', dy: 4  } : false} // 글씨만 검정색으로
               stroke="rgba(255, 255, 255, 0.5)"
             />
             <PolarRadiusAxis
