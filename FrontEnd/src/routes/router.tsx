@@ -36,12 +36,18 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 // 설문조사를 하기 전 사용자
 const PreferenceProtectedRoute = ({ children }: { children: JSX.Element }) => {
   const score = useMemberStore((state) => state.score);
+
+  if (score === undefined) return null;
+
   return score ? children : <Navigate to="/preference" replace />;
 };
 
 // 설문을 이미 한 사람은 접근 불가
 const BlockIfAlreadyHasScore = ({ children }: { children: JSX.Element }) => {
   const score = useMemberStore((state) => state.score);
+
+  if (score === undefined) return null; // 점수 조회 중일 때는 null을 반환하여 로딩 상태를 유지
+
   return score ? <Navigate to="/main" replace /> : children;
 };
 
