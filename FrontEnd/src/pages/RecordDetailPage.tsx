@@ -132,7 +132,7 @@ const RecordDetailPage = () => {
   }
 
   return (
-    <div className="bg-white w-full max-w-[412px] mx-auto h-screen flex flex-col relative z-0">
+    <div className="bg-white w-full mx-auto h-screen flex flex-col relative z-0">
       <div className="flex-1 overflow-auto">
         <div className="flex flex-col pb-16">
           {/* 헤더 */}
@@ -174,11 +174,12 @@ const RecordDetailPage = () => {
                 <img
                   src={recordDetail.recordImg}
                   alt="기록 이미지"
-                  className="w-full h-[500px] object-cover"
+                  className="w-full object-cover"
+                  style={{ maxHeight: '500px', height: 'auto' }}
                 />
               ) : (
                 <div className="w-full h-[300px] bg-gray-200 flex items-center justify-center">
-                  <p className="text-gray-500">이미지가 없습니다</p>
+                  <p className="text-gray-500">이미지가 없습니다 🙁</p>
                 </div>
               )}
             </div>
