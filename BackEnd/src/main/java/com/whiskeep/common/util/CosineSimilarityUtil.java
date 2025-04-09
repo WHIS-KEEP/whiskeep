@@ -1,4 +1,4 @@
-package com.whiskeep.api.recommend.util;
+package com.whiskeep.common.util;
 
 import java.util.HashSet;
 import java.util.Map;

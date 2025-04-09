@@ -16,7 +16,6 @@ import com.whiskeep.api.member.repository.FamiliarWhiskyPreferenceRepository;
 import com.whiskeep.api.member.repository.MemberRepository;
 import com.whiskeep.api.recommend.dto.RecommendResponseDto;
 import com.whiskeep.api.recommend.dto.RecommendedListResponseDto;
-import com.whiskeep.api.recommend.util.CosineSimilarityUtil;
 import com.whiskeep.api.record.domain.Record;
 import com.whiskeep.api.record.repository.RecordRepository;
 import com.whiskeep.api.whisky.domain.Whisky;
@@ -25,6 +24,7 @@ import com.whiskeep.common.exception.ErrorMessage;
 import com.whiskeep.common.exception.NotFoundException;
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
+import com.whiskeep.common.util.CosineSimilarityUtil;
 
 import lombok.RequiredArgsConstructor;
 

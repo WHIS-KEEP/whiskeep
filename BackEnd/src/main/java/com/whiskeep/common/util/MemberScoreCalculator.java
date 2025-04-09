@@ -1,4 +1,4 @@
-package com.whiskeep.api.member.util;
+package com.whiskeep.common.util;
 
 import java.util.Comparator;
 import java.util.EnumMap;
