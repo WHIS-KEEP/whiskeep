@@ -92,7 +92,7 @@ const DetailPage = () => {
   }
 
   return (
-    <ScrollArea className="flex-1 bg-white w-[412px] mx-auto ">
+    <ScrollArea className="flex-1 bg-white w-full max-w-screen-md mx-auto ">
       <div style={{ paddingBottom: '0' }}>
         {/* 헤더 백 버튼 */}
         <div className="flex items-center p-4">
@@ -154,15 +154,15 @@ const DetailPage = () => {
             className="p-4 rounded-lg text-white"
             style={{ backgroundColor: 'var(--bg-muted)' }}
           >
-            <h2 className="text-m font-medium text-gray-500 mb-2">
+            <h2 className="text-lg font-medium text-gray-600 mb-2">
               {user ? `${user.nickname}님` : '게스트님'} 취향 분석
             </h2>
             {/* 테이스팅 프로필 차트 추가 - 이제 내부에 탭 선택 UI 포함 */}
-            <div className="w-full h-48 flex items-center justify-center mt-6">
+            <div className="w-full h-50 flex items-center justify-center mt-2 mb-6">
               <TastingRadarChart
                 whiskyId={whiskyIdNumber}
-                height="100%"
-                width="100%"
+                height="110%"
+                width="110%"
                 className="w-full h-full"
               />
             </div>
@@ -173,28 +173,28 @@ const DetailPage = () => {
         <div className="p-4 border-b border-gray-200">
           <table className="w-full">
             <tbody>
-              <tr className="border-b border-gray-100">
-                <td className="py-2 font-medium">양조장</td>
-                <td className="py-2 text-right">{whiskyDetail?.distillery}</td>
+              <tr>
+                <td className="py-2 font-medium w-1/2">양조장</td>
+                <td className="py-2 text-left">{whiskyDetail?.distillery}</td>
+              </tr >
+              <tr>
+                <td className="py-2 font-medium w-1/2">나라, 지역</td>
+                <td className="py-2 text-left">{whiskyDetail?.country}</td>
               </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-2 font-medium">나라, 지역</td>
-                <td className="py-2 text-right">{whiskyDetail?.country}</td>
-              </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-2 font-medium">도수</td>
-                <td className="py-2 text-right">{whiskyDetail?.abv}%</td>
+              <tr >
+                <td className="py-2 font-medium w-1/2">도수</td>
+                <td className="py-2 text-left">{whiskyDetail?.abv}%</td>
               </tr>
               <tr>
                 <td className="py-2 font-medium">종류</td>
-                <td className="py-2 text-right">{whiskyDetail?.type}</td>
+                <td className="py-2 text-left">{whiskyDetail?.type}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         {/* 제품 설명 */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-5 border-b border-gray-200">
           <p className="text-sm text-gray-700 leading-relaxed">
             {whiskyDetail?.description}
           </p>
@@ -205,23 +205,23 @@ const DetailPage = () => {
           <h2 className="text-lg font-bold mb-3">Tasting Notes</h2>
           <table className="w-full">
             <tbody>
-              <tr className="border-b border-gray-100">
-                <td className="py-2 font-medium w-16">향</td>
-                <td className="py-2">
+              <tr >
+                <td className="py-2 font-medium w-1/3">향</td>
+                <td className="py-2 text-left">
                   {whiskyDetail?.tastingNotes?.nosing?.join(', ') ||
                     '정보 없음'}
                 </td>
               </tr>
-              <tr className="border-b border-gray-100">
-                <td className="py-2 font-medium">맛</td>
-                <td className="py-2">
+              <tr >
+                <td className="py-2 font-medium w-1/3">맛</td>
+                <td className="py-2 text-left">
                   {whiskyDetail?.tastingNotes?.tasting?.join(', ') ||
                     '정보 없음'}
                 </td>
               </tr>
               <tr>
-                <td className="py-2 font-medium">피니시</td>
-                <td className="py-2">
+                <td className="py-2 font-medium w-1/3">피니시</td>
+                <td className="py-2 text-left">
                   {whiskyDetail?.tastingNotes?.finish?.join(', ') ||
                     '정보 없음'}
                 </td>
