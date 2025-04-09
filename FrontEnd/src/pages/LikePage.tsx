@@ -14,24 +14,19 @@ import LikedWhiskyList from '@/components/ui/LikedWhiskyList';
 export function LikePage() {
   const navigate = useNavigate();
 
-
   // React Query를 사용하여 찜 목록 데이터 가져오기
   const { data, isLoading, isError } = useQuery({
     queryKey: [LIKES_QUERY_KEY],
     queryFn: fetchLikedWhiskies,
   });
 
-
-
   // data가 undefined, null이거나 배열이 아닐 경우 빈 배열로 처리
   const likedItems: LikedWhisky[] = Array.isArray(data) ? data : [];
 
   // LikedWhiskyList 클릭 콜백 핸들러 (LikePage의 동작 구현)
   const handlePageItemClick = (item: LikedWhisky) => {
- 
-      // 재클릭 시 상세 페이지로 이동
-      navigate(`/detail/${item.whiskyId}`);
-  
+    // 재클릭 시 상세 페이지로 이동
+    navigate(`/detail/${item.whiskyId}`);
   };
 
   // 로딩 상태 처리
@@ -62,9 +57,7 @@ export function LikePage() {
     <div className="container bg-white rounded-[18px] flex flex-col flex-grow w-full p-4">
       <div className="mt-2 mb-4">
         <div className="flex items-center pl-1">
-          <h1 className="text-xl font-semibold mr-4">
-            나의 찜 리스트
-          </h1>
+          <h1 className="text-xl font-semibold mr-4">나의 찜 리스트</h1>
           <div className="h-px bg-gray-200 flex-grow"></div>
         </div>
       </div>
