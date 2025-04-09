@@ -117,7 +117,8 @@ export default function WhiskyRecommendationSection() {
                   whiskyImage={whisky.whiskyImg}
                   abv={whisky.abv}
                   showLikeButton={false}
-                  showChart={false}
+                  showChart={true}
+                  whiskyId={whisky.whiskyId} // 이 속성이 추가되어야 함!
                   className="w-[280px] sm:w-[320px] md:w-[360px]"
                 />
               </div>

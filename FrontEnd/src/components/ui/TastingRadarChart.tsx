@@ -36,6 +36,9 @@ interface TastingRadarChartProps {
   height?: string | number;
   className?: string;
   profile?: TastingProfile; // 직접 프로필 데이터를 전달할 경우
+  showTabs?: boolean; //기본값은 true
+  showLegend?: boolean;
+  showLabels?: boolean;
 }
 
 // 차트 데이터 포맷 변환 함수
@@ -88,6 +91,9 @@ export function TastingRadarChart({
   width = '100%',
   height = '100%',
   className = '',
+  showTabs= true,
+  showLegend = true, // 기본값은 true
+  showLabels = true, 
   profile: providedProfile,
 }: TastingRadarChartProps) {
   // 현재 선택된 프로필 타입 (기본값: tasting)
@@ -129,6 +135,7 @@ export function TastingRadarChart({
   return (
     <div className={className} style={{ width, height }}>
       {/* 프로필 타입 선택 탭 - 검정색 텍스트로 변경 */}
+      {showTabs && (
       <div className="flex justify-between items-center text-xs text-gray-600 mb-2 border-b border-gray-300 pb-1">
         <button
           className={`px-2 py-1 ${activeProfile === 'nosing' ? 'text-primary-dark font-bold' : ''}`}
@@ -151,7 +158,7 @@ export function TastingRadarChart({
           Finish
         </button>
       </div>
-
+      )}
       {/* 차트 컨테이너 */}
       {isLoading ? (
         <div className="flex items-center justify-center w-full h-full">
@@ -163,7 +170,7 @@ export function TastingRadarChart({
             <PolarGrid stroke="rgba(255, 255, 255, 0.3)" />
             <PolarAngleAxis
               dataKey="subject"
-              tick={{ fontSize: 10, fill: '#333333' }} // 글씨만 검정색으로
+              tick={showLabels ? { fontSize: 10, fill: '#333333' }: false} // 글씨만 검정색으로
               stroke="rgba(255, 255, 255, 0.5)"
             />
             <PolarRadiusAxis
@@ -191,6 +198,7 @@ export function TastingRadarChart({
                 fillOpacity={0.4}
               />
             )}
+            {showLegend && (
             <Legend
               iconSize={10}
               wrapperStyle={{ fontSize: '10px', color: '#333333' }}
@@ -198,6 +206,7 @@ export function TastingRadarChart({
                 <span style={{ color: '#333333' }}>{value}</span>
               )}
             />
+            )}
           </RadarChart>
         </ResponsiveContainer>
       )}

@@ -1,8 +1,8 @@
 import { cn } from '@/lib/util/utils';
 import { Card, CardContent } from '../shadcn/card';
 import defaultBgImg from '../../assets/whisky_background.png';
-import TastingRadarChart, { TastingProfile } from './Tastingchart';
 import HeartButton from './Heart';
+import TastingRadarChart, { TastingProfile } from './TastingRadarChart';
 
 // Props 인터페이스 정의
 interface WhiskycardProps extends React.ComponentProps<typeof Card> {
@@ -59,15 +59,19 @@ export function Whiskycard({
         </div>
         {/* Radar Chart를 우측 상단에 배치 */}
         {showChart && (
-          <div className="absolute top-10 right-10 w-[90px] h-[90px]">
-            <TastingRadarChart
-              whiskyId={whiskyId}
-              profile={tastingProfile}
-              width="90px"
-              height="90px"
-            />
-          </div>
-        )}
+  <div className="absolute right-6 w-[100px] h-[100px] z-20">
+    <TastingRadarChart
+      whiskyId={whiskyId}
+      profile={tastingProfile}
+      width="150px"
+      height="150px"
+      showTabs={false}
+      showLegend={false}
+      showLabels={false}
+      // className="bg-bg/70 rounded-full scale-75" 
+    />
+  </div>
+)}
       </CardContent>
 
       {/* 중앙에 배치할 이미지 - 위치를 더 위로 조정 */}
@@ -78,6 +82,7 @@ export function Whiskycard({
           className="w-[220px] h-[220px] object-cover"
         />
       </div>
+
 
       {/* 카드 아랫부분 - 상단 마진 감소 */}
       <div className="h-[150px] bg-primary-dark rounded-b-[24px] flex items-center justify-between p-4 relative mt-[30px]">
