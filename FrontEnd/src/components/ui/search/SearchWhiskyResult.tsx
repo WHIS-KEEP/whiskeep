@@ -31,7 +31,7 @@ export default function WhiskyListResult({
 
   const formatCount = (count: number) =>
     count > 999 ? '(999+)' : `(${count})`;
-    
+
   // 긴 텍스트 자르기 함수
   const truncateText = (text: string, limit: number) => {
     if (!text) return '';
@@ -146,7 +146,7 @@ export default function WhiskyListResult({
                   <p className="font-semibold text-base leading-tight">
                     {truncateText(item.koName, 30)}
                   </p>
-                  
+
                   {/* 영문 이름 */}
                   {item.enName && (
                     <p className="text-sm text-muted-foreground">
@@ -154,18 +154,20 @@ export default function WhiskyListResult({
                     </p>
                   )}
                 </div>
-                
+
                 {/* 하단 영역: 타입 정보와 별점 */}
                 <div className="flex items-center justify-between w-full mt-1">
                   {/* 타입 정보 */}
                   <div className="text-xs text-muted-foreground max-w-[60%] overflow-hidden text-ellipsis whitespace-nowrap">
                     {item.type} {item.abv ? `| ${item.abv}%` : ''}
                   </div>
-                  
+
                   {/* 별점 영역 - 오른쪽으로 배치 */}
                   <div className="flex items-center gap-1 flex-shrink-0">
                     <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
-                    <span className="text-sm font-medium">{item.avgRating.toFixed(1)}</span>
+                    <span className="text-sm font-medium">
+                      {item.avgRating.toFixed(1)}
+                    </span>
                     <span className="text-xs text-muted-foreground">
                       {formatCount(item.recordCounts)}
                     </span>
