@@ -58,7 +58,7 @@ export default function WhiskyRecommendationSection() {
   };
 
   return (
-    <div className="flex flex-col gap-4 items-center w-full px-0 md:px-0 mb-8">
+    <div className="flex flex-col gap-4 items-center w-full px-0 md:px-0 mb-0">
       <h2 className="font-semibold text-md md:text-md lg:text-md mb-1 self-start pl-5 mt-4">
         <span className="text-2xl md:text-3xl lg:text-4xl">
           {user?.nickname}
