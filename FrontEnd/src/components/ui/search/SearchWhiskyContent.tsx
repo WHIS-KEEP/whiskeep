@@ -38,86 +38,65 @@ const SearchWhiskyContent = ({ onSelect, closeDialog }: Props) => {
 
   const { mutate } = useSearchMutation();
 
-  // 필터 변경 감지
-  const isFilterChanged = useCallback(() => {
-    const currentFilters = JSON.stringify(filters);
-    const filterChanged = currentFilters !== previousFiltersRef.current;
-
-    if (filterChanged) {
-      previousFiltersRef.current = currentFilters;
-    }
-
-    return filterChanged;
-  }, [filters]);
-
   const fetchWhiskies = useCallback(
-    (isLoadMore = false) => {
-      // 이미 로딩 중인 경우 중복 요청 방지
-      if (isLoadMore && isLoadingMore) {
-        return;
-      }
+    (isLoadMore = false, customFilters?: typeof filters) => {
+      const targetFilters = customFilters || filters;
+
+      // 중복 호출 방지
+      if (isLoadMore && isLoadingMore) return;
 
       if (isLoadMore) {
         setIsLoadingMore(true);
-      } else if (isFilterChanged()) {
-        // 필터 변경 시 searchAfter 초기화 및 스크롤 초기화 플래그 설정
-        setSearchAfter([] as []);
-        setShouldScrollToTop(true);
       }
 
       mutate(
         {
-          keyword: filters.keyword,
-          pageSize: 15, // 페이지 사이즈 증가
-          searchAfter: isLoadMore ? searchAfter : ([] as []),
-          sortField: filters.sortField,
-          desc: filters.desc,
-          age: filters.age,
-          type: filters.type,
+          keyword: targetFilters.keyword,
+          pageSize: 15,
+          searchAfter: isLoadMore ? searchAfter : [],
+          sortField: targetFilters.sortField,
+          desc: targetFilters.desc,
+          age: targetFilters.age,
+          type: targetFilters.type,
         },
         {
           onSuccess: (res) => {
-            if (isLoadMore) {
-              // 기존 목록에 새로운 아이템 추가
-              setWhiskies((prev) => [...prev, ...res.whiskies]);
-            } else {
-              // 필터 변경 시 목록 완전 교체
-              setWhiskies(res.whiskies);
-            }
-
+            setWhiskies((prev) =>
+              isLoadMore ? [...prev, ...res.whiskies] : res.whiskies,
+            );
             setSearchAfter(res.nextSearchAfter);
             setHasNext(res.hasNext);
-
-            if (isLoadMore) {
-              setIsLoadingMore(false);
-            }
-
-            // 디버깅용 로그
-            console.log(
-              `Loaded ${res.whiskies.length} items, hasNext: ${res.hasNext}`,
-              res.nextSearchAfter,
-            );
+            if (isLoadMore) setIsLoadingMore(false);
           },
           onError: (err) => {
             console.error('검색 에러:', err);
-            if (isLoadMore) {
-              setIsLoadingMore(false);
-            }
+            if (isLoadMore) setIsLoadingMore(false);
           },
         },
       );
     },
-    [filters, searchAfter, isLoadingMore, mutate, isFilterChanged],
+    [filters, isLoadingMore, mutate, searchAfter],
   );
 
   // 필터 변경 시 새 검색 실행
   useEffect(() => {
-    if (isFilterChanged()) {
-      fetchWhiskies(false);
-    }
-  }, [filters, fetchWhiskies, isFilterChanged]);
+    const currentFilters = JSON.stringify(filters);
+    const hasChanged = currentFilters !== previousFiltersRef.current;
 
-  // shouldScrollToTop 플래그 리셋 (짧은 지연 후)
+    if (hasChanged) {
+      previousFiltersRef.current = currentFilters;
+      setSearchAfter([]);
+      setShouldScrollToTop(true);
+      fetchWhiskies(false, filters);
+    }
+  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 초기 데이터 로딩
+  useEffect(() => {
+    fetchWhiskies(false);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // shouldScrollToTop flag 리셋
   useEffect(() => {
     if (shouldScrollToTop) {
       const timeout = setTimeout(() => {
@@ -126,11 +105,6 @@ const SearchWhiskyContent = ({ onSelect, closeDialog }: Props) => {
       return () => clearTimeout(timeout);
     }
   }, [shouldScrollToTop]);
-
-  // 초기 데이터 로드
-  useEffect(() => {
-    fetchWhiskies(false);
-  }, [fetchWhiskies]);
 
   const handleWhiskyClick = (id: number) => {
     const whisky = whiskies.find((w) => w.whiskyId === id);
@@ -146,24 +120,16 @@ const SearchWhiskyContent = ({ onSelect, closeDialog }: Props) => {
     closeDialog?.();
   };
 
-  // 필터 변경 시 상태 업데이트 및 searchAfter 초기화
-  const handleFilterChange = (newFilters: {
-    keyword?: string;
-    age?: number;
-    type?: string;
-    sortField: string;
-    desc: boolean;
-  }) => {
-    setSearchAfter([] as []);
+  const handleFilterChange = (newFilters: typeof filters) => {
+    setSearchAfter([]);
     setFilters(newFilters);
   };
 
   const handleLoadMore = useCallback(() => {
     if (hasNext && !isLoadingMore) {
-      console.log('Loading more items...', searchAfter);
       fetchWhiskies(true);
     }
-  }, [hasNext, isLoadingMore, searchAfter, fetchWhiskies]);
+  }, [hasNext, isLoadingMore, fetchWhiskies]);
 
   return (
     <div className="flex flex-col h-full overflow-hidden">

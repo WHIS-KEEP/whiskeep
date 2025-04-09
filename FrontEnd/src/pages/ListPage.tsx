@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Whisky } from '@/types/search';
 import SearchWhisky from '@/components/ui/search/SearchWhisky';
@@ -10,9 +10,7 @@ const ListPage = () => {
   const [shouldScrollToTop, setShouldScrollToTop] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [whiskies, setWhiskies] = useState<Whisky[]>([]);
-  const [searchAfter, setSearchAfter] = useState<[] | [number, number]>(
-    [] as [],
-  );
+  const [searchAfter, setSearchAfter] = useState<[] | [number, number]>([]);
   const [hasNext, setHasNext] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const previousFiltersRef = useRef<string>('');
@@ -33,77 +31,61 @@ const ListPage = () => {
 
   const { mutate } = useSearchMutation();
 
-  // 필터 변경 감지
-  const isFilterChanged = useCallback(() => {
-    const currentFilters = JSON.stringify(filters);
-    const filterChanged = currentFilters !== previousFiltersRef.current;
-
-    if (filterChanged) {
-      previousFiltersRef.current = currentFilters;
-    }
-
-    return filterChanged;
-  }, [filters]);
-
+  // 안전한 fetch 함수: filters는 인자로 직접 받는다
   const fetchWhiskies = useCallback(
-    (isLoadMore = false) => {
-      // 이미 로딩 중인 경우 중복 요청 방지
-      if (isLoadMore && isLoadingMore) {
-        return;
-      }
+    (isLoadMore = false, customFilters?: typeof filters) => {
+      const targetFilters = customFilters ?? filters;
 
-      if (isLoadMore) {
-        setIsLoadingMore(true);
-      } else if (isFilterChanged()) {
-        // 필터 변경 시 스크롤 초기화 플래그 설정
-        setShouldScrollToTop(true);
-      }
+      if (isLoadMore && isLoadingMore) return;
+      if (isLoadMore) setIsLoadingMore(true);
 
-      const payload = {
-        keyword: filters.keyword,
-        pageSize: 15, // 페이지 사이즈 증가
-        searchAfter: isLoadMore ? searchAfter : ([] as []),
-        sortField: filters.sortField,
-        desc: filters.desc,
-        age: filters.age,
-        type: filters.type,
-      };
-
-      mutate(payload, {
-        onSuccess: (res) => {
-          if (isLoadMore) {
-            // 무한 스크롤: 기존 항목에 새 항목 추가
-            setWhiskies((prev) => [...prev, ...res.whiskies]);
-          } else {
-            // 필터 변경: 항목 완전 교체
-            setWhiskies(res.whiskies);
-          }
-
-          setSearchAfter(res.nextSearchAfter);
-          setHasNext(res.hasNext);
-
-          if (isLoadMore) {
-            setIsLoadingMore(false);
-          }
+      mutate(
+        {
+          keyword: targetFilters.keyword,
+          pageSize: 15,
+          searchAfter: isLoadMore ? searchAfter : [],
+          sortField: targetFilters.sortField,
+          desc: targetFilters.desc,
+          age: targetFilters.age,
+          type: targetFilters.type,
         },
-        onError: () => {
-          if (isLoadMore) {
-            setIsLoadingMore(false);
-          }
+        {
+          onSuccess: (res) => {
+            setWhiskies((prev) =>
+              isLoadMore ? [...prev, ...res.whiskies] : res.whiskies,
+            );
+            setSearchAfter(res.nextSearchAfter);
+            setHasNext(res.hasNext);
+            if (isLoadMore) setIsLoadingMore(false);
+          },
+          onError: () => {
+            if (isLoadMore) setIsLoadingMore(false);
+          },
         },
-      });
+      );
     },
-    [filters, searchAfter, isLoadingMore, mutate, isFilterChanged],
+    [mutate, searchAfter, isLoadingMore], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  // 필터 변경 시 새 검색 실행
+  // 필터 변경 감지 및 새 요청
   useEffect(() => {
-    if (isFilterChanged()) {
-      fetchWhiskies(false);
-    }
-  }, [filters, fetchWhiskies, isFilterChanged]);
+    const currentFilters = JSON.stringify(filters);
+    const hasChanged = currentFilters !== previousFiltersRef.current;
 
-  // shouldScrollToTop 플래그 리셋 (짧은 지연 후)
+    if (hasChanged) {
+      previousFiltersRef.current = currentFilters;
+      setSearchAfter([]);
+      setShouldScrollToTop(true);
+      fetchWhiskies(false, filters); // filters 직접 넘김
+    }
+  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 최초 1회 데이터 로드
+  useEffect(() => {
+    fetchWhiskies(false, filters);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 스크롤 플래그 리셋
   useEffect(() => {
     if (shouldScrollToTop) {
       const timeout = setTimeout(() => {
@@ -113,11 +95,6 @@ const ListPage = () => {
     }
   }, [shouldScrollToTop]);
 
-  // 초기 데이터 로드
-  useEffect(() => {
-    fetchWhiskies(false);
-  }, [fetchWhiskies]);
-
   const handleSelect = (id: number) => {
     setSelectedId(id);
     navigate(`/detail/${id}`);
@@ -125,26 +102,19 @@ const ListPage = () => {
 
   const handleLoadMore = () => {
     if (hasNext && !isLoadingMore) {
-      fetchWhiskies(true);
+      fetchWhiskies(true, filters);
     }
   };
 
-  const handleFilterChange = (newFilters: {
-    keyword: string | undefined;
-    age: number | undefined;
-    type: string | undefined;
-    sortField: string;
-    desc: boolean;
-  }) => {
-    // 필터 변경 시 searchAfter 초기화
-    setSearchAfter([] as []);
+  const handleFilterChange = (newFilters: typeof filters) => {
+    setSearchAfter([]); // 초기화
     setFilters(newFilters);
   };
 
   return (
     <div className="h-screen w-full bg-bg-muted pt-5 pb-20 flex flex-col">
       <div className="bg-white rounded-t-[18px] p-4 flex flex-col flex-grow overflow-hidden">
-        {/* 검색 + 필터 컴포넌트 */}
+        {/* 검색 + 필터 */}
         <SearchWhisky
           onSelect={handleSelect}
           onFilteredChange={handleFilterChange}
@@ -152,7 +122,7 @@ const ListPage = () => {
           hideTitle
         />
 
-        {/* 결과 렌더링 컴포넌트 */}
+        {/* 결과 렌더링 */}
         <div className="flex-grow overflow-hidden">
           <SearchWhiskyResult
             items={whiskies}
