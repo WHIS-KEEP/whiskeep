@@ -2,6 +2,7 @@
 
 // import { ApiError, handleApiError, createNetworkError } from '../util/error';
 import API from '@/lib/util/axiosInstance'; // API 요청을 위한 axios 인스턴스
+import { Whisky } from './collection';
 
 /**
  * OCR API 응답 타입 정의
@@ -9,8 +10,8 @@ import API from '@/lib/util/axiosInstance'; // API 요청을 위한 axios 인스
  * 추후 백엔드 구현 완료 시 실제 응답 구조에 맞게 조정 필요!!!!!
  */
 export interface OcrResponse {
-  // 백엔드에서 반환하는 실제 구조에 맞게 조정 필요
-  [key: string]: unknown;
+  sameWhiskyIds: number[];
+  whiskies: Whisky[];
 }
 
 /**
