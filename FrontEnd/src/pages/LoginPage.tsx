@@ -36,7 +36,7 @@ const Login = () => {
           {/* --- 로고 영역 끝 --- */}
           {/* --- 메인 이미지 영역 시작 --- */}
           {/* 이미지 자체의 아래 여백(mb)은 제거하고, 그룹 전체의 mb로 간격 관리 */}
-          <div className="w-full rounded-b-[18px] overflow-hidden">
+          <div className="w-full rounded-b-[40px] overflow-hidden">
             <img
               src={loginImage}
               alt="Whiskey tasting"
@@ -50,7 +50,7 @@ const Login = () => {
         {/* --- 버튼 영역 시작 (별도 영역) --- */}
         {/* 버튼 영역의 너비와 정렬을 설정합니다. 로고/이미지 그룹과 동일하게 max-w-sm 적용 */}
         {/* 그룹과의 간격은 위 그룹의 mb-12로 조절했으므로 mt는 제거하거나 작은 값(예: mt-4)으로 설정 가능 */}
-        <div className="flex flex-col items-center gap-5 w-full max-w-sm">
+        <div className="flex flex-col items-center gap-8 w-full max-w-sm">
           <GoogleButton onClick={() => handleLogin('google')} />
           <KakaoButton onClick={() => handleLogin('kakao')} />
         </div>
