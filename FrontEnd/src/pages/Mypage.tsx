@@ -4,7 +4,7 @@ import {
   AvatarImage,
 } from '@/components/shadcn/avatar';
 import { Button } from '@/components/shadcn/Button';
-import { Camera, Pencil, Image as ImageIcon, X } from 'lucide-react';
+import { Camera, Pencil, Image as ImageIcon } from 'lucide-react';
 import {
   Drawer,
   DrawerContent,
