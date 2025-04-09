@@ -7,6 +7,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.whiskeep.api.whisky.domain.Whisky;
@@ -15,7 +17,6 @@ import com.whiskeep.common.enumclass.TastingCategory;
 import com.whiskeep.common.model.TastingComponent;
 import com.whiskeep.common.model.TastingProfile;
 
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +31,7 @@ public class WhiskyStatusCache {
 	private static final int TOP_K = 3; // TOP-K 평균에서 K 값
 
 	// 최초 1회 실행 후 MaxMap에 저장
-	@PostConstruct
+	@EventListener(ApplicationReadyEvent.class)
 	public void init() {
 		this.categoryMaxMap = calculateMaxMap();
 	}
