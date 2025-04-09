@@ -59,19 +59,19 @@ export function Whiskycard({
         </div>
         {/* Radar Chart를 우측 상단에 배치 */}
         {showChart && (
-  <div className="absolute right-6 w-[100px] h-[100px] z-20">
-    <TastingRadarChart
-      whiskyId={whiskyId}
-      profile={tastingProfile}
-      width="150px"
-      height="150px"
-      showTabs={false}
-      showLegend={false}
-      showLabels={false}
-      // className="bg-bg/70 rounded-full scale-75" 
-    />
-  </div>
-)}
+          <div className="absolute right-6 w-[100px] h-[100px] z-20">
+            <TastingRadarChart
+              whiskyId={whiskyId}
+              profile={tastingProfile}
+              width="150px"
+              height="150px"
+              showTabs={false}
+              showLegend={false}
+              showLabels={false}
+              // className="bg-bg/70 rounded-full scale-75"
+            />
+          </div>
+        )}
       </CardContent>
 
       {/* 중앙에 배치할 이미지 - 위치를 더 위로 조정 */}
@@ -82,7 +82,6 @@ export function Whiskycard({
           className="w-[220px] h-[220px] object-cover"
         />
       </div>
-
 
       {/* 카드 아랫부분 - 상단 마진 감소 */}
       <div className="h-[150px] bg-primary-dark rounded-b-[24px] flex items-center justify-between p-4 relative mt-[30px]">

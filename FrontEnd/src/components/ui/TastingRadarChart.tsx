@@ -91,9 +91,9 @@ export function TastingRadarChart({
   width = '100%',
   height = '100%',
   className = '',
-  showTabs= true,
+  showTabs = true,
   showLegend = true, // 기본값은 true
-  showLabels = true, 
+  showLabels = true,
   profile: providedProfile,
 }: TastingRadarChartProps) {
   // 현재 선택된 프로필 타입 (기본값: tasting)
@@ -136,28 +136,28 @@ export function TastingRadarChart({
     <div className={className} style={{ width, height }}>
       {/* 프로필 타입 선택 탭 - 검정색 텍스트로 변경 */}
       {showTabs && (
-      <div className="flex justify-between items-center text-xs text-gray-600 mb-2 border-b border-gray-300 pb-1">
-        <button
-          className={`px-2 py-1 ${activeProfile === 'nosing' ? 'text-primary-dark font-bold' : ''}`}
-          onClick={() => handleProfileTypeChange('nosing')}
-        >
-          Nosing
-        </button>
-        <span className="text-gray-400">|</span>
-        <button
-          className={`px-2 py-1 ${activeProfile === 'tasting' ? 'text-primary-dark font-bold' : ''}`}
-          onClick={() => handleProfileTypeChange('tasting')}
-        >
-          Tasting
-        </button>
-        <span className="text-gray-400">|</span>
-        <button
-          className={`px-2 py-1 ${activeProfile === 'finish' ? 'text-primary-dark font-bold' : ''}`}
-          onClick={() => handleProfileTypeChange('finish')}
-        >
-          Finish
-        </button>
-      </div>
+        <div className="flex justify-between items-center text-xs text-gray-600 mb-2 border-b border-gray-300 pb-1">
+          <button
+            className={`px-2 py-1 ${activeProfile === 'nosing' ? 'text-primary-dark font-bold' : ''}`}
+            onClick={() => handleProfileTypeChange('nosing')}
+          >
+            Nosing
+          </button>
+          <span className="text-gray-400">|</span>
+          <button
+            className={`px-2 py-1 ${activeProfile === 'tasting' ? 'text-primary-dark font-bold' : ''}`}
+            onClick={() => handleProfileTypeChange('tasting')}
+          >
+            Tasting
+          </button>
+          <span className="text-gray-400">|</span>
+          <button
+            className={`px-2 py-1 ${activeProfile === 'finish' ? 'text-primary-dark font-bold' : ''}`}
+            onClick={() => handleProfileTypeChange('finish')}
+          >
+            Finish
+          </button>
+        </div>
       )}
       {/* 차트 컨테이너 */}
       {isLoading ? (
@@ -170,7 +170,7 @@ export function TastingRadarChart({
             <PolarGrid stroke="rgba(255, 255, 255, 0.3)" />
             <PolarAngleAxis
               dataKey="subject"
-              tick={showLabels ? { fontSize: 10, fill: '#333333' }: false} // 글씨만 검정색으로
+              tick={showLabels ? { fontSize: 10, fill: '#333333' } : false} // 글씨만 검정색으로
               stroke="rgba(255, 255, 255, 0.5)"
             />
             <PolarRadiusAxis
@@ -199,13 +199,13 @@ export function TastingRadarChart({
               />
             )}
             {showLegend && (
-            <Legend
-              iconSize={10}
-              wrapperStyle={{ fontSize: '10px', color: '#333333' }}
-              formatter={(value) => (
-                <span style={{ color: '#333333' }}>{value}</span>
-              )}
-            />
+              <Legend
+                iconSize={10}
+                wrapperStyle={{ fontSize: '10px', color: '#333333' }}
+                formatter={(value) => (
+                  <span style={{ color: '#333333' }}>{value}</span>
+                )}
+              />
             )}
           </RadarChart>
         </ResponsiveContainer>
