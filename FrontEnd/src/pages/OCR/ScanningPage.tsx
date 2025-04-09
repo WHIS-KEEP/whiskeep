@@ -17,13 +17,13 @@ interface ResultNavigationState {
 }
 
 const MIN_DISPLAY_TIME_MS = 1000;
-const API_TIMEOUT_MS = 10000;
+const API_TIMEOUT_MS = 30000;
 
 function ScanningPage(): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as LocationState | null;
-  const [message, setMessage] = useState<string>('스캔 중...');
+  const [message, setMessage] = useState<string>('스캔 중... (최대 30초)');
   const isMounted = useRef<boolean>(true);
 
   useEffect(() => {
@@ -103,7 +103,9 @@ function ScanningPage(): JSX.Element {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-screen max-w-md mx-auto bg-black text-white">
-      <div className="animate-pulse text-xl font-semibold">{message}</div>
+      <div className="animate-pulse text-xl font-semibold whitespace-pre-line text-center">
+        {message}
+      </div>
     </div>
   );
 }

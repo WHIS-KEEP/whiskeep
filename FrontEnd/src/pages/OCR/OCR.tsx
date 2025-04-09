@@ -18,7 +18,7 @@ function OCRPage(): JSX.Element {
   const [isCameraReady, setIsCameraReady] = useState<boolean>(false);
 
   const handleGoBack = useCallback(() => {
-    navigate(-1);
+    navigate('/main');
   }, [navigate]);
 
   const getUserVideo = useCallback(async () => {

@@ -22,6 +22,7 @@ export interface ApiError extends Error {
 export interface ErrorState {
   error: string;
   timedOut: boolean;
+  errorImage?: string; // 오류 관련 이미지 경로 (선택 사항)
 }
 
 /**
@@ -127,6 +128,7 @@ export const handleOcrError = (err: unknown): ErrorState => {
 
   let errorMessage = 'OCR 처리 중 오류가 발생했습니다.';
   let timedOut = false;
+  let errorImage: string | undefined; // 이미지 경로 변수 추가
 
   if (err instanceof Error && err.message === 'API timeout') {
     errorMessage =
@@ -134,14 +136,32 @@ export const handleOcrError = (err: unknown): ErrorState => {
     timedOut = true;
   } else if (err instanceof Error && 'status' in err) {
     const apiError = err as ApiError;
-    errorMessage = `OCR 처리 실패 (코드: ${apiError.status || 'N/A'})`;
-    if (apiError.message) errorMessage += `: ${apiError.message}`;
+    switch (apiError.status) {
+      case 406:
+        errorMessage =
+          '텍스트를 인식할 수 없습니다.\n개선된 환경에서 다시 촬영해주세요.';
+        // 406 오류 시 이미지 경로 설정
+        errorImage = 'ocr406.png'; // 이미지 파일명만 반환
+        break;
+      case 500:
+        errorMessage = 'OCR이 작동하지 않습니다.\n운영팀에 문의해주세요.';
+        errorImage = 'ocr500.png'; // 이미지 파일명만 반환
+        break;
+      case 404:
+        errorMessage =
+          '동일 또는 유사한 위스키가 DB에 존재하지 않습니다.\n검색을 이용해주세요.';
+        errorImage = 'ocr404.png'; // 이미지 파일명만 반환
+        break;
+      default:
+        errorMessage = `OCR 오류 발생 (코드: ${apiError.status || 'N/A'})`;
+        if (apiError.message) errorMessage += `: ${apiError.message}`;
+    }
   } else if (err instanceof Error) {
-    const networkError = createNetworkError(err);
-    errorMessage = networkError.message;
+    // 네트워크 또는 기타 클라이언트 오류 처리 (개선)
+    errorMessage = `오류: ${err.message || '알 수 없는 오류가 발생했습니다.'}`;
   }
 
-  return { error: errorMessage, timedOut };
+  return { error: errorMessage, timedOut, errorImage }; // errorImage 포함하여 반환
 };
 
 /**
