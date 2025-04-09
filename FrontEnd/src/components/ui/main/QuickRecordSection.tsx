@@ -59,7 +59,7 @@ export default function QuickRecordSection({
   autoOpen = false,
   ocrResult,
 }: QuickRecordSectionProps) {
-  const [comment, setComment] = useState('');
+  const [content, setContent] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isFirstOcrView, setIsFirstOcrView] = useState(true);
@@ -67,7 +67,7 @@ export default function QuickRecordSection({
   const [selectedWhisky, setSelectedWhisky] = useState<WhiskyData>();
   const [userRating, setUserRating] = useState(0);
 
-  // ✅ OCR 결과로 위스키 자동 선택 및 모달 열기
+  // OCR 결과로 위스키 자동 선택 및 모달 열기
   useEffect(() => {
     if (autoOpen && ocrResult) {
       setIsDialogOpen(true);
@@ -94,10 +94,26 @@ export default function QuickRecordSection({
   };
 
   const handleSubmitRecord = async () => {
+    // 기록 유효성 검사
+    if (!selectedWhisky) {
+      alert('위스키를 선택해주세요.');
+      return;
+    }
+
+    if (userRating === 0) {
+      alert('별점을 선택해주세요.');
+      return;
+    }
+
+    if (!content.trim()) {
+      alert('기록 내용을 입력해주세요.');
+      return;
+    }
+
     const isSuccess = await submitRecord({
       whiskyId: selectedWhisky?.whiskyId,
       rating: userRating,
-      content: comment,
+      content: content,
       isPublic,
     });
 
@@ -105,7 +121,7 @@ export default function QuickRecordSection({
       alert('기록이 성공적으로 등록되었습니다.');
       setSelectedWhisky(undefined);
       setUserRating(0);
-      setComment('');
+      setContent('');
       setIsPublic(false);
     }
   };
@@ -189,8 +205,8 @@ export default function QuickRecordSection({
                 type="text"
                 placeholder="위스킵 해보세요 😊"
                 className="text-m pr-10 h-10 border-b rounded-none border-0 border-gray-200 focus-visible:ring-0 focus-visible:border-b-primary"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
               />
               <Button
                 variant="ghost"
