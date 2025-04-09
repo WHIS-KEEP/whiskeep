@@ -3,7 +3,7 @@ import easyocr
 import numpy as np
 import cv2
 from fastapi.responses import JSONResponse
-from fuzzywuzzy import process, fuzz
+from rapidfuzz import process, fuzz
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -21,14 +21,11 @@ def clean_whisky_keywords(words):
     - 빈 문자열 제거
     - 중복 제거 후 정렬
     """
-    # 모든 특수문자 제거 + 소문자로 변환 (알파벳과 숫자만 남기기)
-    filtering_emo = [re.sub(r"[^a-zA-Z0-9]", "", word).lower() for word in words]
-
-    # 숫자로 시작하는 단어 제거 (ex: '12', '15Years', '1770')
-    filtering_num = [word for word in filtering_emo if not re.search(r"\d", word)]
+    # 모든 특수문자 제거 + 소문자로 변환 (알파벳만 남기기)
+    filtering_emo = [re.sub(r"[^a-zA-Z]", "", word).lower() for word in words]
 
     # 길이가 1 또는 2인 단어 제거
-    filtered_words = [word for word in filtering_num if len(word) > 2]
+    filtered_words = [word for word in filtering_emo if len(word) > 2]
 
     return filtered_words
 
@@ -54,6 +51,22 @@ with open("unique_whisky_name_list.txt", 'r', encoding='utf-8') as f:
         if line:  # 빈 줄 무시
             whisky_list.append(line)
 
+# 불용어 리스트
+stop_words = [
+  'cask', 'batch', 'the', 'edition', 'finish', 'design', 'port', 'reserve', 'strength',
+  'collection', 'proof', 'small', 'distillery', 'whisky', 'whiskey', 'malt', 'bottle',
+  'miniature', 'with', 'label', 'exclusive', 'sherry', 'oloroso', 'peated', 'wood',
+  'oak', 'barrel', 'release', 'aged', 'years', 'year', 'vintage', 'cut', 'matured',
+  'limited', 'single', 'double', 'triple', 'classic', 'ten', 'twelve', 'fourteen',
+  'eighteen', 'twenty', 'twentyone', 'twentytwo', 'twentyfive', 'forty', 'hundred',
+  'no', 'new', 'original', 'de', 'by', 'special', 'label', 'gold', 'black', 'red',
+  'green', 'white', 'mini', 'natural', 'bunnahabhain', 'whiskyde', 'irish', 'way', 'product', 'distilled', 'ireland',
+    'scotch', 'blended'
+]
+
+def remove_stopwords(word):
+    return word if word not in stop_words else ''
+
 ''' 2. 이미지 전처리 '''
 def preprocess_image(image):
     image = cv2.imdecode(np.frombuffer(image, np.uint8), cv2.IMREAD_COLOR)
@@ -71,11 +84,11 @@ def preprocess_image(image):
     return dst
 
 ''' 3. OCR 결과를 위스키 브랜드 키워드 리스트와 비교하여 가장 유사한 단어로 대체 '''
-def correct_ocr_results(ocr_results, whisky_results, threshold=80):
+def correct_ocr_results(ocr_results, keyword_list, threshold=70):
     """
     - `ocr_results`: OCR로 추출된 단어 리스트
     - `whisky_results`: 정제된 위스키 브랜드 키워드 리스트
-    - `threshold`: 유사도를 비교할 최소 임계값 (기본값: 80)
+    - `threshold`: 유사도를 비교할 최소 임계값 (기본값: 70)
 
     반환값: 대체된 결과 리스트
     """
@@ -84,7 +97,7 @@ def correct_ocr_results(ocr_results, whisky_results, threshold=80):
     for word in ocr_results:
 
         # 가장 유사한 단어 찾기
-        best_match, score = process.extractOne(word, whisky_results, scorer=fuzz.token_sort_ratio)
+        best_match, score, match_idx = process.extractOne(word, keyword_list, scorer=fuzz.token_sort_ratio)
 
          # 너무 다른 길이 매칭 방지
         if abs(len(word) - len(best_match)) > 5:
@@ -93,8 +106,6 @@ def correct_ocr_results(ocr_results, whisky_results, threshold=80):
         # 유사도가 threshold 이상이면 저장
         if score >= threshold:
             corrected_results.append(best_match)
-        else:
-            corrected_results.append(word)
 
     return corrected_results
 
@@ -113,9 +124,9 @@ async def perform_ocr(file: UploadFile = File(...)):
         results = ocr.readtext(processed_img)
 
         # 3. OCR 결과 필터링
-        # 너무 작은 글씨 필터링
-        min_width = 200  # 최소 너비
-        min_height = 100  # 최소 높이
+        # 작은 글씨 필터링 (150px는 실제 4~6cm 정도)
+        min_width = 150  # 최소 너비
+        min_height = 80  # 최소 높이
 
         filtered_texts = []
         for (bbox, text, confidence) in results:
@@ -141,10 +152,13 @@ async def perform_ocr(file: UploadFile = File(...)):
         ocr_results = clean_whisky_keywords(split_results)
 
         # 위스키 브랜드 키워드와 가장 유사한 단어로 대체
-        corrected = correct_ocr_results(ocr_results, keyword_list)
+        corrected_results = correct_ocr_results(ocr_results, keyword_list)
+
+        # 불용어 제거
+        final_results = [remove_stopwords(w) for w in corrected_results if remove_stopwords(w)]
 
         """가장 유사한 위스키 브랜드 찾기"""
-        ocr_query = " ".join(corrected)
+        ocr_query = " ".join(final_results)
 
         # 모든 문서 리스트: [OCR 키워드] + [DB 위스키 리스트]
         corpus = [ocr_query] + whisky_list
