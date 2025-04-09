@@ -42,7 +42,7 @@ function ResultPage(): JSX.Element {
       return (
         <div className="text-center">
           {imageSrc && (
-            <div className="mt-20 mb-4 flex justify-center">
+            <div className="mt-20 mb-7 flex justify-center">
               <img
                 src={imageSrc}
                 alt="오류 이미지"
@@ -51,10 +51,12 @@ function ResultPage(): JSX.Element {
               />
             </div>
           )}
-          <p className="mb-2 text-lg text-red-400">오류 발생</p>
-          <p className="whitespace-pre-line text-red-400">{state.error}</p>
+          <p className="mb-5 text-3xl font-bold text-text-main">검색 실패</p>
+          <p className="mb-5 whitespace-pre-line text-text-main">
+            {state.error}
+          </p>
           {state.timedOut && (
-            <p className="mt-2 text-sm text-red-400">(요청 시간 초과)</p>
+            <p className="mt-2 text-sm text-text-main">(요청 시간 초과)</p>
           )}
         </div>
       );
@@ -114,7 +116,7 @@ function ResultPage(): JSX.Element {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-start w-full min-h-[100dvh] max-w-md p-6 pt-12 mx-auto bg-gray-900 text-white">
+    <div className="relative flex flex-col items-center justify-start w-full min-h-[100dvh] max-w-md p-6 pt-12 mx-auto bg-bg-muted text-white">
       {/* Close Button */}
       <button
         className="absolute z-10 p-1 cursor-pointer top-4 left-4 text-white/80 hover:text-white"

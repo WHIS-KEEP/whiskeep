@@ -20,7 +20,7 @@ const NotFound = () => {
         className="mb-4"
         style={{ maxWidth: '400px', height: 'auto' }}
       />
-      <h1 className="text-4xl font-bold mb-4 text-primary">
+      <h1 className="text-4xl font-bold mb-4 text-text-main">
         ): 404 Not Found :(
       </h1>
       <p className="text-xl mb-6 text-text-muted">페이지를 찾을 수 없습니다.</p>
