@@ -3,9 +3,11 @@ import WhiskyRecommendationSection from '@/components/ui/main/WhiskyRecommendati
 
 const MainPage = () => {
   return (
-    <div className="flex flex-col gap-10 bg-white w-full max-w-2xl mx-auto rounded-t-[18px] py-8 px-4 mb-16">
+    <div className="flex flex-col gap-8 bg-white w-full max-w-3xl mx-auto rounded-t-[18px] py-5 px-0 mb-16">
       <QuickRecordSection />
-      <WhiskyRecommendationSection />
+      <div className="w-full">
+        <WhiskyRecommendationSection />
+      </div>
     </div>
   );
 };
