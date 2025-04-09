@@ -31,13 +31,13 @@ const ResultPage = () => {
 
     console.log(state);
     console.log(state.origin);
-  
+
     if (state.origin === 'modal-camera') {
       // 👇 모달에서 시작했으므로 메인으로 리다이렉트 + 상태 전달
       navigate('/main', {
         state: {
           ocrResult: {
-            ...state.result
+            ...state.result,
           },
           backToModal: true,
         },

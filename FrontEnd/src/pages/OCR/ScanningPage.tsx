@@ -26,6 +26,7 @@ function ScanningPage(): JSX.Element {
   const state = location.state as LocationState | null;
   const [message, setMessage] = useState<string>('위스키를 찾는 중입니다...');
   const isMounted = useRef<boolean>(true);
+  const origin = location.state?.origin;
 
   useEffect(() => {
     return () => {
@@ -68,8 +69,6 @@ function ScanningPage(): JSX.Element {
 
         console.log('ScanningPage: OCR Success:', ocrResult);
 
-        const origin = location.state?.origin;
-
         if (origin === 'modal-camera') {
           navigate('/main', {
             state: {
@@ -84,7 +83,7 @@ function ScanningPage(): JSX.Element {
           state: {
             result: ocrResult,
             origin: 'main-camera',
-           } as ResultNavigationState,
+          } as ResultNavigationState,
         });
       } catch (err: unknown) {
         console.error('ScanningPage: OCR failed:', err);
@@ -115,7 +114,7 @@ function ScanningPage(): JSX.Element {
       if (minDisplayTimerId) clearTimeout(minDisplayTimerId);
       console.log('ScanningPage: Unmounting, timers cleared.');
     };
-  }, [state, navigate]);
+  }, [state, navigate, origin]);
 
   return (
     // <div className="flex flex-col items-center justify-center w-full h-screen max-w-md mx-auto bg-black text-white">
@@ -124,9 +123,9 @@ function ScanningPage(): JSX.Element {
     //   </div>
     // </div>
     <div className="fixed inset-0 flex flex-col justify-center items-center z-50 gap-6">
-        <span className="loader" />
-        <p>{message}</p>
-      </div>
+      <span className="loader" />
+      <p>{message}</p>
+    </div>
   );
 }
 

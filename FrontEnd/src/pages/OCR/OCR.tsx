@@ -14,7 +14,6 @@ function OCRPage(): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
 
-
   const [videoActive] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isCameraReady, setIsCameraReady] = useState<boolean>(false);
@@ -53,7 +52,6 @@ function OCRPage(): JSX.Element {
             });
           };
           videoRef.current.onplaying = () => {
-            console.log(location.state)
             console.log('카메라 재생 시작됨');
             setIsCameraReady(true);
             setError(null);
@@ -95,6 +93,8 @@ function OCRPage(): JSX.Element {
     };
   }, [getUserVideo]);
 
+  const origin = location.state?.origin || 'main-camera';
+
   const handleSendImage = useCallback(
     (file: File) => {
       if (!file) {
@@ -104,15 +104,14 @@ function OCRPage(): JSX.Element {
 
       console.log('OCRPage: Image prepared, navigating to scanning page...');
       setError(null);
-      console.log(location.state);
-      navigate('/scanning',{
-        state: { 
+      navigate('/scanning', {
+        state: {
           imageFile: file,
-          origin: location.state?.origin || 'main-camera',
+          origin,
         },
       });
     },
-    [navigate],
+    [navigate, origin],
   );
 
   // 생략된 import 및 상단 선언 부분은 그대로 유지

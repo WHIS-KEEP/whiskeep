@@ -46,7 +46,6 @@ const variantTitles: Record<PromptVariant, string> = {
   edit: '위스키를 변경해주세요.',
 };
 
-
 // --- WishlistDialogContent Component ---
 function WishlistDialogContent({
   onSelect,
@@ -55,9 +54,8 @@ function WishlistDialogContent({
   onSelect: (id: number) => void;
   closeParentDialog?: () => void;
 }) {
-  
   const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
-  
+
   // --- 실제 찜 목록 데이터 가져오기 ---
   const {
     data: likedItemsData, // 이름 변경 (likedItems 사용 중복 방지)
@@ -67,18 +65,18 @@ function WishlistDialogContent({
     queryKey: [LIKES_QUERY_KEY],
     queryFn: fetchLikedWhiskies,
   });
-  
+
   // 실제 사용할 데이터 (로딩/에러 처리 후)
   const actualLikedItems: LikedWhisky[] = Array.isArray(likedItemsData)
-  ? likedItemsData
-  : [];
+    ? likedItemsData
+    : [];
   // --- 데이터 가져오기 끝 ---
-  
+
   // 타입 수정: WishlistItem -> LikedWhisky
   const handleGridItemClick = (item: LikedWhisky) => {
     setSelectedItemId(item.whiskyId); // LikedWhisky의 속성 사용
   };
-  
+
   const handleConfirm = () => {
     if (selectedItemId) {
       onSelect(selectedItemId);
@@ -89,7 +87,7 @@ function WishlistDialogContent({
       console.log('찜 목록 항목이 선택되지 않았습니다.');
     }
   };
-  
+
   // --- 로딩 및 에러 상태 처리 ---
   if (isLoading) {
     return (
@@ -100,7 +98,7 @@ function WishlistDialogContent({
       </div>
     );
   }
-  
+
   if (isError) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center">
@@ -112,7 +110,7 @@ function WishlistDialogContent({
     );
   }
   // --- 로딩/에러 처리 끝 ---
-  
+
   return (
     <div className="flex flex-col h-full">
       <DialogHeader className="mb-2 flex-shrink-0">

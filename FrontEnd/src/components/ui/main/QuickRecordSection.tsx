@@ -59,8 +59,6 @@ export default function QuickRecordSection({
   autoOpen = false,
   ocrResult,
 }: QuickRecordSectionProps) {
-
-  
   const [comment, setComment] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -68,7 +66,7 @@ export default function QuickRecordSection({
   const dialogCloseRef = useRef<HTMLButtonElement>(null);
   const [selectedWhisky, setSelectedWhisky] = useState<WhiskyData>();
   const [userRating, setUserRating] = useState(0);
-  
+
   // ✅ OCR 결과로 위스키 자동 선택 및 모달 열기
   useEffect(() => {
     if (autoOpen && ocrResult) {
@@ -78,9 +76,9 @@ export default function QuickRecordSection({
   }, [autoOpen, ocrResult]);
 
   const { submitRecord } = useRecordSubmit();
-  
+
   const handleCloseDialog = () => dialogCloseRef.current?.click();
-  
+
   const handleWhiskySelect = (whisky: {
     id: number;
     koName: string;

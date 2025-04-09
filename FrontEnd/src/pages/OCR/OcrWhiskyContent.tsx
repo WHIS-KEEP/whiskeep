@@ -35,7 +35,9 @@ const OcrWhiskyContent = ({ ocrResult, onSelect, closeDialog }: Props) => {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-grow overflow-hidden">
-        <h2 className="text-lg font-semibold mb-4 text-center">이미지 검색결과 {whiskies.length}개</h2>
+        <h2 className="text-lg font-semibold mb-4 text-center">
+          이미지 검색결과 {whiskies.length}개
+        </h2>
         <SearchWhiskyResult
           items={whiskies}
           selectedId={selectedId}
