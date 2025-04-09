@@ -28,6 +28,10 @@ const WhiskyRecordPage: React.FC = () => {
     navigate(`/records/${whiskyId}/${recordId}`);
   };
 
+  const handleGoToDetail = () => {
+    navigate(`/detail/${whiskyId}`);
+  };
+
   // 로딩 상태 처리
   if (isLoading) {
     return (
@@ -94,7 +98,10 @@ const WhiskyRecordPage: React.FC = () => {
 
         <div className="p-4 space-y-6">
           {/* 1. 위스키 정보 섹션 */}
-          <div className="flex flex-col items-center space-y-4">
+          <div
+            onClick={handleGoToDetail}
+            className="flex flex-col items-center space-y-4"
+          >
             {/* 위스키 병 이미지 */}
             <div className="w-full max-w-xs mx-auto">
               <img
