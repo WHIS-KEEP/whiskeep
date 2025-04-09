@@ -130,7 +130,7 @@ const SearchWhiskyContent = ({ onSelect, closeDialog }: Props) => {
   // 초기 데이터 로드
   useEffect(() => {
     fetchWhiskies(false);
-  }, []);
+  }, [fetchWhiskies]);
 
   const handleWhiskyClick = (id: number) => {
     const whisky = whiskies.find((w) => w.whiskyId === id);

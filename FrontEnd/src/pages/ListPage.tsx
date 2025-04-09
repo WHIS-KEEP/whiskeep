@@ -116,7 +116,7 @@ const ListPage = () => {
   // 초기 데이터 로드
   useEffect(() => {
     fetchWhiskies(false);
-  }, []);
+  }, [fetchWhiskies]);
 
   const handleSelect = (id: number) => {
     setSelectedId(id);
