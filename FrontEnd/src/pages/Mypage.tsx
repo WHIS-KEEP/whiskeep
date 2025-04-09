@@ -204,21 +204,30 @@ const MyPage = () => {
               </DrawerTrigger>
 
               <DrawerContent className="bg-background">
-                <DrawerHeader className="flex items-center justify-between px-4 pt-4 sm:px-6">
-                  <DrawerTitle className="text-lg font-semibold">
-                    사진 등록하기
-                  </DrawerTitle>
+                {/* DrawerHeader에 relative 추가, 내부 요소 재정렬 및 절대 위치 사용 */}
+                <DrawerHeader className="flex items-center justify-center px-4 pt-4 sm:px-6 relative">
+                  {' '}
+                  {/* justify-center 추가 및 relative 추가 */}
+                  {/* DrawerClose: 절대 위치로 왼쪽 상단 근처 배치 */}
                   <DrawerClose asChild>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="-mr-2 h-8 w-8"
+                      // 절대 위치 지정: left-4는 왼쪽 패딩 고려, top-1/2 -translate-y-1/2는 수직 중앙 정렬
+                      className="absolute left-4 top-1/2 -translate-y-1/2 h-8 w-8"
                       aria-label="닫기"
                     >
-                      <X size={20} />
+                      <X size={24} />
                     </Button>
                   </DrawerClose>
+                  {/* DrawerTitle: 헤더 중앙에 위치하도록 */}
+                  <DrawerTitle className="text-lg font-semibold">
+                    사진 등록하기
+                  </DrawerTitle>
+                  {/* 필요하다면 오른쪽에 보이지 않는 버튼 크기만큼의 공간 확보용 div 추가 가능 */}
+                  {/* <div className="absolute right-4 top-1/2 -translate-y-1/2 h-8 w-8" aria-hidden></div> */}
                 </DrawerHeader>
+                {/* ... rest of DrawerContent */}
                 <div className="grid gap-3 p-4 sm:p-6">
                   <Button
                     variant="outline"
