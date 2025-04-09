@@ -153,117 +153,119 @@ const Collection = () => {
           ) : (
             <div className="w-[var(--mobile-width)] relative px-2 pb-30">
               {/* 이미지 슬라이더 영역 */}
-              <div
-                className="overflow-hidden relative w-[var(--mobile-width)]"
-                ref={sliderRef}
-                onTouchStart={dragStart}
-                onTouchMove={dragMove}
-                onTouchEnd={dragEnd}
-                onMouseDown={dragStart}
-                onMouseMove={dragMove}
-                onMouseUp={dragEnd}
-                onMouseLeave={dragEnd}
-                style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
-              >
+              {items.length > 0 && (
                 <div
-                  // 드래그 중이 아닐 때만 transition 적용 (페이지 이동 시 부드럽게)
-                  className={`flex ${!isDragging ? 'transition-transform duration-300 ease-out' : ''}`}
-                  style={{
-                    width: `${totalPages * 100}%`,
-                    transform: `translateX(${currentTranslate}px)`,
-                    userSelect: 'none',
-                  }}
+                  className="overflow-hidden relative w-[var(--mobile-width)]"
+                  ref={sliderRef}
+                  onTouchStart={dragStart}
+                  onTouchMove={dragMove}
+                  onTouchEnd={dragEnd}
+                  onMouseDown={dragStart}
+                  onMouseMove={dragMove}
+                  onMouseUp={dragEnd}
+                  onMouseLeave={dragEnd}
+                  style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
                 >
-                  {/* === 각 페이지 렌더링 === */}
-                  {Array.from({ length: totalPages }).map((_, pageIndex) => {
-                    // 현재 페이지에 표시될 병들 계산
-                    const startIndex = pageIndex * BOTTLES_PER_PAGE;
-                    const endIndex = startIndex + BOTTLES_PER_PAGE;
-                    const bottlesForCurrentPage = items.slice(
-                      startIndex,
-                      endIndex,
-                    );
+                  <div
+                    // 드래그 중이 아닐 때만 transition 적용 (페이지 이동 시 부드럽게)
+                    className={`flex ${!isDragging ? 'transition-transform duration-300 ease-out' : ''}`}
+                    style={{
+                      width: `${totalPages * 100}%`,
+                      transform: `translateX(${currentTranslate}px)`,
+                      userSelect: 'none',
+                    }}
+                  >
+                    {/* === 각 페이지 렌더링 === */}
+                    {Array.from({ length: totalPages }).map((_, pageIndex) => {
+                      // 현재 페이지에 표시될 병들 계산
+                      const startIndex = pageIndex * BOTTLES_PER_PAGE;
+                      const endIndex = startIndex + BOTTLES_PER_PAGE;
+                      const bottlesForCurrentPage = items.slice(
+                        startIndex,
+                        endIndex,
+                      );
 
-                    return (
-                      <div
-                        key={pageIndex}
-                        className="w-full flex-shrink-0" // 각 페이지는 슬라이더 너비만큼 차지
-                        style={{ width: `${100 / totalPages}%` }} // 너비 분배
-                        aria-label={`페이지 ${pageIndex + 1}`}
-                        role="tabpanel"
-                        // hidden 속성 제거: translateX로 시각적 제어
-                      >
-                        <div className="flex flex-col items-center px-2 ">
-                          {/* === 선반 렌더링 === */}
-                          {Array.from({ length: SHELVES_PER_PAGE }).map(
-                            (_, shelfIndex) => {
-                              // 이 선반에 표시될 병들 계산
-                              const shelfStartIndex =
-                                shelfIndex * BOTTLES_PER_SHELF;
-                              const shelfEndIndex =
-                                shelfStartIndex + BOTTLES_PER_SHELF;
-                              // bottlesForCurrentPage에서 현재 선반에 해당하는 병들만 추출
-                              const bottlesForThisShelf =
-                                bottlesForCurrentPage.slice(
-                                  shelfStartIndex,
-                                  shelfEndIndex,
-                                );
+                      return (
+                        <div
+                          key={pageIndex}
+                          className="w-full flex-shrink-0" // 각 페이지는 슬라이더 너비만큼 차지
+                          style={{ width: `${100 / totalPages}%` }} // 너비 분배
+                          aria-label={`페이지 ${pageIndex + 1}`}
+                          role="tabpanel"
+                          // hidden 속성 제거: translateX로 시각적 제어
+                        >
+                          <div className="flex flex-col items-center px-2 ">
+                            {/* === 선반 렌더링 === */}
+                            {Array.from({ length: SHELVES_PER_PAGE }).map(
+                              (_, shelfIndex) => {
+                                // 이 선반에 표시될 병들 계산
+                                const shelfStartIndex =
+                                  shelfIndex * BOTTLES_PER_SHELF;
+                                const shelfEndIndex =
+                                  shelfStartIndex + BOTTLES_PER_SHELF;
+                                // bottlesForCurrentPage에서 현재 선반에 해당하는 병들만 추출
+                                const bottlesForThisShelf =
+                                  bottlesForCurrentPage.slice(
+                                    shelfStartIndex,
+                                    shelfEndIndex,
+                                  );
 
-                              return (
-                                <div
-                                  key={`shelf-${pageIndex}-${shelfIndex}`}
-                                  className="flex flex-col items-center h-[25vh] w-full max-w-[var(--mobile-width)] -mt-4"
-                                >
-                                  {/* 병 영역 */}
-                                  <div className="grid grid-cols-4 w-full h-[70%] px-2">
-                                    {Array.from({
-                                      length: BOTTLES_PER_SHELF,
-                                    }).map((_, slotIndex) => {
-                                      const bottle =
-                                        bottlesForThisShelf[slotIndex];
-                                      return (
-                                        <div
-                                          key={`slot-${pageIndex}-${shelfIndex}-${slotIndex}`}
-                                          className="flex justify-center items-end h-full"
-                                        >
-                                          {bottle ? (
-                                            <img
-                                              src={bottle.image}
-                                              alt={`병 ${bottle.id}`}
-                                              className="w-auto max-w-[80%] max-h-52 object- select-none -mb-8"
-                                              draggable="false"
-                                              onClick={() =>
-                                                navigate(
-                                                  `/records/${bottle.id}`,
-                                                )
-                                              }
-                                            />
-                                          ) : (
-                                            <div className="w-0 h-0" />
-                                          )}
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-
-                                  {/* 선반 이미지 */}
+                                return (
                                   <div
-                                    className="w-full h-[30%] bg-no-repeat bg-contain bg-bottom pointer-events-none"
-                                    style={{
-                                      backgroundImage: `url(${whiskyShelf})`,
-                                      backgroundSize: '100% 100%',
-                                    }}
-                                  />
-                                </div>
-                              );
-                            },
-                          )}
+                                    key={`shelf-${pageIndex}-${shelfIndex}`}
+                                    className="flex flex-col items-center h-[25vh] w-full max-w-[var(--mobile-width)] -mt-4"
+                                  >
+                                    {/* 병 영역 */}
+                                    <div className="grid grid-cols-4 w-full h-[70%] px-2">
+                                      {Array.from({
+                                        length: BOTTLES_PER_SHELF,
+                                      }).map((_, slotIndex) => {
+                                        const bottle =
+                                          bottlesForThisShelf[slotIndex];
+                                        return (
+                                          <div
+                                            key={`slot-${pageIndex}-${shelfIndex}-${slotIndex}`}
+                                            className="flex justify-center items-end h-full"
+                                          >
+                                            {bottle ? (
+                                              <img
+                                                src={bottle.image}
+                                                alt={`병 ${bottle.id}`}
+                                                className="w-auto max-w-[80%] max-h-52 object- select-none -mb-8"
+                                                draggable="false"
+                                                onClick={() =>
+                                                  navigate(
+                                                    `/records/${bottle.id}`,
+                                                  )
+                                                }
+                                              />
+                                            ) : (
+                                              <div className="w-0 h-0" />
+                                            )}
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+
+                                    {/* 선반 이미지 */}
+                                    <div
+                                      className="w-full h-[30%] bg-no-repeat bg-contain bg-bottom pointer-events-none"
+                                      style={{
+                                        backgroundImage: `url(${whiskyShelf})`,
+                                        backgroundSize: '100% 100%',
+                                      }}
+                                    />
+                                  </div>
+                                );
+                              },
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* === 페이지네이션 표시기 (점) === */}
               {totalPages > 1 && (
@@ -292,12 +294,12 @@ const Collection = () => {
 
               {/* 빈 컬렉션 메시지 (선반 위에 겹쳐서 표시) */}
               {items.length === 0 && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white/80 backdrop-blur-sm px-8 py-6 rounded-xl shadow-md text-center">
-                    <p className="text-lg text-gray-700">
+                <div className="absolute inset-0 flex items-center justify-center pb-20 pointer-events-none z-30">
+                  <div className=" bg-white/80 backdrop-blur-sm py-4 rounded-lg shadow-md text-center w-fit max-w-sm">
+                    <p className="text-base text-gray-700 font-semibold w-100">
                       아직 컬렉션에 위스키가 없습니다.
                     </p>
-                    <p className="text-sm text-gray-500 mt-2">
+                    <p className="text-sm text-gray-500 mt-2 w-100">
                       위스키를 추가해보세요!
                     </p>
                   </div>
