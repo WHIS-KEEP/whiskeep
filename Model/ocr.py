@@ -60,7 +60,8 @@ stop_words = [
   'limited', 'single', 'double', 'triple', 'classic', 'ten', 'twelve', 'fourteen',
   'eighteen', 'twenty', 'twentyone', 'twentytwo', 'twentyfive', 'forty', 'hundred',
   'no', 'new', 'original', 'de', 'by', 'special', 'label', 'gold', 'black', 'red',
-  'green', 'white', 'mini', 'natural', 'bunnahabhain', 'whiskyde', 'irish', 'way', 'product', 'distilled', 'ireland'
+  'green', 'white', 'mini', 'natural', 'bunnahabhain', 'whiskyde', 'irish', 'way', 'product', 'distilled', 'ireland',
+    'scotch', 'blended'
 ]
 
 def remove_stopwords(word):
