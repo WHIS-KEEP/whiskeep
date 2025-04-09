@@ -1,13 +1,12 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Star } from 'lucide-react';
+import Navbar from '@/components/layout/Navbar';
+import { useWhiskyRecordString } from '@/hooks/queries/useRecordQueries';
 import {
-  useRecordDetail,
   useDeleteRecord,
+  useRecordDetail,
 } from '@/hooks/queries/useRecordQuery';
 import { RecordRouteParams } from '@/types/record';
-import { useWhiskyRecordString } from '@/hooks/queries/useRecordQueries';
-import Navbar from '@/components/layout/Navbar';
+import { ChevronLeft, Star } from 'lucide-react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // 날짜 포맷 함수
 const formatDate = (dateString: string): string => {
@@ -60,7 +59,7 @@ const RecordDetailPage = () => {
   // 상태 및 훅 유지
   const { whiskyId, recordId } = useParams<RecordRouteParams>();
   const navigate = useNavigate();
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  // const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const { data: whiskyRecordData } = useWhiskyRecordString(whiskyId);
 
   const {
@@ -70,8 +69,7 @@ const RecordDetailPage = () => {
     error,
   } = useRecordDetail(whiskyId, recordId);
 
-  const { mutate: deleteRecordMutation, isPending: isDeleting } =
-    useDeleteRecord();
+  const { mutate: deleteRecordMutation } = useDeleteRecord();
 
   // 핸들러 함수들 유지
   const handleGoBack = () => {
@@ -82,15 +80,10 @@ const RecordDetailPage = () => {
     navigate(`/records/${whiskyId}/${recordId}/edit`);
   };
 
-  const handleDeleteConfirm = () => {
-    setShowDeleteConfirm(true);
-  };
-
-  const handleDeleteCancel = () => {
-    setShowDeleteConfirm(false);
-  };
-
   const handleDeleteRecord = async () => {
+    const confirm = window.confirm('이 기록을 정말 삭제 하시겠습니까?');
+    if (!confirm) return;
+
     if (!whiskyId || !recordId) return;
 
     deleteRecordMutation(
@@ -112,7 +105,7 @@ const RecordDetailPage = () => {
         onError: (error) => {
           console.error('삭제 오류:', error);
           alert('삭제에 실패했습니다.');
-          setShowDeleteConfirm(false);
+          // setShowDeleteConfirm(false);
         },
       },
     );
@@ -139,7 +132,7 @@ const RecordDetailPage = () => {
   }
 
   return (
-    <div className="bg-white w-full max-w-[412px] mx-auto h-screen flex flex-col">
+    <div className="bg-white w-full max-w-[412px] mx-auto h-screen flex flex-col relative z-0">
       <div className="flex-1 overflow-auto">
         <div className="flex flex-col pb-16">
           {/* 헤더 */}
@@ -162,7 +155,7 @@ const RecordDetailPage = () => {
                   </button>
                   <span className="mx-2">|</span>
                   <button
-                    onClick={handleDeleteConfirm}
+                    onClick={handleDeleteRecord}
                     className="font-medium text-gray-500"
                   >
                     삭제
@@ -172,32 +165,6 @@ const RecordDetailPage = () => {
             </div>
             <div className="w-0" />
           </div>
-
-          {/* 삭제 확인 모달 */}
-          {showDeleteConfirm && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg p-6 w-80 max-w-full">
-                <h3 className="text-lg font-medium mb-3">기록 삭제</h3>
-                <p className="mb-4">이 기록을 정말 삭제하시겠습니까?</p>
-                <div className="flex justify-end gap-3">
-                  <button
-                    onClick={handleDeleteCancel}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700"
-                    disabled={isDeleting}
-                  >
-                    취소
-                  </button>
-                  <button
-                    onClick={handleDeleteRecord}
-                    className="px-4 py-2 bg-[#900000] text-white rounded-md"
-                    disabled={isDeleting}
-                  >
-                    {isDeleting ? '삭제 중...' : '삭제'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* 메인 컨텐츠 */}
           <div className="flex-1">
