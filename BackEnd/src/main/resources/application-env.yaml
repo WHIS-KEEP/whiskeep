@@ -23,6 +23,8 @@ spring:
       port: ${SPRING_DATA_REDIS_PORT}
       ssl:
         enabled: ${SPRING_DATA_REDIS_SSL_ENABLED}
+    elasticsearch:
+      uris: ${SPRING_DATA_ES_URIS}
 
   # GOOGLE 소셜 로그인 환경변수
   security:
