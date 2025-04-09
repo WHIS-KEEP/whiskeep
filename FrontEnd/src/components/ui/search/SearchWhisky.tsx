@@ -22,12 +22,12 @@ const sortOptions: { value: SortCriteria; label: string }[] = [
   { value: 'records_desc', label: '기록 많은 순' },
 ];
 
-interface Props {
+interface SearchWhiskyProps {
   onSelect?: (id: number) => void;
   onFilteredChange?: (filters: {
-    keyword?: string;
-    age?: number;
-    type?: string;
+    keyword: string | undefined;
+    age: number | undefined;
+    type: string | undefined;
     sortField: string;
     desc: boolean;
   }) => void;
@@ -35,10 +35,10 @@ interface Props {
   hideTitle?: boolean;
 }
 
-export default function SearchWhiskyContent({
+export default function SearchWhisky({
   onFilteredChange,
   hideTitle = false,
-}: Props) {
+}: SearchWhiskyProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAgeRange, setSelectedAgeRange] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);

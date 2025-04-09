@@ -4,7 +4,7 @@ import { cn } from '@/lib/util/utils';
 import { Whisky } from '@/types/search';
 import { Star } from 'lucide-react';
 import exampleImage from '../../../assets/example.png';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Props {
   items: Whisky[];
@@ -26,18 +26,30 @@ export default function WhiskyListResult({
 }: Props) {
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [prevItemsLength, setPrevItemsLength] = useState(0);
 
   const formatCount = (count: number) =>
     count > 999 ? '(999+)' : `(${count})`;
 
-  // 스크롤을 Top으로 올리는 로직은 따로 분리
+  // 스크롤을 Top으로 올리는 로직 - 필터 변경 시에만 작동하도록 수정
   useEffect(() => {
-    if (shouldScrollToTops && viewportRef.current) {
+    if (
+      shouldScrollToTops &&
+      viewportRef.current &&
+      items.length !== prevItemsLength
+    ) {
+      // 필터 변경으로 인한 새 결과일 때만 스크롤 초기화
       viewportRef.current.scrollTop = 0;
     }
-  }, [shouldScrollToTops]);
 
-  // IntersectionObserver는 스크롤 동작과 무관하게 분리
+    // 아이템 길이가 변경되면 저장
+    if (items.length !== prevItemsLength) {
+      setPrevItemsLength(items.length);
+    }
+  }, [shouldScrollToTops, items.length, prevItemsLength]);
+
+  // IntersectionObserver 로직 개선
   useEffect(() => {
     const target = loaderRef.current;
     const root = viewportRef.current;
@@ -46,14 +58,19 @@ export default function WhiskyListResult({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !isScrolling) {
+          setIsScrolling(true);
           onLoadMore();
+          // 스크롤 요청 후 짧은 딜레이를 두어 중복 요청 방지
+          setTimeout(() => {
+            setIsScrolling(false);
+          }, 300);
         }
       },
       {
         root,
-        rootMargin: '0px',
-        threshold: 0.5,
+        rootMargin: '100px', // 더 일찍 감지하도록 마진 증가
+        threshold: 0.1, // 임계값 낮춤
       },
     );
 
@@ -62,7 +79,29 @@ export default function WhiskyListResult({
     return () => {
       observer.disconnect();
     };
-  }, [items.length, hasNext, onLoadMore]);
+  }, [hasNext, onLoadMore, isScrolling, items.length]);
+
+  // 스크롤 이벤트 핸들러 추가
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    const handleScroll = () => {
+      // 스크롤 끝에 가까워지면 추가 로드 (IntersectionObserver 보완)
+      const isNearBottom =
+        viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight <
+        100;
+
+      if (isNearBottom && hasNext && !isScrolling) {
+        setIsScrolling(true);
+        onLoadMore();
+        setTimeout(() => setIsScrolling(false), 300);
+      }
+    };
+
+    viewport.addEventListener('scroll', handleScroll);
+    return () => viewport.removeEventListener('scroll', handleScroll);
+  }, [hasNext, onLoadMore, isScrolling]);
 
   return (
     <ScrollArea
@@ -118,15 +157,21 @@ export default function WhiskyListResult({
               </div>
             </Button>
           ))}
-          {/* 무한 스크롤 감지 영역 */}
-          <div ref={loaderRef} className="h-6" />
+          {/* 무한 스크롤 감지 영역 - 더 눈에 띄게 만듦 */}
+          <div
+            ref={loaderRef}
+            className="h-10 flex items-center justify-center"
+          >
+            {hasNext && items.length > 0 && (
+              <div className="w-6 h-6 border-t-2 border-primary rounded-full animate-spin" />
+            )}
+          </div>
         </div>
       ) : (
         <div className="flex items-center justify-center h-full">
           <p className="text-sm text-muted-foreground">검색 결과가 없습니다.</p>
         </div>
       )}
-      {/* <ScrollBar orientation="vertical" className="hidden" /> */}
     </ScrollArea>
   );
 }
