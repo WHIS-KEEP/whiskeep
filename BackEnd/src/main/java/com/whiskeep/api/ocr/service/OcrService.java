@@ -28,9 +28,11 @@ import com.whiskeep.common.exception.InternalServerException;
 import com.whiskeep.common.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OcrService {
 
 	private final WhiskyService whiskyService;
@@ -58,10 +60,15 @@ public class OcrService {
 				fastApiOcrUrl, HttpMethod.POST, requestEntity, Map.class
 			);
 
+			log.info(response.getBody().toString());
+
 			// response 값 : {bestMatch : _, similarityScore: _}
 			String enName = response.getBody().get("bestMatch").toString();
 			// 1. 위스키 조회
 			List<Whisky> whiskies = whiskyService.getWhiskiesByEnName(enName);
+
+			log.info(whiskies.toString());
+
 			// sameWhiskyIds 추출
 			List<Long> sameWhiskyIds = whiskies.stream()
 				.map(Whisky::getWhiskyId)
@@ -79,6 +86,8 @@ public class OcrService {
 			);
 
 			WhiskySearchResponseDto whiskySearchResponseDto = whiskyService.searchWhiskies(whiskySearchRequestDto);
+
+			log.info(whiskySearchResponseDto.toString());
 
 			return new OcrResponseDto(sameWhiskyIds, whiskySearchResponseDto.whiskies());
 		} catch (HttpClientErrorException e) {
