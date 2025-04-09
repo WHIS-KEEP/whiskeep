@@ -176,12 +176,12 @@ const DetailPage = () => {
               <tr>
                 <td className="py-2 font-medium w-1/2">양조장</td>
                 <td className="py-2 text-left">{whiskyDetail?.distillery}</td>
-              </tr >
+              </tr>
               <tr>
                 <td className="py-2 font-medium w-1/2">나라, 지역</td>
                 <td className="py-2 text-left">{whiskyDetail?.country}</td>
               </tr>
-              <tr >
+              <tr>
                 <td className="py-2 font-medium w-1/2">도수</td>
                 <td className="py-2 text-left">{whiskyDetail?.abv}%</td>
               </tr>
@@ -205,14 +205,14 @@ const DetailPage = () => {
           <h2 className="text-lg font-bold mb-3">Tasting Notes</h2>
           <table className="w-full">
             <tbody>
-              <tr >
+              <tr>
                 <td className="py-2 font-medium w-1/3">향</td>
                 <td className="py-2 text-left">
                   {whiskyDetail?.tastingNotes?.nosing?.join(', ') ||
                     '정보 없음'}
                 </td>
               </tr>
-              <tr >
+              <tr>
                 <td className="py-2 font-medium w-1/3">맛</td>
                 <td className="py-2 text-left">
                   {whiskyDetail?.tastingNotes?.tasting?.join(', ') ||
