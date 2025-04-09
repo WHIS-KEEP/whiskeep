@@ -1,7 +1,7 @@
 // src/services/OCR.ts (또는 apiService.ts)
 
 import API from '@/lib/util/axiosInstance'; // API 요청을 위한 axios 인스턴스
-import { Whisky } from './collection';
+import { Whisky } from '@/types/search';
 
 /**
  * OCR API 응답 타입 정의

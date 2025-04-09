@@ -11,7 +11,7 @@ const App = () => {
       <AuthProvider>
         <BrowserRouter>
           <div className="mobile-container">
-            <ScrollToTop/>
+            <ScrollToTop />
             <Router />
           </div>
         </BrowserRouter>
