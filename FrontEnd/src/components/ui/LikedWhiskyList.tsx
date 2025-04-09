@@ -27,13 +27,13 @@ export function LikedWhiskyList({
 
   return (
     // ScrollArea와 내부 그리드 로직
-    <ScrollArea className="w-full flex-grow rounded-md">
+    <ScrollArea className="w-full flex-grow rounded-md min-h-[70vh]">
       {likedItems.length === 0 ? (
-        <div className="flex items-center justify-center h-full pb-10 text-gray-500">
+        <div className="flex items-center justify-center h-[70vh] w-full text-gray-500">
           찜한 위스키가 없습니다.
         </div>
       ) : (
-        <div className="flex justify-center">
+        <div className="flex justify-center ">
           {/* 반응형 간격 재조정: 기본(모달) gap-x-2, sm 이상(페이지) gap-x-4 */}
           <div className="grid grid-cols-2 gap-x-2 sm:gap-x-   gap-y-4 w-full pt-2 px-2 pb-10 justify-items-center">
             {likedItems.map((item) => (
