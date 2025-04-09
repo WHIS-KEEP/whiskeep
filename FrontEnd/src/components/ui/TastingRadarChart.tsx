@@ -54,7 +54,7 @@ const formatChartData = (
       fullMark: 100,
     },
     {
-      subject: '매움',
+      subject: '향신료',
       whisky: whiskyProfile.spicyScore * 20,
       user: userProfile ? userProfile.spicyScore * 20 : 0,
       fullMark: 100,
