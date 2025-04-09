@@ -123,7 +123,7 @@ function ResultPage(): JSX.Element {
         onClick={handleGoBack}
         aria-label="닫기"
       >
-        <X size={28} />
+        <X size={28} className="text-text-muted-40" />
       </button>
 
       <div className="flex flex-col items-center w-full max-w-sm mt-8">
