@@ -13,4 +13,5 @@ public interface FamiliarWhiskyPreferenceRepository extends JpaRepository<Famili
 
 	Boolean existsByMember(Member member);
 
+	void deleteByMember(Member member);
 }

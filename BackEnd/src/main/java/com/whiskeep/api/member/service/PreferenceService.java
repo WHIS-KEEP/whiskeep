@@ -209,5 +209,6 @@ public class PreferenceService {
 	@Transactional
 	public void deletePreferenceByMember(Member member) {
 		memberPreferenceRepository.deleteByMember(member);
+		familiarWhiskyPreferenceRepository.deleteByMember(member);
 	}
 }
