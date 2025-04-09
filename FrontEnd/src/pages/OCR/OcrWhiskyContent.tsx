@@ -38,15 +38,17 @@ const OcrWhiskyContent = ({ ocrResult, onSelect, closeDialog }: Props) => {
         <h2 className="text-lg font-semibold mb-4 text-center">
           이미지 검색결과 {whiskies.length}개
         </h2>
-        <SearchWhiskyResult
-          items={whiskies}
-          selectedId={selectedId}
-          onSelect={handleWhiskyClick}
-          height="100%"
-          onLoadMore={() => {}}
-          hasNext={false}
-          shouldScrollToTops={false}
-        />
+        <div className="w-[370px] h-[600px] p-3 flex flex-col overflow-y-auto overflow-x-auto border-none rounded-[18px]">
+          <SearchWhiskyResult
+            items={whiskies}
+            selectedId={selectedId}
+            onSelect={handleWhiskyClick}
+            height="100%"
+            onLoadMore={() => {}}
+            hasNext={false}
+            shouldScrollToTops={false}
+          />
+        </div>
       </div>
     </div>
   );
