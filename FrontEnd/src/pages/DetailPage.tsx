@@ -142,7 +142,7 @@ const DetailPage = () => {
                 forceLikedState={whiskyDetail?.isLiked}
                 className="static" // absolute 대신 static 사용
                 buttonClassName="bg-transparent shadow-none border-none"
-                heartIconClassName="size-5"
+                heartIconClassName="size-7"
               />
             </div>
           </div>

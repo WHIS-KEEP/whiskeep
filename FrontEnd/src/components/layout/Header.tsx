@@ -47,8 +47,8 @@ function Header() {
           {/* 찜 개수 표시 뱃지 */}
           {likeCount > 0 && (
             <span
-              className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full text-xs text-white"
-              style={{ backgroundColor: '#AE4D4D' }}
+              className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full text-xs text-white"
+              style={{ backgroundColor: '#f87171 ' }}
             >
               {displayCount}
             </span>
