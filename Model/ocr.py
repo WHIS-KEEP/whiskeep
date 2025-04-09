@@ -83,11 +83,11 @@ def preprocess_image(image):
     return dst
 
 ''' 3. OCR 결과를 위스키 브랜드 키워드 리스트와 비교하여 가장 유사한 단어로 대체 '''
-def correct_ocr_results(ocr_results, keyword_list, threshold=80):
+def correct_ocr_results(ocr_results, keyword_list, threshold=70):
     """
     - `ocr_results`: OCR로 추출된 단어 리스트
     - `whisky_results`: 정제된 위스키 브랜드 키워드 리스트
-    - `threshold`: 유사도를 비교할 최소 임계값 (기본값: 80)
+    - `threshold`: 유사도를 비교할 최소 임계값 (기본값: 70)
 
     반환값: 대체된 결과 리스트
     """
