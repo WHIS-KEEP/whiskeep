@@ -59,7 +59,7 @@ export function Whiskycard({
         </div>
         {/* Radar Chart를 우측 상단에 배치 */}
         {showChart && (
-          <div className="absolute right-6 w-[100px] h-[100px] z-20">
+          <div className="absolute right-10 w-[100px] h-[100px] z-20">
             <TastingRadarChart
               whiskyId={whiskyId}
               profile={tastingProfile}
