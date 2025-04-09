@@ -12,5 +12,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ../ocr.py .
 COPY ../cleaned_whisky_keywords.txt .
+COPY ../unique_whisky_name_list.txt .
 
 CMD ["uvicorn", "ocr:app", "--host", "0.0.0.0", "--port", "8000"]
