@@ -78,7 +78,7 @@ public class OcrService {
 				null
 			);
 
-			WhiskySearchResponseDto whiskySearchResponseDto = whiskyService.searchWithFuzziness(whiskySearchRequestDto);
+			WhiskySearchResponseDto whiskySearchResponseDto = whiskyService.searchWhiskies(whiskySearchRequestDto);
 
 			return new OcrResponseDto(sameWhiskyIds, whiskySearchResponseDto.whiskies());
 		} catch (HttpClientErrorException e) {
