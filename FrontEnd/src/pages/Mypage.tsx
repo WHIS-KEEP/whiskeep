@@ -7,7 +7,6 @@ import { Button } from '@/components/shadcn/Button';
 import { Camera, Pencil, Image as ImageIcon, X } from 'lucide-react';
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
@@ -25,6 +24,7 @@ import {
 } from '@/hooks/mutations/useMyPageMutations';
 import { useLogout } from '@/hooks/mutations/useLogout';
 import useAuth from '@/store/useContext';
+import { useQueryClient } from '@tanstack/react-query'; // 프로필 상태관리 위함
 
 const MyPage = () => {
   const { data: userData, isLoading } = useMyPageQuery();
@@ -33,7 +33,6 @@ const MyPage = () => {
   const { mutate: deleteUser } = useDeleteUserMutation();
   const { mutate: logoutMutation } = useLogout();
   const { logout } = useAuth();
-
   const [nicknameEditable, setNicknameEditable] = useState(false);
   const [nicknameChecked, setNicknameChecked] = useState(false);
   const [nicknameCheckMessage, setNicknameCheckMessage] = useState('');
@@ -43,6 +42,7 @@ const MyPage = () => {
 
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const queryClient = useQueryClient(); // 프로필 상태관리 위함
 
   useEffect(() => {
     if (userData) {
@@ -121,6 +121,8 @@ const MyPage = () => {
           };
 
           sessionStorage.setItem('user', JSON.stringify(userInfoToSave));
+
+          queryClient.invalidateQueries({ queryKey: ['myPageUser'] }); // 프로필 상태관리 위함
 
           navigate('/mypage');
         },
@@ -204,38 +206,12 @@ const MyPage = () => {
               </DrawerTrigger>
 
               <DrawerContent className="bg-background">
-                {/* DrawerHeader에 relative 추가, 내부 요소 재정렬 및 절대 위치 사용 */}
-                <DrawerHeader className="flex items-center justify-center px-4 pt-4 sm:px-6 relative">
-                  {' '}
-                  {/* justify-center 추가 및 relative 추가 */}
-                  {/* DrawerClose: 절대 위치로 왼쪽 상단 근처 배치 */}
-                  <DrawerClose asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      // 절대 위치 지정: left-4는 왼쪽 패딩 고려, top-1/2 -translate-y-1/2는 수직 중앙 정렬
-                      className="absolute left-4 top-1/2 -translate-y-1/2 h-8 w-8"
-                      aria-label="닫기"
-                    >
-                      <X size={24} />
-                    </Button>
-                  </DrawerClose>
-                  {/* DrawerTitle: 헤더 중앙에 위치하도록 */}
+                <DrawerHeader className="flex items-center justify-between px-4 pt-4 sm:px-6">
                   <DrawerTitle className="text-lg font-semibold">
                     사진 등록하기
                   </DrawerTitle>
-                  {/* 필요하다면 오른쪽에 보이지 않는 버튼 크기만큼의 공간 확보용 div 추가 가능 */}
-                  {/* <div className="absolute right-4 top-1/2 -translate-y-1/2 h-8 w-8" aria-hidden></div> */}
                 </DrawerHeader>
-                {/* ... rest of DrawerContent */}
                 <div className="grid gap-3 p-4 sm:p-6">
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start gap-3 py-6 text-base"
-                  >
-                    <Camera size={20} className="text-muted-foreground" />
-                    카메라로 촬영하기
-                  </Button>
                   <Button
                     variant="outline"
                     className="w-full justify-start gap-3 py-6 text-base"
@@ -255,7 +231,41 @@ const MyPage = () => {
               </DrawerContent>
             </Drawer>
           </div>
-          <p className="text-sm text-text-muted">기본 프로필 이미지</p>
+          <div className="flex items-center justify-between gap-2">
+            <button
+              className="text-sm text-text-muted hover:text-blue-500 cursor-pointer"
+              onClick={() => {
+                // 랜덤 아바타 URL 목록
+                const avatarUrls = [
+                  'https://avatar.iran.liara.run/public/boy?username=Ash',
+                  'https://avatar.iran.liara.run/public/girl?username=Jane',
+                  'https://avatar.iran.liara.run/public/boy?username=Mike',
+                  'https://avatar.iran.liara.run/public/girl?username=Sarah',
+                  'https://avatar.iran.liara.run/public/boy?username=Alex',
+                ];
+
+                // 랜덤으로 하나 선택
+                const randomUrl =
+                  avatarUrls[Math.floor(Math.random() * avatarUrls.length)];
+
+                // URL에서 이미지 가져오기
+                fetch(randomUrl)
+                  .then((response) => response.blob())
+                  .then((blob) => {
+                    const file = new File([blob], 'profile.png', {
+                      type: 'image/png',
+                    });
+                    setSelectedImage(file);
+                    setChangesMade(true);
+                  })
+                  .catch((error) => {
+                    console.error('아바타 이미지 가져오기 실패:', error);
+                  });
+              }}
+            >
+              기본 프로필 이미지
+            </button>
+          </div>
         </div>
 
         <div className="mb-8 w-full space-y-5 px-4 sm:px-0 sm:max-w-sm sm:mx-auto">
