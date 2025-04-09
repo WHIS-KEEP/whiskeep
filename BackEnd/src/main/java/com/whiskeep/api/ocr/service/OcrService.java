@@ -60,14 +60,10 @@ public class OcrService {
 				fastApiOcrUrl, HttpMethod.POST, requestEntity, Map.class
 			);
 
-			log.info(response.getBody().toString());
-
 			// response 값 : {bestMatch : _, similarityScore: _}
 			String enName = response.getBody().get("bestMatch").toString();
 			// 1. 위스키 조회
 			List<Whisky> whiskies = whiskyService.getWhiskiesByEnName(enName);
-
-			log.info(whiskies.toString());
 
 			// sameWhiskyIds 추출
 			List<Long> sameWhiskyIds = whiskies.stream()
@@ -86,8 +82,6 @@ public class OcrService {
 			);
 
 			WhiskySearchResponseDto whiskySearchResponseDto = whiskyService.searchWhiskies(whiskySearchRequestDto);
-
-			log.info(whiskySearchResponseDto.toString());
 
 			return new OcrResponseDto(sameWhiskyIds, whiskySearchResponseDto.whiskies());
 		} catch (HttpClientErrorException e) {
