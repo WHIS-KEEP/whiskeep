@@ -31,6 +31,12 @@ export default function WhiskyListResult({
 
   const formatCount = (count: number) =>
     count > 999 ? '(999+)' : `(${count})`;
+    
+  // 긴 텍스트 자르기 함수
+  const truncateText = (text: string, limit: number) => {
+    if (!text) return '';
+    return text.length > limit ? text.substring(0, limit) + '...' : text;
+  };
 
   // 스크롤을 Top으로 올리는 로직 - 필터 변경 시에만 작동하도록 수정
   useEffect(() => {
@@ -116,15 +122,15 @@ export default function WhiskyListResult({
               key={item.whiskyId}
               variant="outline"
               className={cn(
-                'w-full max-w-full h-auto p-3 text-left flex items-center gap-4 rounded-[14px] overflow-hidden',
+                'w-full max-w-full h-[90px] p-3 text-left flex items-center gap-4 rounded-[14px]',
                 selectedId === item.whiskyId
                   ? 'border-2 border-primary ring-1 ring-primary bg-accent'
                   : 'border hover:bg-accent/50',
               )}
               onClick={() => onSelect(item.whiskyId)}
             >
-              {/* 이미지 영역 */}
-              <div className="w-14 h-18 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-lg overflow-hidden">
+              {/* 이미지 영역 - 고정 크기 */}
+              <div className="w-14 h-16 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-lg overflow-hidden">
                 <img
                   src={item.whiskyImg || exampleImage}
                   alt={item.koName}
@@ -132,24 +138,35 @@ export default function WhiskyListResult({
                 />
               </div>
 
-              {/* 텍스트 영역 */}
-              <div className="flex-grow flex flex-col justify-center gap-1 min-w-0 overflow-hidden">
-                <p className="font-semibold text-base leading-normal truncate">
-                  {item.koName}
-                </p>
-                {item.enName && (
-                  <p className="text-sm text-muted-foreground leading-normal truncate">
-                    {item.enName}
+              {/* 메인 컨테이너 - 수직 중앙 정렬 */}
+              <div className="flex-grow flex flex-col justify-center min-w-0 max-w-[calc(100%-80px)] h-full">
+                {/* 상단 영역: 이름 */}
+                <div className="w-full">
+                  {/* 한글 이름 */}
+                  <p className="font-semibold text-base leading-tight">
+                    {truncateText(item.koName, 30)}
                   </p>
-                )}
-                <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
-                  <span className="truncate">
+                  
+                  {/* 영문 이름 */}
+                  {item.enName && (
+                    <p className="text-sm text-muted-foreground">
+                      {truncateText(item.enName, 35)}
+                    </p>
+                  )}
+                </div>
+                
+                {/* 하단 영역: 타입 정보와 별점 */}
+                <div className="flex items-center justify-between w-full mt-1">
+                  {/* 타입 정보 */}
+                  <div className="text-xs text-muted-foreground max-w-[60%] overflow-hidden text-ellipsis whitespace-nowrap">
                     {item.type} {item.abv ? `| ${item.abv}%` : ''}
-                  </span>
+                  </div>
+                  
+                  {/* 별점 영역 - 오른쪽으로 배치 */}
                   <div className="flex items-center gap-1 flex-shrink-0">
                     <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
-                    <span className="text-sm">{item.avgRating.toFixed(1)}</span>
-                    <span className="ml-0.5 text-xs">
+                    <span className="text-sm font-medium">{item.avgRating.toFixed(1)}</span>
+                    <span className="text-xs text-muted-foreground">
                       {formatCount(item.recordCounts)}
                     </span>
                   </div>
@@ -157,7 +174,7 @@ export default function WhiskyListResult({
               </div>
             </Button>
           ))}
-          {/* 무한 스크롤 감지 영역 - 더 눈에 띄게 만듦 */}
+          {/* 무한 스크롤 감지 영역 */}
           <div
             ref={loaderRef}
             className="h-10 flex items-center justify-center"
