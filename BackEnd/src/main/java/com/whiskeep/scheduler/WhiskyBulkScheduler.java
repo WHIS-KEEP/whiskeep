@@ -32,10 +32,10 @@ public class WhiskyBulkScheduler {
 	private final RecordRepository recordRepository;
 
 	// ✅ 서버 시작 시 1회 실행
-//	@PostConstruct
-//	public void indexOnceAtStartup() throws IOException {
-//		indexWhiskies();
-//	}
+	@PostConstruct
+	public void indexOnceAtStartup() throws IOException {
+		indexWhiskies();
+	}
 
 	// ✅ 매일 새벽 2시에 실행
 	@Scheduled(cron = "0 0 2 * * *")
