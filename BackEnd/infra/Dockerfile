@@ -18,8 +18,6 @@ COPY ../src ./src
 # bootJar 생성 (Checkstyle 생략)
 RUN ./gradlew clean bootJar -x checkstyleMain -x checkstyleTest --no-daemon
 
----
-
 ### 2️⃣ Runtime Stage: JRE Slim
 FROM eclipse-temurin:21-jre-alpine
 
