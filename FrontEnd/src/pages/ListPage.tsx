@@ -76,6 +76,16 @@ const ListPage = () => {
     setShouldScrollToTop(true);
   }, [filters, fetchWhiskies]);
 
+  // 부모 컴포넌트에서 필터 변경 후 0.1초 뒤 초기화
+  useEffect(() => {
+    if (shouldScrollToTop) {
+      const timeout = setTimeout(() => {
+        setShouldScrollToTop(false);
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [shouldScrollToTop]);
+
   const handleSelect = (id: number) => {
     setSelectedId(id);
     navigate(`/detail/${id}`);

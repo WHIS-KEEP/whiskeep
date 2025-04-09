@@ -30,11 +30,15 @@ export default function WhiskyListResult({
   const formatCount = (count: number) =>
     count > 999 ? '(999+)' : `(${count})`;
 
+  // 스크롤을 Top으로 올리는 로직은 따로 분리
   useEffect(() => {
     if (shouldScrollToTops && viewportRef.current) {
       viewportRef.current.scrollTop = 0;
     }
+  }, [shouldScrollToTops]);
 
+  // IntersectionObserver는 스크롤 동작과 무관하게 분리
+  useEffect(() => {
     const target = loaderRef.current;
     const root = viewportRef.current;
 
@@ -56,10 +60,9 @@ export default function WhiskyListResult({
     observer.observe(target);
 
     return () => {
-      observer.unobserve(target);
       observer.disconnect();
     };
-  }, [items.length, hasNext, shouldScrollToTops, onLoadMore]);
+  }, [items.length, hasNext, onLoadMore]);
 
   return (
     <ScrollArea
