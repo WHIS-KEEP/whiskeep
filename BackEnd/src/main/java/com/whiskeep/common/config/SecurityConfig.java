@@ -55,7 +55,12 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://j12a409.p.ssafy.io"));
+		config.setAllowedOriginPatterns(
+			List.of("http://localhost:5173",
+				"https://j12a409.p.ssafy.io",
+				"https://www.whiskeep.com",
+				"https://whiskeep.com")
+		);
 		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(List.of("*"));
 		config.setAllowCredentials(true);
