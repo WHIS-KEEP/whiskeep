@@ -18,6 +18,13 @@ import {
   DialogTrigger,
 } from '@/components/shadcn/dialog';
 import { Switch } from '@/components/shadcn/switch';
+import { useQuery } from '@tanstack/react-query';
+import {
+  COLLECTION_QUERY_KEY,
+  fetchWhiskyCollection,
+} from '@/lib/api/collection';
+import { useMemberScoreQuery } from '@/hooks/queries/useMemberQuery';
+import useMemberStore from '@/store/useMemberStore';
 
 const RecordPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -27,6 +34,14 @@ const RecordPage: React.FC = () => {
   const [content, setContent] = useState<string>('');
   const [isPublic, setIsPublic] = useState<boolean>(false);
   const [selectedWhisky, setSelectedWhisky] = useState<WhiskyInfo | null>(null);
+
+  const { refetch: refetchCollection } = useQuery({
+    queryKey: [COLLECTION_QUERY_KEY],
+    queryFn: fetchWhiskyCollection,
+  });
+
+  const { refetch: refetchMemberScore } = useMemberScoreQuery();
+  const setUserStore = useMemberStore((state) => state.setUserScore);
 
   // 모달 상태 관리
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -111,6 +126,21 @@ const RecordPage: React.FC = () => {
 
     if (success) {
       alert('기록이 성공적으로 등록되었습니다.');
+
+      // 기록된 위스키 수가 3병 이상이 되는 순간부터 사용자 점수 업데이트
+      try {
+        const { data: updatedCollection } = await refetchCollection();
+
+        if (updatedCollection && updatedCollection.length >= 3) {
+          const { data: newScore } = await refetchMemberScore();
+          if (newScore) {
+            setUserStore(newScore);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
       window.location.href = '/collection';
     } else if (submitError) {
       alert(submitError.message || '기록 등록에 실패했습니다.');
