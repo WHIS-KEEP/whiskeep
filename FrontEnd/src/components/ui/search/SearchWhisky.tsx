@@ -127,15 +127,15 @@ export default function SearchWhisky({
                 className="rounded-[20px] h-8 px-5 text-base data-[state=on]:bg-point-red-40 data-[state=on]:text-primary-foreground border"
               >
                 {age === '10'
-                  ? '10년산 이하'
+                  ? '~10년'
                   : age === '12'
-                    ? '12년산'
+                    ? '~12년'
                     : age === '15'
-                      ? '15년산'
+                      ? '~15년'
                       : age === '18'
-                        ? '18년산'
+                        ? '~18년'
                         : age === '19'
-                          ? '19년산 이상'
+                          ? '19년 이상'
                           : ''}
               </ToggleGroupItem>
             ))}
