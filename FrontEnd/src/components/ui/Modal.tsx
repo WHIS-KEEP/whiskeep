@@ -23,6 +23,7 @@ import {
 
 // 이미지 임포트 추가
 import exampleImage from '../../assets/example.png';
+import SearchWhiskyContent from './search/SearchWhiskyContent';
 
 // --- Types, Interfaces, Titles ---
 type PromptVariant = 'regist' | 'edit';
@@ -31,6 +32,13 @@ export interface WhiskySelectionDialogProps {
   title?: string;
   boxContent?: React.ReactNode;
 }
+
+type SelectedWhisky = {
+  id: number;
+  koName: string;
+  imageUrl?: string;
+};
+
 const variantTitles: Record<PromptVariant, string> = {
   regist: '오늘의 한 잔 위스키가\n등록되지 않았습니다.\n위스키를 등록해주세요.',
   edit: '위스키를 변경해주세요.',
@@ -152,12 +160,13 @@ export function WhiskySelectionDialog({
   const displayTitle = propTitle || variantTitles[variant];
 
   // 선택된 위스키 정보 상태 (LikedWhisky만 가능하도록 수정)
-  const [selectedWhisky, setSelectedWhisky] = useState<LikedWhisky | null>(
+  const [selectedWhisky, setSelectedWhisky] = useState<SelectedWhisky | null>(
     null,
   );
 
-  // 내부 Dialog 상태 (찜 목록만)
-  const [wishlistDialogOpen, setWishlistDialogOpen] = useState(false);
+  // 내부 Dialog 상태
+  const [wishlistDialogOpen, setWishlistDialogOpen] = useState(false); // 찜 목록
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false); // 전체 검색
 
   // 찜 목록 데이터 가져오기
   const { data: likedItemsData } = useQuery({
@@ -176,11 +185,15 @@ export function WhiskySelectionDialog({
   };
 
   // 위스키 ID로 찜 목록에서 위스키 찾기 함수 (수정됨)
-  const findWhiskyById = (id: number): LikedWhisky | null => {
-    // 찜 목록에서 찾기
+  const findWhiskyById = (id: number): SelectedWhisky | null => {
     const fromWishlist = likedItems.find((item) => item.whiskyId === id);
-    if (fromWishlist) return fromWishlist;
-
+    if (fromWishlist) {
+      return {
+        id: fromWishlist.whiskyId,
+        koName: fromWishlist.koName,
+        imageUrl: fromWishlist.whiskyImg,
+      };
+    }
     return null;
   };
 
@@ -189,16 +202,20 @@ export function WhiskySelectionDialog({
     const whisky = findWhiskyById(id); // 이제 LikedWhisky | null 반환
     if (whisky) {
       console.log(`Whisky ${id} selected:`, whisky);
-      setSelectedWhisky(whisky); // 상태 타입 일치
+      setSelectedWhisky({
+        id: whisky.id,
+        koName: whisky.koName,
+        imageUrl: whisky.imageUrl,
+      }); // 상태 타입 일치
 
       // 상위 컴포넌트로 선택된 위스키 정보 전달 (형식 맞추기)
       if (onWhiskySelect) {
         const selectedData = {
-          id: whisky.whiskyId,
+          id: whisky.id,
           koName: whisky.koName,
           // LikedWhisky 타입에 whiskyImg가 있다고 가정하고 접근
           // 만약 없다면 undefined 처리 필요
-          imageUrl: whisky.whiskyImg, // LikedWhisky의 이미지 속성 사용
+          imageUrl: whisky.imageUrl, // LikedWhisky의 이미지 속성 사용
         };
         onWhiskySelect(selectedData);
       }
@@ -222,7 +239,7 @@ export function WhiskySelectionDialog({
 
     // 선택된 위스키가 있는 경우 이미지 표시 (LikedWhisky 타입에 맞춰 접근)
     if (selectedWhisky) {
-      const imageUrl = selectedWhisky.whiskyImg || exampleImage; // LikedWhisky의 이미지 속성
+      const imageUrl = selectedWhisky.imageUrl || exampleImage; // LikedWhisky의 이미지 속성
 
       return (
         <div className="w-full h-full flex items-center justify-center overflow-hidden">
@@ -273,6 +290,7 @@ export function WhiskySelectionDialog({
           {renderContent()}
         </div>
         <div className="flex w-full flex-col items-center gap-3">
+          {/* 카메라로 검색 */}
           <Btn
             size="l"
             color="color-wood-70"
@@ -281,6 +299,37 @@ export function WhiskySelectionDialog({
             onClick={() => (window.location.href = '/camera-search')}
             className="w-full"
           />
+          {/* 전체 위스키 목록 검색 */}
+          <Dialog open={searchDialogOpen} onOpenChange={setSearchDialogOpen}>
+            <DialogTrigger asChild>
+              <Btn
+                size="l"
+                color="color-wood-70"
+                text="위스키 목록에서 검색"
+                textColor="text-white"
+                className="w-full"
+              />
+            </DialogTrigger>
+            <DialogContent className="w-[370px] h-[600px] p-3 flex flex-col overflow-hidden border-none rounded-[18px]">
+              <SearchWhiskyContent
+                onSelect={(whisky) => {
+                  setSelectedWhisky({
+                    id: whisky.id,
+                    koName: whisky.koName,
+                    imageUrl: whisky.imageUrl,
+                  });
+                  onWhiskySelect?.(whisky);
+                  setSearchDialogOpen(false);
+                  setTimeout(() => closeParentDialog(), 100);
+                }}
+                closeDialog={() => {
+                  setSearchDialogOpen(false);
+                  setTimeout(() => closeParentDialog(), 100);
+                }}
+              />
+            </DialogContent>
+          </Dialog>
+          {/** 찜 목록에서 선택 */}
           <Dialog
             open={wishlistDialogOpen}
             onOpenChange={setWishlistDialogOpen}
