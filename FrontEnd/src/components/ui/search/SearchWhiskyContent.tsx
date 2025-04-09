@@ -73,7 +73,7 @@ const SearchWhiskyContent = ({ onSelect, closeDialog }: Props) => {
   useEffect(() => {
     fetchWhiskies(false);
     setShouldScrollToTop(true);
-  }, [filters]);
+  }, [filters, fetchWhiskies]);
 
   const handleWhiskyClick = (id: number) => {
     const whisky = whiskies.find((w) => w.whiskyId === id);
