@@ -35,7 +35,7 @@ function OCRPage(): JSX.Element {
       const constraints: MediaStreamConstraints = {
         video: {
           width: { ideal: 720 },
-          height: { ideal: 720 },
+          height: { ideal: 960 },
           facingMode: 'environment',
         },
       };
@@ -201,7 +201,7 @@ function OCRPage(): JSX.Element {
   };
 
   return (
-    <div className="relative w-full h-screen max-w-md mx-auto overflow-hidden bg-black">
+    <div className="relative w-full h-screen mx-auto overflow-hidden bg-black">
       <button
         className="absolute z-30 p-1 cursor-pointer top-4 left-4 text-white/80 hover:text-white"
         onClick={handleGoBack}
@@ -211,7 +211,7 @@ function OCRPage(): JSX.Element {
       </button>
 
       <div
-        className="absolute top-16 left-0 right-0 bg-black"
+        className="absolute top-[10vh] left-0 right-0 bg-black"
         style={{
           maxHeight: 'calc(100vh - 200px)',
           display: 'flex',
@@ -244,7 +244,7 @@ function OCRPage(): JSX.Element {
         <canvas ref={canvasRef} className="hidden" />
       </div>
 
-      <div className="absolute bottom-70 left-0 right-0 z-20 flex items-center justify-around w-full p-4 bg-black/50 shrink-0">
+      <div className="absolute top-[80vh] left-0 right-0 z-20 flex items-center justify-around w-full p-4 bg-black/50 shrink-0">
         <div className="relative flex items-center justify-center w-[70px] h-[70px]">
           <div className="absolute z-0 w-[50px] h-[50px] rounded-full bg-gray-800" />
           <button

@@ -1,13 +1,53 @@
+import { useEffect, useRef } from 'react'; // useEffect, useRef 훅 import
 import GoogleButton from '@/components/ui/Googlebutton';
 import KakaoButton from '@/components/ui/Kakaobutton';
 import { useLoginMutations } from '@/hooks/mutations/useLoginMutations';
 
 import loginImage from '@/assets/login.png';
 import logoImage from '@/assets/logo.svg'; // 로고 경로 확인
+import paintImage from '@/assets/paint.png'; // paint.png 이미지 경로 추가
 
 const Login = () => {
   const googleLogin = useLoginMutations();
   const kakaoLogin = useLoginMutations();
+
+  // --- 애니메이션 대상 요소에 대한 Ref 생성 ---
+  const paintImageRef = useRef<HTMLImageElement>(null);
+  const logoImageRef = useRef<HTMLImageElement>(null);
+
+  // --- 컴포넌트 마운트 시 애니메이션 실행 ---
+  useEffect(() => {
+    // JavaScript로 직접 애니메이션 구현
+    const paintImage = paintImageRef.current;
+    const logoImage = logoImageRef.current;
+
+    if (!paintImage || !logoImage) return;
+
+    // 시작 상태 설정 - 모든 이미지가 왼쪽 끝부터 시작
+    paintImage.style.opacity = '1';
+    paintImage.style.clipPath = 'inset(0 100% 0 0)'; // 왼쪽 끝 0%만 보이게 (오른쪽 100% 잘림)
+
+    // 로고도 왼쪽 끝만 보이게 설정 (동일한 효과)
+    logoImage.style.opacity = '1';
+    logoImage.style.clipPath = 'inset(0 100% 0 0)'; // 왼쪽 끝 0%만 보이게
+
+    // 페인트 효과 (왼쪽에서 오른쪽으로)
+    setTimeout(() => {
+      // 부드러운 트랜지션 설정
+      paintImage.style.transition =
+        'clip-path 800ms cubic-bezier(0.22, 1, 0.36, 1)';
+      // 왼쪽에서 오른쪽으로 페인트칠하듯 애니메이션
+      paintImage.style.clipPath = 'inset(0 0 0 0)'; // 오른쪽 0% 잘림 (전체 보임)
+
+      // 로고 애니메이션 (페인트 애니메이션이 완료된 후)
+      setTimeout(() => {
+        // 로고도 같은 페인트칠 효과 사용
+        logoImage.style.transition =
+          'clip-path 600ms cubic-bezier(0.22, 1, 0.36, 1)';
+        logoImage.style.clipPath = 'inset(0 0 0 0)'; // 전체 이미지가 보이게
+      }, 0); // 페인트 애니메이션 시작 후 0ms 후에 로고 애니메이션 시작(0->n으로 변동 시 n ms)
+    }, 100); // 약간의 지연 후 애니메이션 시작
+  }, []); // 마운트 시 한 번만 실행
 
   const handleLogin = (provider: 'google' | 'kakao') => {
     sessionStorage.setItem('provider', provider);
@@ -20,43 +60,42 @@ const Login = () => {
 
   return (
     <div className="flex-1 overflow-hidden relative">
-      {/* 메인 컨텐츠 영역: 전체 높이 사용, 내부 아이템 수직/수평 중앙 정렬 */}
       <div className="flex flex-col items-center justify-center h-full">
-        {/* --- 로고 + 이미지 그룹 시작 (이 부분이 애니메이션 대상) --- */}
-        {/* 이 그룹 자체의 너비와 정렬을 설정합니다. 버튼과 동일하게 max-w-sm 적용 */}
         <div className="w-full flex flex-col items-center mb-20">
-          {' '}
-          {/* 그룹 아래 여백 추가 */}
-          {/* --- 로고 영역 시작 --- */}
-          <div className="mb-35 mt-70 flex justify-center w-full">
-            {' '}
-            {/* 로고와 이미지 간격 */}
-            <img src={logoImage} alt="App Logo" className="h-12 w-auto" />
-          </div>
-          {/* --- 로고 영역 끝 --- */}
-          {/* --- 메인 이미지 영역 시작 --- */}
-          {/* 이미지 자체의 아래 여백(mb)은 제거하고, 그룹 전체의 mb로 간격 관리 */}
-          <div className="w-full rounded-b-[40px] overflow-hidden">
+          {/* --- 메인 이미지 영역 (상대 위치 지정 및 레이어링) --- */}
+          <div className="relative w-full rounded-b-[40px] overflow-hidden">
+            {/* 1. 배경 이미지 */}
             <img
               src={loginImage}
-              alt="Whiskey tasting"
-              className="w-full object-contain block"
+              alt="Whiskey tasting background"
+              className="w-full object-contain block relative z-10"
+            />
+            {/* 2. 페인트 이미지 (애니메이션 대상) */}
+            <img
+              ref={paintImageRef}
+              src={paintImage}
+              alt="Paint effect"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-auto object-contain z-20 pointer-events-none"
+            />
+            {/* 3. 로고 이미지 (애니메이션 대상) */}
+            <img
+              ref={logoImageRef}
+              src={logoImage}
+              alt="Logo"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-auto object-contain z-30 pointer-events-none"
             />
           </div>
           {/* --- 메인 이미지 영역 끝 --- */}
         </div>
-        {/* --- 로고 + 이미지 그룹 끝 --- */}
+        {/* --- 이미지 그룹 끝 --- */}
 
-        {/* --- 버튼 영역 시작 (별도 영역) --- */}
-        {/* 버튼 영역의 너비와 정렬을 설정합니다. 로고/이미지 그룹과 동일하게 max-w-sm 적용 */}
-        {/* 그룹과의 간격은 위 그룹의 mb-12로 조절했으므로 mt는 제거하거나 작은 값(예: mt-4)으로 설정 가능 */}
+        {/* --- 버튼 영역 시작 --- */}
         <div className="flex flex-col items-center gap-8 w-full max-w-sm">
           <GoogleButton onClick={() => handleLogin('google')} />
           <KakaoButton onClick={() => handleLogin('kakao')} />
         </div>
         {/* --- 버튼 영역 끝 --- */}
       </div>
-      {/* 메인 컨텐츠 영역 끝 */}
     </div>
   );
 };
