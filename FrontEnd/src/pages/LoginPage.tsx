@@ -28,27 +28,29 @@ const Login = () => {
   // const [initialLogoPosition, setInitialLogoPosition] =
   //   useState<LogoPosition | null>(null);
   // const [animationComplete, setAnimationComplete] = useState(false);
+  const [paintLoaded, setPaintLoaded] = useState(false);
+  const [logoLoaded, setLogoLoaded] = useState(false);
   const [showPaintAnimation, setShowPaintAnimation] = useState(false);
 
   // 세션 스토리지에서 이전 페이지의 로고 위치 정보 가져오기
   useEffect(() => {
     const storedPosition = sessionStorage.getItem('logoPosition');
 
-    if (storedPosition) {
-      // setInitialLogoPosition(JSON.parse(storedPosition));
-      // 로고 이동 애니메이션이 있을 경우, 페인트 애니메이션은 이후에 시작
+    if (!storedPosition) {
+      // 위치 정보 없으면 바로 애니메이션 → 여기서도 이미지 로딩 이후에 시작하도록
       setShowPaintAnimation(false);
-    } else {
-      // 저장된 위치가 없으면 페인트 애니메이션 바로 시작
-      // setAnimationComplete(true);
-      setShowPaintAnimation(true);
     }
-
     // 애니메이션이 끝나면 세션 스토리지 정리
     return () => {
       sessionStorage.removeItem('logoPosition');
     };
   }, []);
+
+  useEffect(() => {
+    if (paintLoaded && logoLoaded) {
+      setShowPaintAnimation(true);
+    }
+  }, [paintLoaded, logoLoaded]);
 
   // // 로고 애니메이션 완료 표시
   // useEffect(() => {
@@ -171,6 +173,7 @@ const Login = () => {
               ref={paintImageRef}
               src={paintImage}
               alt="Paint effect"
+              onLoad={() => setPaintLoaded(true)}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-auto object-contain z-20 pointer-events-none"
               style={{ opacity: 1 }}
             />
@@ -179,6 +182,7 @@ const Login = () => {
               ref={logoImageRef}
               src={logoImage}
               alt="Logo"
+              onLoad={() => setLogoLoaded(true)}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-auto object-contain z-30 pointer-events-none"
               style={{ opacity: 1 }}
             />
