@@ -146,7 +146,7 @@ export default function QuickRecordSection({
         </div>
 
         {/* 메인 컨텐츠 */}
-        <div className="flex items-center gap-4 border border-gray-200 p-4 rounded-lg transition-colors hover:bg-gray-50">
+        <div className="flex items-center gap-4 border border-gray-200 p-4 rounded-lg transition-colors">
           {/* 이미지 부분 - 크기를 더 크게 증가 */}
           <DialogTrigger asChild>
             <div
@@ -204,14 +204,14 @@ export default function QuickRecordSection({
               <Input
                 type="text"
                 placeholder="위스킵 해보세요 😊"
-                className="text-m pr-10 h-10 border-b rounded-none border-0 border-gray-200 focus-visible:ring-0 focus-visible:border-b-primary"
+                className="text-m pr-10 h-10 border border-gray-200 rounded-md focus:ring-0  "
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
               />
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-0 h-10 w-10"
+                className="absolute right-0 h-10 w-10 cursor-pointer"
                 onClick={handleSubmitRecord}
               >
                 <Send
@@ -220,7 +220,7 @@ export default function QuickRecordSection({
                     'transition-colors',
                     !selectedWhisky || userRating === 0
                       ? 'text-gray-300'
-                      : 'text-primary hover:text-primary-dark',
+                      : 'text-primary ',
                   )}
                 />
               </Button>
