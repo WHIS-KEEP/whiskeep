@@ -199,14 +199,6 @@ function OCRPage(): JSX.Element {
 
   return (
     <div className="relative w-full h-screen mx-auto overflow-hidden bg-black">
-      <button
-        className="absolute z-30 p-1 cursor-pointer top-4 left-4 text-white/80 hover:text-white"
-        onClick={handleGoBack}
-        aria-label="뒤로 가기"
-      >
-        <X size={28} />
-      </button>
-
       <div
         className="absolute top-[10vh] left-0 right-0 bg-black"
         style={{
@@ -216,6 +208,13 @@ function OCRPage(): JSX.Element {
           justifyContent: 'center',
         }}
       >
+        <button
+          className="absolute z-30 p-1 cursor-pointer top-4 left-4 text-white/80 hover:text-white"
+          onClick={handleGoBack}
+          aria-label="뒤로 가기"
+        >
+          <X size={28} />
+        </button>
         {error && (
           <div className="absolute inset-0 z-10 flex items-center justify-center p-5 text-lg font-bold text-center text-white bg-black/70">
             {error}
@@ -230,7 +229,7 @@ function OCRPage(): JSX.Element {
 
         <video
           ref={videoRef}
-          className={`block w-auto h-[600px] object-contain ${
+          className={`block w-auto h-full object-contain ${
             isCameraReady && !error ? 'visible' : 'invisible'
           }`}
           style={{ maxHeight: '100%' }}
