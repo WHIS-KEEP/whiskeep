@@ -42,8 +42,8 @@ type SelectedWhisky = {
 };
 
 const variantTitles: Record<PromptVariant, string> = {
-  regist: '오늘의 한 잔 위스키가\n등록되지 않았습니다.\n위스키를 등록해주세요.',
-  edit: '위스키를 변경해주세요.',
+  regist: '위스키를 등록해주세요.',
+  edit: '위스키를 등록해주세요.',
 };
 
 // --- WishlistDialogContent Component ---
