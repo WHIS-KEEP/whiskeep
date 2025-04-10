@@ -286,7 +286,7 @@ export function WhiskySelectionDialog({
         <p className="whitespace-pre-line text-center text-base text-gray-600 opacity-90 mb-4">
           {displayTitle}
         </p>
-        <div className="mb-4 flex h-[180px] w-[180px] items-center justify-center rounded-[10px] bg-muted p-0 overflow-hidden">
+        <div className="mb-4 flex h-[180px] w-[180px] items-center justify-center rounded-[10px] p-0 overflow-hidden">
           {renderContent()}
         </div>
         <div className="flex w-full flex-col items-center gap-3">

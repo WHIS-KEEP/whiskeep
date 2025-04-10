@@ -17,6 +17,7 @@ import useRecordSubmit from '@/hooks/mutations/useRecordSubmit';
 import whiskyGlass from '@/assets/whiskyGlass.svg';
 import { OcrResponse } from '@/lib/api/OCR';
 import OcrWhiskyContent from '@/pages/OCR/OcrWhiskyContent';
+import bottle from '@/assets/bottle.png';
 
 // 백엔드 API 응답 타입에 맞게 인터페이스 수정
 interface WhiskyData {
@@ -241,7 +242,11 @@ export default function QuickRecordSection({
             variant="regist"
             boxContent={
               <div className="w-full h-full flex items-center justify-center overflow-hidden">
-                <Plus size={32} />
+                <img
+                  src={bottle}
+                  alt="Whiskey Bottle"
+                  className="w-auto h-full object-contain grayscale opacity-50"
+                />
               </div>
             }
             onWhiskySelect={handleWhiskySelect}

@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 import { Image as ImageIcon } from 'lucide-react';
 import whiskyPlaceholder from '../assets/bottle.png';
+import bottle from '@/assets/bottle.png';
 
 // 커스텀 훅 가져오기
 import useImageUpload from '../hooks/mutations/useImageUpload';
@@ -162,24 +163,11 @@ const RecordPage: React.FC = () => {
     </div>
   ) : (
     <div className="flex items-center justify-center w-full h-full">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="64"
-        height="64"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-muted-foreground opacity-50"
-      >
-        <path d="M15 3h6v6" />
-        <path d="M10 14 21 3" />
-        <path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5" />
-        <path d="M14 3v6h-6" />
-        <path d="M3 14 11 6" />
-      </svg>
+      <img
+        src={bottle}
+        alt="Whiskey Bottle"
+        className="w-auto h-full object-contain grayscale opacity-50"
+      />
     </div>
   );
 
