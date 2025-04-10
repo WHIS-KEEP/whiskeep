@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area';
 import { ChevronLeft, Star } from 'lucide-react';
@@ -14,6 +14,9 @@ import {
   useWhiskyDetail,
   useWhiskyRecords,
 } from '@/hooks/queries/useWhiskyQueries';
+
+// 추천 정보를 가져오는 훅 추가
+import { useRecommendQuery } from '@/hooks/queries/useRecommendQuery';
 // 샘플 이미지 (실제 구현 시 경로 수정 필요)
 import backgroundImage from '@/assets/whisky_background.png';
 
@@ -26,6 +29,8 @@ const DetailPage = () => {
 
   const { user } = useAuth();
 
+  const [isWhiskeepPick, setIsWhiskeepPick] = useState<boolean>(false);
+
   // React Query 훅 사용
   const {
     data: whiskyDetail,
@@ -37,6 +42,19 @@ const DetailPage = () => {
     whiskyIdNumber,
     page,
   );
+
+  // 추천 목록 데이터 가져오기
+  const { data: recommendations } = useRecommendQuery();
+
+  // 현재 위스키가 추천 목록에 있는지 확인
+  useEffect(() => {
+    if (recommendations && recommendations.length > 0) {
+      const isInRecommendList = recommendations.some(
+        (whisky) => whisky.whiskyId === whiskyIdNumber,
+      );
+      setIsWhiskeepPick(isInRecommendList);
+    }
+  }, [recommendations, whiskyIdNumber]);
 
   // 뒤로가기 핸들러
   const handleGoBack = () => {
@@ -128,9 +146,11 @@ const DetailPage = () => {
           </div>
 
           {/* Wiskeep's Pick 배지 */}
-          <div className="absolute left-4 bottom-4 bg-rose-300 bg-opacity-90 text-white px-4 py-2 rounded-full text-sm z-20">
-            Whiskeep's Pick
-          </div>
+          {isWhiskeepPick && (
+            <div className="absolute left-4 bottom-4 bg-rose-300 bg-opacity-90 text-white px-4 py-2 rounded-full text-sm z-20">
+              Whiskeep's Pick
+            </div>
+          )}
         </div>
 
         <div className="p-4">
