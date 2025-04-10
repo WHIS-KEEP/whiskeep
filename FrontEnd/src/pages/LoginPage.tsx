@@ -172,7 +172,7 @@ const Login = () => {
               src={paintImage}
               alt="Paint effect"
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-auto object-contain z-20 pointer-events-none"
-              style={{ opacity: showPaintAnimation ? 1 : 0 }}
+              style={{ opacity: 1 }}
             />
             {/* 3. 로고 이미지 (애니메이션 대상) - 로고 이동 애니메이션 후에만 표시 */}
             <img
@@ -180,7 +180,7 @@ const Login = () => {
               src={logoImage}
               alt="Logo"
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-auto object-contain z-30 pointer-events-none"
-              style={{ opacity: showPaintAnimation ? 1 : 0 }}
+              style={{ opacity: 1 }}
             />
           </div>
           {/* --- 메인 이미지 영역 끝 --- */}
