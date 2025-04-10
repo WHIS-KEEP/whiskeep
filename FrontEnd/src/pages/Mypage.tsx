@@ -148,6 +148,7 @@ const MyPage = () => {
     deleteUser(undefined, {
       onSuccess: () => {
         alert('회원탈퇴가 완료되었습니다.');
+        localStorage.clear();
         sessionStorage.clear();
         navigate('/login');
       },

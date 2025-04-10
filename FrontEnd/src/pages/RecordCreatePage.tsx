@@ -224,7 +224,7 @@ const RecordPage: React.FC = () => {
             <DialogContent className="w-[370px] max-h-[600px] overflow-hidden border-none rounded-[18px]">
               <WhiskySelectionDialog
                 variant="regist"
-                title="위스키를 선택해주세요"
+                title="위스키를 등록해주세요"
                 boxContent={dialogBoxContent}
                 onWhiskySelect={handleSelectWhisky}
                 onClose={handleCloseDialog}

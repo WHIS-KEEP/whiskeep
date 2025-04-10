@@ -15,8 +15,8 @@ const useMemberStore = create<UserState>()(
       setUserScore: (score) => set({ score }), // 상태 업데이트 함수
     }),
     {
-      name: 'member-score', // sessionStorage에 저장될 key 이름
-      storage: createJSONStorage(() => sessionStorage), // sessionStorage에 JSON 형식으로 저장
+      name: 'member-score',
+      storage: createJSONStorage(() => localStorage),
       // 초기화 시 hydration 할 때 undefined 되지 않도록 해주는 설정
       // hydration 이후에도 undefined가 되려면 이거 생략
       partialize: (state) => ({ score: state.score ?? null }),

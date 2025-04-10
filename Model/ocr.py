@@ -9,7 +9,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 app = FastAPI()
-ocr = easyocr.Reader(['en'])
+ocr = easyocr.Reader(['en'], gpu=False)
 
 ''' 1. 텍스트 전처리 '''
 # 위스키 브랜드 키워드를 정제하는 함수

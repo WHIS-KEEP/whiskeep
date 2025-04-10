@@ -11,12 +11,5 @@ const getSocialLogin = async (provider: 'google' | 'kakao') => {
 export const useLoginMutations = () => {
   return useMutation({
     mutationFn: getSocialLogin,
-    onMutate: () => {
-      // // 뮤테이션 함수가 실행되기 직전에 호출되는 함수
-      // if (localStorage.getItem('accessToken')) {
-      //   localStorage.removeItem('accessToken');
-      //   console.log('소셜 로그인 전 기존 토큰 삭제 완료');
-      // }
-    },
   });
 };

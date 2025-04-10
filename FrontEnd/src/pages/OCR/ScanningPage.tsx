@@ -88,9 +88,13 @@ function ScanningPage(): JSX.Element {
         );
 
         const errorState: ErrorState = handleOcrError(err);
-
         navigate('/result', {
-          state: errorState as ResultNavigationState,
+          state: {
+            error: errorState.error,
+            timedOut: errorState.timedOut,
+            errorImage: errorState.errorImage,
+            origin,
+          } as ResultNavigationState,
         });
       } finally {
         if (apiTimerId) clearTimeout(apiTimerId);
@@ -107,11 +111,6 @@ function ScanningPage(): JSX.Element {
   }, [state, navigate, origin]);
 
   return (
-    // <div className="flex flex-col items-center justify-center w-full h-screen max-w-md mx-auto bg-black text-white">
-    //   <div className="animate-pulse text-xl font-semibold whitespace-pre-line text-center">
-    //     {message}
-    //   </div>
-    // </div>
     <div className="fixed inset-0 flex flex-col justify-center items-center z-50 gap-6">
       <span className="loader" />
       <p>{message}</p>
