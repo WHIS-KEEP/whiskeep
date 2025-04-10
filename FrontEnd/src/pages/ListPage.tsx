@@ -112,7 +112,7 @@ const ListPage = () => {
   };
 
   return (
-    <div className="h-screen w-full bg-bg-muted pt-5 pb-20 flex flex-col">
+    <div className="h-screen w-full bg-bg-muted pb-20 flex flex-col">
       <div className="bg-white rounded-t-[18px] p-4 flex flex-col flex-grow overflow-hidden">
         {/* 검색 + 필터 */}
         <SearchWhisky
