@@ -210,7 +210,7 @@ function OCRPage(): JSX.Element {
       <div
         className="absolute top-[10vh] left-0 right-0 bg-black"
         style={{
-          maxHeight: 'calc(100vh - 200px)',
+          maxHeight: '80vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -230,7 +230,7 @@ function OCRPage(): JSX.Element {
 
         <video
           ref={videoRef}
-          className={`block w-full h-auto object-contain ${
+          className={`block w-auto h-full object-contain ${
             isCameraReady && !error ? 'visible' : 'invisible'
           }`}
           style={{ maxHeight: '100%' }}
