@@ -37,7 +37,7 @@ const Login = () => {
     if (storedPosition) {
       setInitialLogoPosition(JSON.parse(storedPosition));
       // 로고 이동 애니메이션이 있을 경우, 페인트 애니메이션은 이후에 시작
-      setShowPaintAnimation(false);
+      // setShowPaintAnimation(false);
     } else {
       // 저장된 위치가 없으면 페인트 애니메이션 바로 시작
       setAnimationComplete(true);

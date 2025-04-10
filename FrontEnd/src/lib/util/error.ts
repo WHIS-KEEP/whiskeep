@@ -153,8 +153,8 @@ export const handleOcrError = (err: unknown): ErrorState => {
         errorImage = 'ocr404.png'; // 이미지 파일명만 반환
         break;
       default:
-        errorMessage = `OCR 오류 발생 (코드: ${apiError.status || 'N/A'})`;
-        if (apiError.message) errorMessage += `: ${apiError.message}`;
+        errorMessage = '이미지를 인식할 수 없습니다.\n검색을 이용해주세요.';
+        errorImage = 'ocr500.png'; // 이미지 파일명만 반환
     }
   } else if (err instanceof Error) {
     // 네트워크 또는 기타 클라이언트 오류 처리 (개선)
