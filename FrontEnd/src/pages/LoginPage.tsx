@@ -9,12 +9,12 @@ import logoImage from '@/assets/logo.svg';
 import paintImage from '@/assets/paint.png';
 
 // 로고 위치 정보에 대한 인터페이스 정의
-interface LogoPosition {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-}
+// interface LogoPosition {
+//   top: number;
+//   left: number;
+//   width: number;
+//   height: number;
+// }
 
 const Login = () => {
   const googleLogin = useLoginMutations();
@@ -25,8 +25,8 @@ const Login = () => {
   const logoImageRef = useRef<HTMLImageElement>(null);
   // const movingLogoRef = useRef<HTMLImageElement>(null);
 
-  const [initialLogoPosition, setInitialLogoPosition] =
-    useState<LogoPosition | null>(null);
+  // const [initialLogoPosition, setInitialLogoPosition] =
+  //   useState<LogoPosition | null>(null);
   // const [animationComplete, setAnimationComplete] = useState(false);
   const [showPaintAnimation, setShowPaintAnimation] = useState(false);
 
@@ -35,7 +35,7 @@ const Login = () => {
     const storedPosition = sessionStorage.getItem('logoPosition');
 
     if (storedPosition) {
-      setInitialLogoPosition(JSON.parse(storedPosition));
+      // setInitialLogoPosition(JSON.parse(storedPosition));
       // 로고 이동 애니메이션이 있을 경우, 페인트 애니메이션은 이후에 시작
       setShowPaintAnimation(false);
     } else {
@@ -50,17 +50,17 @@ const Login = () => {
     };
   }, []);
 
-  // 로고 애니메이션 완료 표시
-  useEffect(() => {
-    if (initialLogoPosition) {
-      const timer = setTimeout(() => {
-        // setAnimationComplete(true);
-        setShowPaintAnimation(true); // 로고 이동 후 페인트 애니메이션 시작
-      }, 2000); // 로고 애니메이션 시간과 맞춰야 함
+  // // 로고 애니메이션 완료 표시
+  // useEffect(() => {
+  //   if (initialLogoPosition) {
+  //     const timer = setTimeout(() => {
+  //       // setAnimationComplete(true);
+  //       setShowPaintAnimation(true); // 로고 이동 후 페인트 애니메이션 시작
+  //     }, 2000); // 로고 애니메이션 시간과 맞춰야 함
 
-      return () => clearTimeout(timer);
-    }
-  }, [initialLogoPosition]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [initialLogoPosition]);
 
   // 페인트 및 로고 애니메이션 (기존 코드)
   useEffect(() => {
@@ -84,7 +84,7 @@ const Login = () => {
     setTimeout(() => {
       // 부드러운 트랜지션 설정
       paintImage.style.transition =
-        'clip-path 2000ms cubic-bezier(0.22, 1, 0.36, 1)';
+        'clip-path 1000ms cubic-bezier(0.22, 1, 0.36, 1)';
       // 왼쪽에서 오른쪽으로 페인트칠하듯 애니메이션
       paintImage.style.clipPath = 'inset(0 0 0 0)'; // 오른쪽 0% 잘림 (전체 보임)
 
@@ -92,7 +92,7 @@ const Login = () => {
       setTimeout(() => {
         // 로고도 같은 페인트칠 효과 사용
         logoImage.style.transition =
-          'clip-path 2000ms cubic-bezier(0.22, 1, 0.36, 1)';
+          'clip-path 1000ms cubic-bezier(0.22, 1, 0.36, 1)';
         logoImage.style.clipPath = 'inset(0 0 0 0)'; // 전체 이미지가 보이게
       }, 0); // 페인트 애니메이션 시작 후 0ms 후에 로고 애니메이션 시작
     }, 100); // 약간의 지연 후 애니메이션 시작
