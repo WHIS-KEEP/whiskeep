@@ -240,7 +240,7 @@ function OCRPage(): JSX.Element {
         <canvas ref={canvasRef} className="hidden" />
       </div>
 
-      <div className="absolute top-[80vh] left-0 right-0 z-20 flex items-center justify-around w-full p-4 bg-black/50 shrink-0">
+      <div className="absolute top-[50vh] left-0 right-0 z-20 flex items-center justify-around w-full p-4 bg-black/50 shrink-0">
         <div className="relative flex items-center justify-center w-[70px] h-[70px]">
           <div className="absolute z-0 w-[50px] h-[50px] rounded-full bg-gray-800" />
           <button
