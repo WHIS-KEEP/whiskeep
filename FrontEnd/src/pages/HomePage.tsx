@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // react-router-dom을 사용하여 페이지 이동
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import logo from '../assets/logo.svg'; // 로고 경로 확인 필요
 
-import logo from '../assets/logo.svg';
-
-const Home = () => {
+const HomePage = () => {
   const [opacity, setOpacity] = useState(0);
+  const [animationComplete, setAnimationComplete] = useState(false);
+  const logoRef = useRef<HTMLImageElement>(null); // ref 타입 명시
   const navigate = useNavigate();
 
+  // 로고 페이드인 애니메이션
   useEffect(() => {
     // 점차 선명해지는 로고 애니메이션
     const fadeInDuration = 2000;
@@ -21,21 +24,53 @@ const Home = () => {
 
       if (currentStep >= steps) {
         clearInterval(fadeInInterval);
+
+        // 페이드인 완료 후 로고 위치 정보 저장을 위한 짧은 지연
+        setTimeout(() => {
+          setAnimationComplete(true);
+        }, 500);
       }
     }, interval);
 
-    const navigationDelay = 3500;
-    setTimeout(() => {
-      navigate('/main');
-    }, navigationDelay);
-
     return () => clearInterval(fadeInInterval);
-  }, [navigate]);
+  }, []);
+
+  // 로고 위치 정보를 세션 스토리지에 저장하고 페이지 전환
+  useEffect(() => {
+    if (animationComplete && logoRef.current) {
+      const logoRect = logoRef.current.getBoundingClientRect();
+
+      // 로고 위치 정보 세션 스토리지에 저장
+      sessionStorage.setItem(
+        'logoPosition',
+        JSON.stringify({
+          top: logoRect.top,
+          left: logoRect.left,
+          width: logoRect.width,
+          height: logoRect.height,
+        }),
+      );
+
+      // 페이지 전환 (약간 지연)
+      setTimeout(() => {
+        navigate('/login');
+      }, 100);
+    }
+  }, [animationComplete, navigate]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[90vh] p-6 bg-bg-muted rounded-lg">
+    <motion.div
+      className="flex flex-col items-center justify-center min-h-[90vh] p-6 bg-bg-muted rounded-lg"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{
+        opacity: animationComplete ? 0 : 1,
+        transition: { duration: 0.3 },
+      }}
+    >
       <div className="flex items-center justify-center">
-        <img
+        <motion.img
+          ref={logoRef}
           src={logo}
           alt="Wiskeep"
           className="h-10 w-auto"
@@ -43,12 +78,21 @@ const Home = () => {
             opacity: opacity,
             WebkitBackgroundClip: 'text',
             color: 'transparent',
-            transition: 'opacity 0.2s ease-in-out',
           }}
+          animate={
+            animationComplete
+              ? {
+                  y: -100,
+                  scale: 1.2,
+                  transition: { duration: 0.5, ease: 'easeInOut' },
+                }
+              : {}
+          }
+          transition={{ opacity: { duration: 0.4, ease: 'easeInOut' } }}
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-export default Home;
+export default HomePage;

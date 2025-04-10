@@ -1,4 +1,5 @@
-import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import Home from '@/pages/HomePage';
 import NotFound from '@/pages/NotFoundPage';
 import Main from '@/pages/MainPage';
@@ -58,103 +59,107 @@ const PublicRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 const Router = () => {
+  const location = useLocation();
+
   return (
-    <Routes>
-      {/* 로그인한 사용자는 접근 불가 */}
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* 로그인한 사용자는 접근 불가 */}
 
-      <Route
-        path="/"
-        element={
-          <PublicRoute>
-            <Home />
-          </PublicRoute>
-        }
-      />
-
-      <Route
-        path="login"
-        element={
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="login/success"
-        element={
-          <PublicRoute>
-            <LoginSuccess />
-          </PublicRoute>
-        }
-      />
-      <Route
-        path="/preference"
-        element={
-          <BlockIfAlreadyHasScore>
-            <PreferenceSurveyIntroPage />
-          </BlockIfAlreadyHasScore>
-        }
-      />
-      <Route
-        path="/preference/beginner"
-        element={
-          <BlockIfAlreadyHasScore>
-            <BeginnerSurveyPage />
-          </BlockIfAlreadyHasScore>
-        }
-      />
-      <Route
-        path="/preference/familiar"
-        element={
-          <BlockIfAlreadyHasScore>
-            <FamiliarSurveyPage />
-          </BlockIfAlreadyHasScore>
-        }
-      />
-      <Route
-        path="/preference/complete"
-        element={
-          <BlockIfAlreadyHasScore>
-            <PreferenceCompletePage />
-          </BlockIfAlreadyHasScore>
-        }
-      />
-
-      <Route element={<Layout />}>
         <Route
+          path="/"
           element={
-            <ProtectedRoute>
-              <PreferenceProtectedRoute>
-                <Outlet />
-              </PreferenceProtectedRoute>
-            </ProtectedRoute>
+            <PublicRoute>
+              <Home />
+            </PublicRoute>
           }
-        >
-          <Route path="main" element={<Main />} />
-          <Route path="list" element={<List />} />
-          <Route path="collection" element={<Collection />} />
-          <Route path="mypage" element={<Mypage />} />
-          <Route path="/records/create" element={<RecordCreatePage />} />
-          <Route path="/records/:whiskyId" element={<WhiskyRecordPage />} />
-          <Route path="/like" element={<LikePage />} />
-          <Route path="detail/:whiskyId" element={<DetailPage />} />
-          <Route path="/ocr" element={<OCR />} />
-          <Route path="/result" element={<ResultPage />} />
-          <Route path="/scanning" element={<ScanningPage />} />
-          <Route
-            path="/records/:whiskyId/:recordId"
-            element={<RecordDetailPage />}
-          />
-          <Route
-            path="/records/:whiskyId/:recordId/edit"
-            element={<RecordEditPage />}
-          />
-        </Route>
-      </Route>
+        />
 
-      {/* 404 페이지 */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route
+          path="login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="login/success"
+          element={
+            <PublicRoute>
+              <LoginSuccess />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/preference"
+          element={
+            <BlockIfAlreadyHasScore>
+              <PreferenceSurveyIntroPage />
+            </BlockIfAlreadyHasScore>
+          }
+        />
+        <Route
+          path="/preference/beginner"
+          element={
+            <BlockIfAlreadyHasScore>
+              <BeginnerSurveyPage />
+            </BlockIfAlreadyHasScore>
+          }
+        />
+        <Route
+          path="/preference/familiar"
+          element={
+            <BlockIfAlreadyHasScore>
+              <FamiliarSurveyPage />
+            </BlockIfAlreadyHasScore>
+          }
+        />
+        <Route
+          path="/preference/complete"
+          element={
+            <BlockIfAlreadyHasScore>
+              <PreferenceCompletePage />
+            </BlockIfAlreadyHasScore>
+          }
+        />
+
+        <Route element={<Layout />}>
+          <Route
+            element={
+              <ProtectedRoute>
+                <PreferenceProtectedRoute>
+                  <Outlet />
+                </PreferenceProtectedRoute>
+              </ProtectedRoute>
+            }
+          >
+            <Route path="main" element={<Main />} />
+            <Route path="list" element={<List />} />
+            <Route path="collection" element={<Collection />} />
+            <Route path="mypage" element={<Mypage />} />
+            <Route path="/records/create" element={<RecordCreatePage />} />
+            <Route path="/records/:whiskyId" element={<WhiskyRecordPage />} />
+            <Route path="/like" element={<LikePage />} />
+            <Route path="detail/:whiskyId" element={<DetailPage />} />
+            <Route path="/ocr" element={<OCR />} />
+            <Route path="/result" element={<ResultPage />} />
+            <Route path="/scanning" element={<ScanningPage />} />
+            <Route
+              path="/records/:whiskyId/:recordId"
+              element={<RecordDetailPage />}
+            />
+            <Route
+              path="/records/:whiskyId/:recordId/edit"
+              element={<RecordEditPage />}
+            />
+          </Route>
+        </Route>
+
+        {/* 404 페이지 */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
   );
 };
 
