@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ScrollArea } from '@/components/shadcn/scroll-area';
 import { Button } from '@/components/shadcn/Button';
 import { cn } from '@/lib/util/utils';
@@ -36,6 +37,8 @@ export default function LikedWhiskyList({
       onItemClick(selectedItem);
     }
   };
+
+  const navigate = useNavigate();
 
   return (
     <ScrollArea
@@ -141,10 +144,9 @@ export default function LikedWhiskyList({
           </p>
           <Button
             variant="outline"
-            className="mt-3 text-sm border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary-30)]"
-            onClick={() => {
-              /* 위스키 탐색 페이지로 이동 */
-            }}
+            className="mt-3 text-sm border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary-30)] cursor-pointer"
+            onClick={() => navigate('/list')}
+            /* 위스키 탐색 페이지로 이동 */
           >
             위스키 둘러보기
           </Button>
