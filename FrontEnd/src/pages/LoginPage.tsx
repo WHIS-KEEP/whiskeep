@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+// import { motion } from 'framer-motion';
 import GoogleButton from '@/components/ui/Googlebutton';
 import KakaoButton from '@/components/ui/Kakaobutton';
 import { useLoginMutations } from '@/hooks/mutations/useLoginMutations';
@@ -23,11 +23,11 @@ const Login = () => {
   // --- 애니메이션 대상 요소에 대한 Ref 생성 ---
   const paintImageRef = useRef<HTMLImageElement>(null);
   const logoImageRef = useRef<HTMLImageElement>(null);
-  const movingLogoRef = useRef<HTMLImageElement>(null);
+  // const movingLogoRef = useRef<HTMLImageElement>(null);
 
   const [initialLogoPosition, setInitialLogoPosition] =
     useState<LogoPosition | null>(null);
-  const [animationComplete, setAnimationComplete] = useState(false);
+  // const [animationComplete, setAnimationComplete] = useState(false);
   const [showPaintAnimation, setShowPaintAnimation] = useState(false);
 
   // 세션 스토리지에서 이전 페이지의 로고 위치 정보 가져오기
@@ -37,10 +37,10 @@ const Login = () => {
     if (storedPosition) {
       setInitialLogoPosition(JSON.parse(storedPosition));
       // 로고 이동 애니메이션이 있을 경우, 페인트 애니메이션은 이후에 시작
-      // setShowPaintAnimation(false);
+      setShowPaintAnimation(false);
     } else {
       // 저장된 위치가 없으면 페인트 애니메이션 바로 시작
-      setAnimationComplete(true);
+      // setAnimationComplete(true);
       setShowPaintAnimation(true);
     }
 
@@ -54,7 +54,7 @@ const Login = () => {
   useEffect(() => {
     if (initialLogoPosition) {
       const timer = setTimeout(() => {
-        setAnimationComplete(true);
+        // setAnimationComplete(true);
         setShowPaintAnimation(true); // 로고 이동 후 페인트 애니메이션 시작
       }, 2000); // 로고 애니메이션 시간과 맞춰야 함
 
@@ -108,39 +108,39 @@ const Login = () => {
   };
 
   // 현재 뷰포트 크기 계산
-  const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 0;
-  const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
+  // const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 0;
+  // const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 0;
 
   // 로고의 초기 위치와 최종 위치 계산 (없으면 기본값)
-  const initialTop = initialLogoPosition
-    ? initialLogoPosition.top
-    : viewportHeight / 2;
-  const initialLeft = initialLogoPosition
-    ? initialLogoPosition.left
-    : viewportWidth / 2;
+  // const initialTop = initialLogoPosition
+  //   ? initialLogoPosition.top
+  //   : viewportHeight / 2;
+  // const initialLeft = initialLogoPosition
+  //   ? initialLogoPosition.left
+  //   : viewportWidth / 2;
 
   // 로고 크기 계산
-  const initialScale =
-    initialLogoPosition && movingLogoRef.current
-      ? initialLogoPosition.width / movingLogoRef.current.offsetWidth || 1
-      : 1;
+  // const initialScale =
+  //   initialLogoPosition && movingLogoRef.current
+  //     ? initialLogoPosition.width / movingLogoRef.current.offsetWidth || 1
+  //     : 1;
 
   // 페이지가 처음 렌더링될 때 로고의 초기 위치 스타일
-  const initialLogoStyle: React.CSSProperties = initialLogoPosition
-    ? {
-        position: 'absolute',
-        top: initialTop,
-        left: initialLeft,
-        transform: `translate(-50%, -50%) scale(${initialScale})`,
-        zIndex: 50,
-        opacity: 1,
-      }
-    : {};
+  // const initialLogoStyle: React.CSSProperties = initialLogoPosition
+  //   ? {
+  //       position: 'absolute',
+  //       top: initialTop,
+  //       left: initialLeft,
+  //       transform: `translate(-50%, -50%) scale(${initialScale})`,
+  //       zIndex: 50,
+  //       opacity: 1,
+  //     }
+  //   : {};
 
   return (
     <div className="flex-1 overflow-hidden relative">
       {/* 로고 이동 애니메이션 (홈페이지에서 넘어올 때) */}
-      {initialLogoPosition && !animationComplete && (
+      {/* {initialLogoPosition && !animationComplete && (
         <motion.img
           ref={movingLogoRef}
           src={logoImage}
@@ -154,7 +154,7 @@ const Login = () => {
             transition: { duration: 0.6, ease: 'easeInOut' },
           }}
         />
-      )}
+      )} */}
 
       <div className="flex flex-col items-center justify-center h-full">
         <div className="w-full flex flex-col items-center mb-20">
