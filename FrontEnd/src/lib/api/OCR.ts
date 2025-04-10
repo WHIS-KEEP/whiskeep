@@ -29,7 +29,6 @@ export const sendImageToOCR = async (image: File): Promise<OcrResponse> => {
   formData.append('image', image);
 
   const response = await API.post<OcrResponse>(OCR_ENDPOINT, formData);
-  console.log('OCR API 응답:', response);
   return response.data;
 };
 

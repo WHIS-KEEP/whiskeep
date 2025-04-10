@@ -83,8 +83,6 @@ function WishlistDialogContent({
       if (closeParentDialog) {
         setTimeout(() => closeParentDialog(), 100);
       }
-    } else {
-      console.log('찜 목록 항목이 선택되지 않았습니다.');
     }
   };
 
@@ -204,7 +202,6 @@ export function WhiskySelectionDialog({
   const handleWhiskySelected = (id: number) => {
     const whisky = findWhiskyById(id); // 이제 LikedWhisky | null 반환
     if (whisky) {
-      console.log(`Whisky ${id} selected:`, whisky);
       setSelectedWhisky({
         id: whisky.id,
         koName: whisky.koName,

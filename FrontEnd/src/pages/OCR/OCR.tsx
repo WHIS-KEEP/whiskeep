@@ -52,7 +52,6 @@ function OCRPage(): JSX.Element {
             });
           };
           videoRef.current.onplaying = () => {
-            console.log('카메라 재생 시작됨');
             setIsCameraReady(true);
             setError(null);
           };
@@ -88,7 +87,6 @@ function OCRPage(): JSX.Element {
       if (videoElement && videoElement.srcObject) {
         const stream = videoElement.srcObject as MediaStream;
         stream.getTracks().forEach((track) => track.stop());
-        console.log('카메라 스트림 정리 완료 (언마운트)');
       }
     };
   }, [getUserVideo]);
@@ -102,7 +100,6 @@ function OCRPage(): JSX.Element {
         return;
       }
 
-      console.log('OCRPage: Image prepared, navigating to scanning page...');
       setError(null);
       navigate('/scanning', {
         state: {

@@ -50,7 +50,6 @@ function ScanningPage(): JSX.Element {
 
     const performOcr = async () => {
       try {
-        console.log('ScanningPage: Starting OCR process...');
         const minDisplayPromise = new Promise<void>((resolve) => {
           minDisplayTimerId = setTimeout(resolve, MIN_DISPLAY_TIME_MS);
         });
@@ -66,8 +65,6 @@ function ScanningPage(): JSX.Element {
 
         const ocrResult = await Promise.race([apiPromise, timeoutPromise]);
         await minDisplayPromise;
-
-        console.log('ScanningPage: OCR Success:', ocrResult);
 
         if (origin === 'modal-camera') {
           navigate('/main', {
@@ -86,17 +83,11 @@ function ScanningPage(): JSX.Element {
           } as ResultNavigationState,
         });
       } catch (err: unknown) {
-        console.error('ScanningPage: OCR failed:', err);
-        console.log('ScanningPage: Entering catch block. Error:', err);
-
         await new Promise<void>((resolve) =>
           setTimeout(resolve, MIN_DISPLAY_TIME_MS),
         );
 
-        console.log('ScanningPage: Minimum display time passed.');
-
         const errorState: ErrorState = handleOcrError(err);
-        console.log('ScanningPage: Error processed:', errorState);
 
         navigate('/result', {
           state: errorState as ResultNavigationState,
@@ -112,7 +103,6 @@ function ScanningPage(): JSX.Element {
     return () => {
       if (apiTimerId) clearTimeout(apiTimerId);
       if (minDisplayTimerId) clearTimeout(minDisplayTimerId);
-      console.log('ScanningPage: Unmounting, timers cleared.');
     };
   }, [state, navigate, origin]);
 
