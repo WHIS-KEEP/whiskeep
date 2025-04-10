@@ -230,7 +230,7 @@ function OCRPage(): JSX.Element {
 
         <video
           ref={videoRef}
-          className={`block w-auto h-full object-contain ${
+          className={`block w-auto h-[600px] object-contain ${
             isCameraReady && !error ? 'visible' : 'invisible'
           }`}
           style={{ maxHeight: '100%' }}
