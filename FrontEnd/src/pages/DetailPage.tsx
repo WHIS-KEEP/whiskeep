@@ -175,7 +175,10 @@ const DetailPage = () => {
             style={{ backgroundColor: 'var(--bg-muted)' }}
           >
             <h2 className="text-lg font-medium text-gray-600 mb-2">
-              {user ? `${user.nickname}님` : '게스트님'} 취향 분석
+              <span className="font-bold">
+                {user ? `${user.nickname}님` : '게스트님'}
+              </span>{' '}
+              취향 분석
             </h2>
             {/* 테이스팅 프로필 차트 추가 - 이제 내부에 탭 선택 UI 포함 */}
             <div className="w-full h-50 flex items-center justify-center mt-2 mb-6">

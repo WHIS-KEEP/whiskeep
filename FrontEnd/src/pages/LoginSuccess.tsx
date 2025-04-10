@@ -43,17 +43,8 @@ const LoginSuccess = () => {
           // zustand에 점수가 이미 존재하면,
           navigate('/main');
           return;
-        }
-
-        // 2. zustand에 점수가 없다면, refetch()로 서버에서 점수 다시 조회
-        const { data, isSuccess } = await refetch();
-
-        if (isSuccess && data?.nosing) {
-          // 점수가 있다면 zustand에 저장 후 main으로 이동
-          setMemberStore(data);
-          navigate('/main');
         } else {
-          // 점수가 없다면 preference 페이지로 이동
+          // 2. 점수가 없다면 preference 페이지로 이동
           navigate('/preference');
         }
       } catch (error) {

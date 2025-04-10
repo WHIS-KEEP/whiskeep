@@ -26,14 +26,6 @@ const PreferenceSurveyIntroPage = () => {
       </div>
 
       <div className="px-6 pt-6 pb-10">
-        {/* Progress Bar
-        <div className="flex justify-between items-center w-full max-w-xs mx-auto mt-2 mb-8">
-          <div className="w-[60px] h-[6px] rounded-full bg-[var(--primary-dark)]" />
-          <div className="w-[60px] h-[6px] rounded-full bg-[var(--text-muted-20)]" />
-          <div className="w-[60px] h-[6px] rounded-full bg-[var(--text-muted-20)]" />
-          <div className="w-[60px] h-[6px] rounded-full bg-[var(--text-muted-20)]" />
-        </div> */}
-
         {/* 질문 */}
         <h2 className="text-[18px] font-bold text-center text-[var(--text-main)] leading-[140%] mb-8">
           위스키를 경험해 본 적 있으신가요?
