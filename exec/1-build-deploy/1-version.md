@@ -1,4 +1,6 @@
 ## [IDE]
+IntelliJ IDEA 2024.3, Visual Studio Code 1.96.2  
+<br>
 
 ## [BE]
 
@@ -9,7 +11,7 @@
 | Java | Liberica JDK | 21 |
 | Spring Boot | Spring Boot, Spring Data JPA, Spring Security | 3.4.3 |
 
----
+<br>
 
 ⚒️ 개발 도구 및 품질 관리
 
@@ -19,7 +21,8 @@
 | Logger | Slf4j |  |
 | DB Logging | p6spy | 1.9.2 |
 | QueryDSL | querydsl-jpa / apt | 5.0.0 (jakarta) |
----
+
+<br>
 
 🗄️ DB 및 검색
 
@@ -30,11 +33,22 @@
 | Elasticsearch | spring-data-elasticsearch | 5.4.4 |
 | Redis | spring-boot-starter-data-redis |  |
 
----
+<br>
 
 ## [FE]
 
-위에 처럼 나눠도 조아용~~~
+| 라이브러리/도구 | 역할 | 버전 |
+| --- | --- | --- |
+| Vite | 빌드 도구 | 6.2.0 |
+| React | UI 라이브러리 | 19.1.0 |
+| TypeScript | 정적 타입 언어 | 5.0.3 |
+| Zustand | 클라이언트 상태관리 | 5.0.3 |
+| Tanstack/React-query | 서버 상태관리 | 5.69.0 |
+| Axios |비동기 통신 라이브러리 | 1.8.4 |
+| Tailwind CSS | CSS 라이브러리 | 4.0.15 |
+| shadcn | CSS 라이브러리 |  |
+
+<br>
 
 ## [INFRA]
 

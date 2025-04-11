@@ -1,4 +1,5 @@
-각 .env 파일은 환경에 따라 달라집니다. (local, dev, prod 각각 관리)
+## 각 .env 파일은 환경에 따라 달라집니다.  
+(local, dev, prod 각각 관리)
 
 <details> <summary><code>BackEnd/infra/.env</code></summary>
 
