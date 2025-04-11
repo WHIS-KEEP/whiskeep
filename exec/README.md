@@ -14,6 +14,5 @@
 <br>
 
 ## 3️⃣ DB 덤프 파일  
-<br>
 
 ## 4️⃣ [시연 시나리오](./4-scenario/README.md)
