@@ -1,4 +1,3 @@
-### 1️⃣ Builder Stage
 FROM python:3.10-slim AS builder
 
 RUN apt-get update && apt-get install -y \
@@ -16,7 +15,6 @@ COPY ../ocr.py .
 COPY ../cleaned_whisky_keywords.txt .
 COPY ../unique_whisky_name_list.txt .
 
-### 2️⃣ Runtime Stage
 FROM python:3.10-slim
 
 RUN apt-get update && apt-get install -y \
